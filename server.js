@@ -15,6 +15,7 @@ app.set('views', './client/components')
 app.set('view engine', 'pug');
 app.use(Gun.serve).use(express.static(__dirname));
 app.use(express.static('client'))
+app.use(express.static('client/components/raygun'))
 app.use('/client/components', express.static(__dirname + '/client/components'));
 app.use(express.json());
 app.use(cookieParser());
