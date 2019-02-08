@@ -1,4 +1,6 @@
 const User = require('../models/user');
+const Dimension = require('../models/dimension');
+const Idea = require('../models/idea');
 const jwt = require('jsonwebtoken');
 
 module.exports = (app) => {
@@ -48,6 +50,14 @@ module.exports = (app) => {
   app.get('/logout', (req, res) => {
     res.clearCookie('userToken');
     res.send();
+  })
+
+  app.get('/api/user/:userId/dimensions', (req, res) => {
+    Dimension.find({creator : req.params.userId}).then((dims) => {
+      if(dims){
+        res.send(dims);
+      }
+    })
   })
 
 }

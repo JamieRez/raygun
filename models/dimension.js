@@ -4,15 +4,12 @@ const { Schema } = mongoose;
 const DimensionSchema = new Schema({
   name : String,
   creator : {type : String, default : 'James'},
-  backgroundImage : String,
-  backgroundColor : {type : String, default : '#5fa87e'},
-  ideas : Array,
-  things : Array,
+  ideas : {type : [String], default : []},
+  things : {type : [String], default : []},
   thingCount : {default : 0, type : Number},
   isPrivate : {type : Boolean, default : false},
-  editors : Array,
-  defaultIdeas : Array,
-  defaultThings : Array
+  editors : {type : [String], default : []},
+  defaultThings : {type : [String], default : []}
 });
 
 const Dimension = mongoose.model('Dimension', DimensionSchema);

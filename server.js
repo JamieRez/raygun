@@ -53,6 +53,7 @@ app.get('/', (req, res) => {
 
 //Controllers
 require('./controllers/user.js')(app);
+require('./controllers/dimension.js')(app);
 
 let server = app.listen(process.env.PORT || '3000');
 let gun = Gun({
