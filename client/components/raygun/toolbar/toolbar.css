@@ -34,7 +34,7 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  width : 500px;
+  width : 100%;
 }
 
 .raygunToolbarDashBtn{
@@ -66,4 +66,5 @@
 .toolbarLabel{
   text-align: center;
   font-size: 30px;
+  outline: none;
 }
