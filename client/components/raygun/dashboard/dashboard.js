@@ -43,6 +43,8 @@ function changeToEditor(dim){
     padding : "5px 10px",
   })
   dimBeingEdited = dim;
+  $('.ideaBtn').remove();
+  loadDimensionIdeas();
 }
 
 $(document).ready(()=> {
