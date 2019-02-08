@@ -1,0 +1,69 @@
+.raygunToolbar{
+  border-bottom: 2px solid #3ea26e;
+  padding : 5px 20px;
+  height : 60px;
+  width : 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.raygunToolbarLeft{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height : 100%;
+  justify-content: flex-start;
+  width : 500px;
+}
+
+.raygunToolbarRight{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  height : 100%;
+  margin-right: 40px;
+  width : 500px;
+}
+
+.raygunToolbarCenter{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width : 500px;
+}
+
+.raygunToolbarDashBtn{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100%;
+  cursor : pointer;
+}
+
+.raygunIcon{
+  width : 64px;
+  height : 64px;
+  cursor : pointer;
+  margin-right: 10px;
+}
+
+.raygunProfileIcon{
+  width : 48px;
+  height : 48px;
+  cursor : pointer;
+}
+
+.raygunLabel{
+  font-size: 30px;
+  font-weight: 250;
+}
+
+.toolbarLabel{
+  text-align: center;
+  font-size: 30px;
+}

@@ -1,13 +1,10 @@
 link(rel='stylesheet' type="text/css" href='raygun.css')
 
 .raygun
-  .raygunToolbar
-    img.raygunIcon(src='raygun.svg')
-    .raygunLabel.primaryText RayGun
+  include toolbar/toolbar
+      
   .raygunCore
-    .raygunIdeasAndDimension
-      .raygunIdeas
-      .raygunDimension
-    .raygunThings
+    include dashboard/dashboard
+    include editor/editor
     
   
