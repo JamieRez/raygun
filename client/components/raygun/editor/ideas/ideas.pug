@@ -4,6 +4,18 @@ script(src='/editor/ideas/ideas.js')
 .editorIdeas.editorWindow
   .editorTab
     .editorTabLabel Ideas
-  .editorIdeasList
-    .newIdeaBtn
-      .newIdeaBtnLabel New Idea
+  .editorIdeasCore
+    .editorIdeasList
+      .newIdeaBtn
+        .newIdeaBtnLabel New Idea
+    .editIdeaContainer
+      .editIdeaNav
+        img.editIdeaNavBackBtn(src='/editor/ideas/back.svg')
+      .editIdeaName(contenteditable="true")
+      .editIdeaCreator
+      .editIdeaDescContainer
+        .editIdeaDescStart Description
+        .editIdeaDesc(contenteditable="true")
+      .editIdeaCode
+        .editIdeaCodeBtn
+          .editIdeaCodeBtnLabel View / Edit Code

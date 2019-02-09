@@ -9,8 +9,10 @@ module.exports = (app) => {
     if(req.user){
       let newIdea = new Idea();
       newIdea.name = req.body.name || "Untitled Idea";
-      newIdea.creator = req.user.id;
+      newIdea.creatorId = req.user.id;
+      newIdea.creatorName = req.user.username;
       newIdea.editors = [req.user.id];
+      newIdea.desc = req.body.desc || "This idea is new!";
       newIdea.code = req.body.code || "//Code Your Idea!";
       newIdea.save().then((newIdea) => {
         //Add to User
@@ -39,10 +41,12 @@ module.exports = (app) => {
       Idea.findById(req.params.ideaId).then((idea) => {
         if(idea && idea.editors.includes(req.user.id)){
           idea.name = req.body.name || idea.name;
-          idea.creator = req.body.creator || idea.creator;
+          idea.creatorId = req.body.creatorId || idea.creatorId;
+          idea.creatorName = req.body.creatorName || idea.creatorName;
           idea.isPrivate = req.body.isPrivate || idea.isPrivate;
           idea.editors = req.body.editors || idea.editors;
           idea.code = req.body.code || idea.code;
+          idea.desc = req.body.desc || idea.desc;
           idea.save().then((idea) => {
             res.send(idea);
           })

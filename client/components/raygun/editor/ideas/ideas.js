@@ -8,6 +8,26 @@ function addNewIdea(idea){
   newIdeaElemLabel.classList.add('ideaBtnLabel');
   newIdeaElemLabel.textContent = idea.name;
   $(newIdeaElem).append(newIdeaElemLabel);
+
+  //Clicking on an idea, goes to the idea editor
+  $(newIdeaElem).on("click", (e) => {
+    $('.editorIdeasList').css({
+      transform : "translate3d(-750px, 0px, 0px)"
+    })
+    $('.editIdeaContainer').css({
+      display : "flex"
+    })
+    setTimeout(() => {
+      $('.editIdeaContainer').css({
+        transform : "translate3d(0px, 0px, 0px)"
+      })
+      $('.editIdeaName').text(idea.name);
+      $('.editIdeaCreator').text("Created by: " + idea.creatorName);
+      $('.editIdeaDesc').text(idea.desc);
+    }, 10);
+
+  })
+
 }
 
 function loadDimensionIdeas(){
