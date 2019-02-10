@@ -1,3 +1,11 @@
+window.ideaBeingEdited = null;
+
+function saveIdea(idea){
+  axios.post('/api/idea/' + idea._id, idea).then((res) => {
+
+  })
+}
+
 function addNewIdea(idea){
   //Add an idea to the editor
   let newIdeaElem = document.createElement('div');
@@ -11,6 +19,7 @@ function addNewIdea(idea){
 
   //Clicking on an idea, goes to the idea editor
   $(newIdeaElem).on("click", (e) => {
+    ideaBeingEdited = idea;
     $('.editorIdeasList').css({
       transform : "translate3d(-750px, 0px, 0px)"
     })
@@ -26,6 +35,11 @@ function addNewIdea(idea){
       $('.editIdeaDesc').text(idea.desc);
     }, 10);
 
+    setTimeout(() => {
+      $('.editorIdeasList').css({
+        display : "none"
+      })
+    }, 20)
   })
 
 }
@@ -48,5 +62,39 @@ $(document).ready(() => {
       addNewIdea(res.data);
     })
   })
+
+  //Blur on Name or Description, saves the idea
+  $('.editIdeaName').on('blur', (e) => {
+    if($('.editIdeaName').text().length > 0){
+      ideaBeingEdited.name = $('.editIdeaName').text()
+      saveIdea(ideaBeingEdited);
+    }
+  })
+  $('.editIdeaDesc').on('blur', () => {
+    if($('.editIdeaDesc').text().length > 0){
+      ideaBeingEdited.desc = $('.editIdeaDesc').text()
+      saveIdea(ideaBeingEdited);
+    }
+  })
+
+  //Back btn in idea editor goes back to ideaslist
+  $('.editIdeaNavBackBtn').on('click', () => {
+    $('.editIdeaContainer').css({
+      display : "none",
+      transform : "translate3d(-750px, 0px, 0px)"
+    })
+    $('.editIdeaName').text("");
+    $('.editIdeaCreator').text("");
+    $('.editIdeaDesc').text("");
+    $('.editorIdeasList').css({
+      display : "flex"
+    })
+    setTimeout(() => {
+      $('.editorIdeasList').css({
+        transform : "translate3d(0px, 0px, 0px)"
+      })
+    })
+  })
+
 
 })
