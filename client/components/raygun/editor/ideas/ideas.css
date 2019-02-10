@@ -6,6 +6,8 @@
   flex-direction: column;
   padding: 5px;
   padding-bottom: 0px;
+  background-color: #f0f0f0;
+  transition: transform 0.5s ease-in;
 }
 
 .editorIdeasCore{

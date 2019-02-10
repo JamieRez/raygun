@@ -4,6 +4,7 @@
   height : 100%;
   flex-direction: column;
   color : #2ed17c;
+  transition: transform 0.5s linear;
 }
 
 .editorIdeasAndDimension {
@@ -11,6 +12,7 @@
   height : 60%;
   display: flex;
   flex-direction: row;
+  transition: transform 0.5s linear;
 }
 
 .editorTab{

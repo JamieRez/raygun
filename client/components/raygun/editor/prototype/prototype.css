@@ -1,0 +1,41 @@
+.prototype{
+  display : none;
+  width : 100%;
+  height : 100%;
+  flex-direction: row;
+  color : #2ed17c;
+  position: absolute;
+  transition: transform 0.5s linear;
+  transform: perspective(500px) translate3d(0px, -2000px, -5000px);
+}
+
+.prototypeCode{
+  width : 50%;
+  background-color: #230f1a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.prototypePreview{
+  width : 50%;
+  background-color: #d0d0d0;
+  background : url('code-bg.png');
+}
+
+.protoCodeNav{
+  width : 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.protoCodeNavBackBtn{
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color : #fc70bf;
+  border : 2px solid #fc70bf;
+  border-radius : 15px;
+  padding: 5px 10px;
+}

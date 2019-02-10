@@ -37,6 +37,7 @@ script(src="/imports/axios.min.js")
 script(src="/imports/ipfs_http.js")
 //Main.css
 link(rel='stylesheet' href='/components/main.css')
+script(src='/components/main.js')
 
 link(rel="icon" href="/components/favicon.png")
 
@@ -47,6 +48,7 @@ meta(name='viewport', content='width=device-width, initial-scale=1.0, maximum-sc
 if currentUser
   p#username(hidden)=currentUser.username
   p#userId(hidden)=currentUser.id
+  p#userHash(hidden)=currentUser.password
   include raygun/raygun
 else
   include auth/auth

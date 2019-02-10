@@ -10,6 +10,14 @@ require('gun/lib/bye')
 
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/raygun', { useNewUrlParser: true });
 
+let server = app.listen(process.env.PORT || '3000');
+let gun = Gun({
+  // file: 'data.json', // local testing and development
+  web: server
+});
+
+let userGun = gun.user();
+
 //App Setting
 app.set('views', './client/components')
 app.set('view engine', 'pug');
@@ -52,12 +60,6 @@ app.get('/', (req, res) => {
 })
 
 //Controllers
-require('./controllers/user.js')(app);
-require('./controllers/dimension.js')(app);
-require('./controllers/idea.js')(app);
-
-let server = app.listen(process.env.PORT || '3000');
-let gun = Gun({
-  // file: 'data.json', // local testing and development
-  web: server
-});
+require('./controllers/user.js')(app, gun);
+require('./controllers/dimension.js')(app, gun);
+require('./controllers/idea.js')(app, gun);

@@ -96,5 +96,33 @@ $(document).ready(() => {
     })
   })
 
+  //Click on View/Edit Code Btn opens the prototype screen
+  $('.editIdeaCodeBtn').on('click', () => {
+    //Move the editor windows out
+    $('.editorIdeas').css({
+      transform : "perspective(500px) translate3d(-1500px, 0px, -500px)"
+    })
+    $('.editorDimension').css({
+      transform : "perspective(500px) translate3d(1500px, 0px, -500px)"
+    })
+    $('.editorThings').css({
+      transform : "perspective(500px) translate3d(0px, 1500px, -500px)"
+    })
+    $('.prototype').css('display', 'flex');
+    //Bring in the prototype scree
+    setTimeout(() => {
+      $('.prototype').css({
+        transform : "perspective(500px) translate3d(0px, 0px, 0px)"
+      })
+      //Update Toolbar
+      setTimeout(() => {
+        //Change toolbar label to be the idea being worked on
+        $('.toolbarLabel').text(ideaBeingEdited.name);
+        changeToolbarColorsForIdeaBuilder();
+      }, 500)
+    }, 250)
+
+  })
+
 
 })
