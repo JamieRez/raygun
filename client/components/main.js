@@ -1,5 +1,6 @@
 let gun = Gun([`${window.location.href}gun`])
 window.raygun = gun.user()
+window.currentRaygunScreen = null;
 
 $(document).ready(() => {
 

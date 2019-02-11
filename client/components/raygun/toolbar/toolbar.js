@@ -1,4 +1,5 @@
 function switchToDashboard(){
+  currentRaygunScreen = "dashboard";
   $('.editor').css({
     display : "none"
   })
@@ -62,6 +63,29 @@ $(document).ready(() => {
     switchToDashboard();
     changeToolbarColorsToDefault();
     resetEditor();
+  })
+
+  $('.toolbarLabel').on("blur", () => {
+    //Toolbar label is dimension name if in dimenion editor
+    if(currentRaygunScreen == "editor"){
+      let newDimName = $('.toolbarLabel').text();
+      if(newDimName.length > 0){
+        dimBeingEdited.name = newDimName;
+        axios.post('/api/dimension/' + dimBeingEdited._id, dimBeingEdited).then((res) => {
+          let dim = res.data;
+          $('#dashDimOption-' + dim._id).find('.dashDimOptionLabel').text(dim.name);
+        });
+      }
+    }else if(currentRaygunScreen == "prototype"){
+      let newIdeaName = $('.toolbarLabel').text();
+      if(newIdeaName.length > 0){
+        ideaBeingEdited.name = newIdeaName;
+        axios.post('/api/idea/' + ideaBeingEdited._id, ideaBeingEdited).then((res) => {
+          let idea = res.data;
+          $('#ideaBtn-' + idea._id).find('.ideaBtnLabel').text(idea.name);
+        });
+      }
+    }
   })
 
 })

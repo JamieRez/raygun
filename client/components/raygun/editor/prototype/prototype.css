@@ -27,10 +27,12 @@
   width : 100%;
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
 }
 
 .protoCodeNavBackBtn{
   margin: 10px;
+  margin-left: 22px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,5 +40,26 @@
   border : 2px solid #fc70bf;
   border-radius : 15px;
   padding: 5px 10px;
+  cursor : pointer;
+}
+
+#protoCodeEditor{
+  width : 90%;
+  height : 75%;
+  margin-top: 5px;
+  border : 1px solid #fc70bf;
+  padding: 5px;
+}
+
+.protoCodeRunBtn{
+  margin: 10px;
+  margin-right: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color : #2ed17c;
+  border : 2px solid #24da7b;
+  border-radius : 15px;
+  padding: 5px 25px;
   cursor : pointer;
 }

@@ -28,6 +28,7 @@ function recieveDimensionsOfUser(){
 }
 
 function changeToEditor(dim){
+  currentRaygunScreen = "editor";
   //Change to Editor
   $('.dashboard').css({
     display : "none"
@@ -48,7 +49,6 @@ function changeToEditor(dim){
 }
 
 $(document).ready(()=> {
-
   recieveDimensionsOfUser();
 
   $('.dashNewDimensionBtn').on("click", (e) => {
