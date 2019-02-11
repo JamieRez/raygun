@@ -43,8 +43,9 @@ function changeToEditor(dim){
     borderRadius : "25px",
     padding : "5px 10px",
   })
-  dimBeingEdited = dim;
+  dimBeingEdited = new Dimension(dim);
   $('.ideaBtn').remove();
+  dimBeingEdited.renderAt($('.editorDimPreview')[0]);
   loadDimensionIdeas();
 }
 

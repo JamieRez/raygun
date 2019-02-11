@@ -61,5 +61,10 @@
   border : 2px solid #24da7b;
   border-radius : 15px;
   padding: 5px 25px;
+  background-color: #211119;
   cursor : pointer;
+}
+
+.protoCodeRunBtn:hover{
+  background-color: #0e3822;
 }
