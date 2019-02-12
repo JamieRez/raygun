@@ -46,6 +46,9 @@ function prototypeToEditor(){
     $('.editorThings').css({
       transform : "perspective(500px) translate3d(0px, 0px, 0px)"
     })
+    $(dimBeingEdited.element).css({
+      transform : "perspective(500px) translate3d(575px, -100px, -500px)",
+    })
     $('.prototype').css('display', 'none');
     setTimeout(() => {
       //Change toolbar label to be the dimension being worked on

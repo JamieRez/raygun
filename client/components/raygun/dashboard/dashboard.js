@@ -49,7 +49,11 @@ function changeToEditor(dim){
   $('.ideaBtn').remove();
   $('.thingOptionBtn').remove();
   $('.editorDimPreview').empty();
-  dimBeingEdited.renderAt($('.editorDimPreview')[0]);
+  dimBeingEdited.renderAt('body');
+  $(dimBeingEdited.element).css({
+    transform : "perspective(500px) translate3d(575px, -100px, -500px)",
+    boxShadow : "0px 0px 3px 3px #2ed17c"
+  })
   loadDimensionIdeas();
   loadDimensionThings();
 }

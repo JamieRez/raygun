@@ -9,6 +9,30 @@
   transition: transform 0.5s linear;
 }
 
+.editorDimensionNav{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.goToDimBtn{
+  border : 2px solid #3ea26e;
+  color : #2ed17c;
+  font-size: 15px;
+  padding: 5px 10px;
+  margin-right: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  cursor : pointer;
+}
+
+.goToDimBtn:hover{
+  background-color: #d9fae9;
+}
+
 .editorDimPreview{
   width : 90%;
   height : 80%;
@@ -18,5 +42,4 @@
   align-items: center;
   margin-top: 20px;
   align-self: center;
-  box-shadow: 0px 0px 3px 3px #2ed17c;
 }

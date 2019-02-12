@@ -12,6 +12,9 @@ function openIdeaPrototypeEditor(){
   $('.editorThings').css({
     transform : "perspective(500px) translate3d(0px, 1500px, -500px)"
   })
+  $(dimBeingEdited.element).css({
+    transform : "perspective(500px) translate3d(2075px, -100px, -500px)"
+  })
   $('.prototype').css('display', 'flex');
   $(ideaEditorDimension.element).empty();
   eval(ideaBeingEdited.classCode);
