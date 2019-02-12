@@ -27,7 +27,7 @@ $(document).ready(() => {
     else if(e.keyCode == 192 && currentRaygunScreen == 'dimension'
          && dimBeingEdited.editors.includes($('#userId').text())
     ){
-        escapeDimensionToRaygun();
+      escapeDimensionToRaygun();
     }
   })
 

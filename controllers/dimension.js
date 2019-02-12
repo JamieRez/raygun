@@ -34,6 +34,7 @@ module.exports = (app) => {
           dim.isPrivate = req.body.isPrivate || dim.isPrivate;
           dim.editors = req.body.editors || dim.editors;
           dim.defaultThings = req.body.defaultThings || dim.defaultThings;
+          dim.domainName = req.body.domainNae || dim.domainName;
           dim.save().then((dim) => {
             res.send(dim);
           })

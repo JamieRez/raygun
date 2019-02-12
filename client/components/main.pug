@@ -50,6 +50,8 @@ if currentUser
   p#username(hidden)=currentUser.username
   p#userId(hidden)=currentUser.id
   p#userHash(hidden)=currentUser.password
+  if dimension
+    p#currentDimension(hidden)=dimension._id
   include raygun/raygun
 else
   include auth/auth

@@ -50,7 +50,16 @@ app.get('/', (req, res) => {
         res.clearCookie('userToken');
         res.render('main');
       }else{
-        res.render('main', {currentUser : req.user})
+        if(req.hostname != 'raygun.live' || 'localhost'){
+          Dimension.findOne({domainName : req.hostname}).then((dim) => {
+            res.render('main', {
+              currentUser : req.user,
+              dimension : dim
+            })
+          })
+        }else{
+          res.render('main', {currentUser : req.user})
+        }
       }
     })
   }else{
