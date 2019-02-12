@@ -51,6 +51,7 @@ app.get('/', (req, res) => {
         res.clearCookie('userToken');
         res.render('main');
       }else{
+        console.log(req.hostname);
         if(req.hostname != 'raygun.live' || 'localhost'){
           Dimension.findOne({domainName : req.hostname}).then((dim) => {
             res.render('main', {
