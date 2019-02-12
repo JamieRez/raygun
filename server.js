@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const User = require('./models/user');
+const Dimension = require('./models/dimension');
 require('dotenv').config();
 require('gun/lib/bye')
 
