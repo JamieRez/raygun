@@ -63,3 +63,4 @@ app.get('/', (req, res) => {
 require('./controllers/user.js')(app, gun);
 require('./controllers/dimension.js')(app, gun);
 require('./controllers/idea.js')(app, gun);
+require('./controllers/thing.js')(app, gun)

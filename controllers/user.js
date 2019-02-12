@@ -21,7 +21,7 @@ module.exports = (app, gun) => {
           let userData = {
             id: user._id,
             username : user.username,
-            password
+            password : user.password
           }
           let token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: "60 days"});
           res.cookie('userToken', token);

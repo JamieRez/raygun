@@ -6,7 +6,6 @@ const DimensionSchema = new Schema({
   creator : {type : String, default : 'James'},
   ideas : {type : [String], default : []},
   things : {type : [String], default : []},
-  thingCount : {default : 0, type : Number},
   isPrivate : {type : Boolean, default : false},
   editors : {type : [String], default : []},
   defaultThings : {type : [String], default : []}

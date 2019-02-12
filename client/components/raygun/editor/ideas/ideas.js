@@ -32,6 +32,7 @@ function openIdeaPrototypeEditor(){
       //Change toolbar label to be the idea being worked on
       $('.toolbarLabel').text(ideaBeingEdited.name);
       ideaEditor.setValue(ideaBeingEdited.code);
+      runCodeInIdeaEditor();
       changeToolbarColorsForIdeaBuilder();
     }, 500)
   }, 250)
@@ -44,6 +45,10 @@ function saveIdea(idea){
 }
 
 function addNewIdea(idea){
+  //Run the idea code
+  eval(idea.classCode);
+  //Add to dimBeingEdited
+  dimBeingEdited.ideas[idea._id] = idea;
   //Add an idea to the editor
   let newIdeaElem = document.createElement('div');
   newIdeaElem.classList.add('ideaBtn');
@@ -135,9 +140,17 @@ $(document).ready(() => {
 
   //Click on View/Edit Code Btn opens the prototype screen
   $('.editIdeaCodeBtn').on('click', () => {
-
     openIdeaPrototypeEditor();
+  })
 
+  //Click on Make Thing Button makes a new thing in this dimension
+  $('.editIdeaMakeThingBtn').on('click', () => {
+    axios.post('/api/thing/new', {
+      dimension : dimBeingEdited,
+      idea : ideaBeingEdited
+    }).then((res) => {
+      createNewThing(res.data);
+    })
   })
 
 

@@ -14,6 +14,7 @@ function runCodeInIdeaEditor(){
   let codeInEditor = ideaEditor.getValue();
   try {
     saveCodeInEditor((idea) => {
+      $(ideaEditorDimension.element).empty();
       eval(idea.classCode);
       let protoThingData = {
         id : "proto-" + idea.className,
@@ -29,6 +30,7 @@ function runCodeInIdeaEditor(){
 }
 
 function prototypeToEditor(){
+  currentRaygunScreen = "editor";
   //Move the prototype screen away
   $('.prototype').css({
     transform : "perspective(500px) translate3d(0px, -2000px, -5000px)"
@@ -48,6 +50,14 @@ function prototypeToEditor(){
     setTimeout(() => {
       //Change toolbar label to be the dimension being worked on
       $('.toolbarLabel').text(dimBeingEdited.name);
+      dimBeingEdited.ideas = {};
+      dimBeingEdited.things = {};
+      $('.ideaBtn').remove();
+      $('.thingOptionBtn').remove();
+      $('.editorDimPreview').empty();
+      dimBeingEdited.renderAt($('.editorDimPreview')[0]);
+      loadDimensionIdeas();
+      loadDimensionThings();
       changeToolbarColorsToDefault();
     }, 500)
   }, 250);
@@ -68,6 +78,12 @@ $(document).ready(() => {
   ideaEditorDimension.id = "prototype";
   ideaEditorDimension.things = {};
   ideaEditorDimension.renderAt('.prototypePreview');
+  $(ideaEditorDimension.element).css({
+    display : "flex",
+    flexDirection : "column"
+    // justifyContent : "center",
+    // alignItems : "center"
+  })
 
   //Go back to editor on back button Click
   $('.protoCodeNavBackBtn').on('click', () => {

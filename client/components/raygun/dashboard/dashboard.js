@@ -44,9 +44,14 @@ function changeToEditor(dim){
     padding : "5px 10px",
   })
   dimBeingEdited = new Dimension(dim);
+  dimBeingEdited.ideas = {};
+  dimBeingEdited.things = {};
   $('.ideaBtn').remove();
+  $('.thingOptionBtn').remove();
+  $('.editorDimPreview').empty();
   dimBeingEdited.renderAt($('.editorDimPreview')[0]);
   loadDimensionIdeas();
+  loadDimensionThings();
 }
 
 $(document).ready(()=> {
