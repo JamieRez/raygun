@@ -51,16 +51,19 @@ app.get('/', (req, res) => {
         res.clearCookie('userToken');
         res.render('main');
       }else{
-        console.log(req.hostname);
-        if(req.hostname != 'raygun.live' || 'localhost'){
+        if(req.hostname != 'www.raygun.live' && req.hostname != 'localhost'){
           Dimension.findOne({domainName : req.hostname}).then((dim) => {
-            res.render('main', {
-              currentUser : req.user,
-              dimension : dim
-            })
+            if(dim){
+              res.render('main', {
+                currentUser : req.user,
+                dimension : dim._id || null
+              })
+            }
           })
         }else{
-          res.render('main', {currentUser : req.user})
+          res.render('main', {
+            currentUser : req.user
+          })
         }
       }
     })

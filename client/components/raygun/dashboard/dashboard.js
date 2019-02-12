@@ -59,6 +59,21 @@ function changeToEditor(dim){
 }
 
 $(document).ready(()=> {
+
+  if($('#currentDimension').text()){
+    axios.get('/api/dimension/' + $('#currentDimension').text()).then((res) => {
+      changeToEditor(res.data);
+      enterDimensionInEditor();
+    })
+  }else{
+    $('body').css({
+      background: 'url("body-bg.gif")',
+    })
+    $('.raygun').css({
+      display : 'flex'
+    })
+  }
+
   recieveDimensionsOfUser();
 
   $('.dashNewDimensionBtn').on("click", (e) => {

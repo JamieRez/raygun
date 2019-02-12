@@ -58,7 +58,11 @@ function prototypeToEditor(){
       $('.ideaBtn').remove();
       $('.thingOptionBtn').remove();
       $('.editorDimPreview').empty();
-      dimBeingEdited.renderAt($('.editorDimPreview')[0]);
+      $(dimBeingEdited.element).remove();
+      dimBeingEdited.renderAt($('body')[0]);
+      $(dimBeingEdited.element).css({
+        transform : "perspective(500px) translate3d(575px, -100px, -500px)",
+      })
       loadDimensionIdeas();
       loadDimensionThings();
       changeToolbarColorsToDefault();

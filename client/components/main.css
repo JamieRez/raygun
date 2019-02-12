@@ -9,7 +9,8 @@ html, body {
    -ms-transform: translateZ(0);
    -o-transform: translateZ(0);
    transform: translateZ(0);
-   background: url("body-bg.gif");
+   background-color: #000000;
+   /*background: url("body-bg.gif");*/
 }
 
 body {

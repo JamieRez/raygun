@@ -7,6 +7,12 @@ function enterDimensionInEditor(){
 
 function escapeDimensionToRaygun(){
   currentRaygunScreen = 'editor';
+  $('body').css({
+    background: 'url("/components/body-bg.gif")'
+  })
+  $('.raygun').css({
+    display : 'flex'
+  })
   $(dimBeingEdited.element).css({
     transform : "perspective(500px) translate3d(575px, -100px, -500px)",
     boxShadow : "0px 0px 3px 3px #2ed17c"

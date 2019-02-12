@@ -43,5 +43,13 @@ module.exports = (app) => {
     }
   })
 
+  app.get('/api/dimension/:id', (req, res) => {
+    Dimension.findById(req.params.id).then((dim) => {
+      if(!dim.isPrivate && dim){
+        res.send(dim);
+      }
+    })
+  })
+
 
 }

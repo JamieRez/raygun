@@ -148,8 +148,11 @@ $(document).ready(() => {
 
   //Click on Make Thing Button makes a new thing in this dimension
   $('.editIdeaMakeThingBtn').on('click', () => {
+    let dataDim = dimBeingEdited;
+    dataDim.ideas = {};
+    dataDim.things = {};
     axios.post('/api/thing/new', {
-      dimension : dimBeingEdited,
+      dimension : dataDim,
       idea : ideaBeingEdited
     }).then((res) => {
       createNewThing(res.data);
