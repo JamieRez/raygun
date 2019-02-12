@@ -9,7 +9,7 @@ html, body {
    -ms-transform: translateZ(0);
    -o-transform: translateZ(0);
    transform: translateZ(0);
-   background: url("https://media.giphy.com/media/Uix8IwC3G6UU/giphy.gif");
+   background: url("body-bg.gif");
 }
 
 body {

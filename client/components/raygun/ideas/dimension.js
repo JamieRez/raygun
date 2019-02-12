@@ -2,11 +2,12 @@ window.Dimension = class {
 
   constructor(dim){
     Object.assign(this, dim);
+    this.id = this._id;
   }
 
   renderAt(parentElement){
     this.element = document.createElement('div');
-    this.element.id = this._id;
+    this.element.id = this.id;
     this.element.classList.add("dimension");
     $(this.element).css({
       width : "100%",

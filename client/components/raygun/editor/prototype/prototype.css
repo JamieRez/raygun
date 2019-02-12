@@ -19,8 +19,10 @@
 
 .prototypePreview{
   width : 50%;
-  background-color: #d0d0d0;
-  background : url('code-bg.png');
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .protoCodeNav{

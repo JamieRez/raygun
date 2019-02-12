@@ -13,4 +13,10 @@ $(document).ready(() => {
 
   }
 
+  $(window).on('keydown', (e) => {
+    if(e.metaKey && e.keyCode == 83 || e.ctrlKey && e.keyCode == 83) {
+      e.preventDefault();
+    }
+  })
+
 })

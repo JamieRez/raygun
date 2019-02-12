@@ -2,6 +2,34 @@ const Dimension = require('../models/dimension');
 const Idea = require('../models/idea');
 const User = require('../models/user');
 
+function createIdeaClassCode(idea){
+  let ideaClassName = idea.name;
+  ideaClassName = ideaClassName[0].toUpperCase() + ideaClassName.substr(1, ideaClassName.length);
+  ideaClassName = ideaClassName.split('');
+  for(var i=0; i < ideaClassName.length; i++) {
+    if (ideaClassName[i] === " "){
+      let nextLetter = ideaClassName[i+1].toUpperCase()
+      ideaClassName.splice(i, 2, nextLetter);
+      i -= 1;
+    }
+  }
+  idea.className = ideaClassName.join('');
+  let codeStart = `
+  window.${idea.className} = class {
+
+    constructor(thing){
+      Object.assign(this, thing);
+    }
+
+    build(){
+  `
+  let codeEnd = `
+    }
+  }
+  `
+  return codeStart + "\t" + idea.code + codeEnd;
+}
+
 module.exports = (app) => {
 
   //New Ideas
@@ -13,7 +41,10 @@ module.exports = (app) => {
       newIdea.creatorName = req.user.username;
       newIdea.editors = [req.user.id];
       newIdea.desc = req.body.desc || "This idea is new!";
-      newIdea.code = req.body.code || "//Code Your Idea!";
+      newIdea.code = req.body.code || `
+        //Write code for ${newIdea.name}
+      `;
+      newIdea.classCode = createIdeaClassCode(newIdea);
       newIdea.save().then((newIdea) => {
         //Add to User
         User.findById(req.user.id).then((user) => {
@@ -46,6 +77,7 @@ module.exports = (app) => {
           idea.isPrivate = req.body.isPrivate || idea.isPrivate;
           idea.editors = req.body.editors || idea.editors;
           idea.code = req.body.code || idea.code;
+          idea.classCode = createIdeaClassCode(idea)
           idea.desc = req.body.desc || idea.desc;
           idea.save().then((idea) => {
             res.send(idea);

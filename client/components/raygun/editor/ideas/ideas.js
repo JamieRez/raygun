@@ -13,6 +13,15 @@ function openIdeaPrototypeEditor(){
     transform : "perspective(500px) translate3d(0px, 1500px, -500px)"
   })
   $('.prototype').css('display', 'flex');
+  $(ideaEditorDimension.element).empty();
+  eval(ideaBeingEdited.classCode);
+  let protoThingData = {
+    id : "proto-" + ideaBeingEdited.className,
+    dimension : ideaEditorDimension,
+    idea : ideaBeingEdited
+  }
+  let protoThing = new Thing(protoThingData);
+  protoThing.render();
   //Bring in the prototype scree
   setTimeout(() => {
     $('.prototype').css({
@@ -22,6 +31,7 @@ function openIdeaPrototypeEditor(){
     setTimeout(() => {
       //Change toolbar label to be the idea being worked on
       $('.toolbarLabel').text(ideaBeingEdited.name);
+      ideaEditor.setValue(ideaBeingEdited.code);
       changeToolbarColorsForIdeaBuilder();
     }, 500)
   }, 250)
