@@ -1,8 +1,19 @@
 window.Dimension = class {
 
   constructor(dim){
-    Object.assign(this, dim);
-    this.id = this._id;
+    if(dim){
+      this.id = dim.id || UUID();
+      this.name = dim.name || "Untitled Dimension";
+      this.creatorId = dim.creatorId || $('#userId').text();
+      this.creatorName = dim.creatorName || $('#username').text();
+      this.isPrivate = dim.isPrivate || false;
+    }else{
+      this.id = UUID();
+      this.name = "Untitled Dimension";
+      this.creatorId = $('#userId').text();
+      this.creatorName = $('#username').text();
+      this.isPrivate = false;
+    }
   }
 
   renderAt(parentElement){

@@ -18,10 +18,10 @@ function createNewThing(thing){
 }
 
 function loadDimensionThings(){
-  axios.get('/api/dimension/' + dimBeingEdited._id + '/things').then((res) => {
-    res.data.forEach((thing) => {
-      createNewThing(thing);
-    })
+  raygun.get('dimension').get(dimBeingEdited.id).once((things) => {
+    for(id in things){
+      createNewThing(things[id]);
+    }
   })
 }
 

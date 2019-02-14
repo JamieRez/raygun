@@ -72,13 +72,7 @@ $(document).ready(() => {
       let newDimName = $('.toolbarLabel').text();
       if(newDimName.length > 0){
         dimBeingEdited.name = newDimName;
-        let dimSaveData = dimBeingEdited;
-        dimSaveData.ideas = Object.keys(dimBeingEdited.ideas);
-        dimSaveData.things = Object.keys(dimBeingEdited.things);
-        axios.post('/api/dimension/' + dimBeingEdited._id, dimBeingEdited).then((res) => {
-          let dim = res.data;
-          $('#dashDimOption-' + dim._id).find('.dashDimOptionLabel').text(dim.name);
-        });
+        raygun.get(`dimension/${dimBeingEdited.id}`).get('name').put(newDimName);
       }
     }else if(currentRaygunScreen == "prototype"){
       let newIdeaName = $('.toolbarLabel').text();

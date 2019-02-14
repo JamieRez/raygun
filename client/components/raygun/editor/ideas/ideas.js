@@ -50,12 +50,10 @@ function saveIdea(idea){
 function addNewIdea(idea){
   //Run the idea code
   eval(idea.classCode);
-  //Add to dimBeingEdited
-  dimBeingEdited.ideas[idea._id] = idea;
   //Add an idea to the editor
   let newIdeaElem = document.createElement('div');
   newIdeaElem.classList.add('ideaBtn');
-  newIdeaElem.id = 'ideaBtn-' + idea._id;
+  newIdeaElem.id = 'ideaBtn-' + idea.id;
   $('.editorIdeasList').append(newIdeaElem);
   let newIdeaElemLabel = document.createElement('div');
   newIdeaElemLabel.classList.add('ideaBtnLabel');
@@ -90,10 +88,10 @@ function addNewIdea(idea){
 }
 
 function loadDimensionIdeas(){
-  axios.get('/api/dimension/' + dimBeingEdited._id + '/ideas').then((res) => {
-    res.data.forEach((idea) => {
-      addNewIdea(idea);
-    })
+  let dimGun = raygun.get('dimension/' + dimBeingEdited.id);
+  dimGun.get('ideas').map().once((idea) => {
+    let thisIdea = new Idea(idea)
+    addNewIdea(thisIdea)
   })
 }
 
@@ -101,11 +99,10 @@ $(document).ready(() => {
 
   //Add New Idea on newIdeaBtn click
   $('.newIdeaBtn').on("click", (e) => {
-    axios.post('/api/idea/new', {
-      dimId : dimBeingEdited._id
-    }).then((res) => {
-      addNewIdea(res.data);
-    })
+    let newIdea = new Idea();
+    raygun.get('ideas').set(newIdea);
+    usergun.get('ideas').set(newIdea);
+    raygun.get('dimension/' + dimBeingEdited.id).get('ideas').set(newIdea);
   })
 
   //Blur on Name or Description, saves the idea

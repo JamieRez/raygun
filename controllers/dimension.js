@@ -2,7 +2,7 @@ const Dimension = require('../models/dimension');
 const Idea = require('../models/idea');
 const User = require('../models/user');
 
-module.exports = (app) => {
+module.exports = (app, raygun) => {
 
   //New Dimensions
   app.post('/api/dimension/new', (req, res) => {

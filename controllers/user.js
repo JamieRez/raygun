@@ -3,9 +3,7 @@ const Dimension = require('../models/dimension');
 const Idea = require('../models/idea');
 const jwt = require('jsonwebtoken');
 
-module.exports = (app, gun) => {
-
-  let userGun = gun.user();
+module.exports = (app, raygun) => {
 
   app.post('/register', (req, res) => {
     User.findOne({username : req.body.username.toLowerCase()}).then((user) => {
@@ -16,7 +14,6 @@ module.exports = (app, gun) => {
         newUser.username = req.body.username.toLowerCase();
         newUser.password = newUser.generateHash(req.body.password);
         newUser.save((err, user) => {
-          userGun.create(user.username, user.password);
           // generate a JWT for this user from the user's id and the secret key
           let userData = {
             id: user._id,

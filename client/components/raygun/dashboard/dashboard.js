@@ -1,8 +1,21 @@
+window.thisUsername = $('#username').text();
+window.thisUserId = $('#userId').text();
+if(thisUserId.length > 0 && thisUsername.length > 0){
+  window.usergun = raygun.get('user').get(thisUserId);
+  usergun.not(() => {
+    usergun.put({
+      name : thisUsername,
+      id : thisUserId,
+    });
+  })
+}
+
+
 function addDimOption(dim){
   //Create a Dimension Option on the dashboard
   let newDimElem = document.createElement('div');
   newDimElem.classList.add('dashDimOption');
-  newDimElem.id = 'dashDimOption-' + dim._id;
+  newDimElem.id = 'dashDimOption-' + dim.id;
   $('.dashboardCreations').append(newDimElem);
   let newDimElemLabel = document.createElement('div');
   newDimElemLabel.classList.add('dashDimOptionLabel');
@@ -14,20 +27,22 @@ function addDimOption(dim){
     changeToEditor(dim);
   })
 
+  //Updates for this dim name affect the option box
+  raygun.get('dimension/' + dim.id).get('name').on((name) => {
+    newDimElemLabel.textContent = name;
+  })
+
 }
 
 function recieveDimensionsOfUser(){
-  let thisUserId = $('#userId').text();
-  $.get('/api/user/' + thisUserId + '/dimensions', (dims) => {
-    if(dims){
-      dims.forEach((dim) => {
-        addDimOption(dim);
-      })
-    }
+  usergun.get('dimension').map().once((dim) => {
+    let thisDim = new Dimension(dim);
+    addDimOption(thisDim)
   })
 }
 
 function changeToEditor(dim){
+
   currentRaygunScreen = "editor";
   //Change to Editor
   $('.dashboard').css({
@@ -43,22 +58,22 @@ function changeToEditor(dim){
     borderRadius : "25px",
     padding : "5px 10px",
   })
-  dimBeingEdited = new Dimension(dim);
-  dimBeingEdited.ideas = {};
-  dimBeingEdited.things = {};
   $('.ideaBtn').remove();
   $('.thingOptionBtn').remove();
   $('.editorDimPreview').empty();
-  dimBeingEdited.renderAt('body');
-  $(dimBeingEdited.element).css({
+  dim.renderAt('body');
+  $(dim.element).css({
     transform : "perspective(500px) translate3d(575px, -100px, -500px)",
     boxShadow : "0px 0px 3px 3px #2ed17c"
   })
+  dimBeingEdited = dim;
   loadDimensionIdeas();
   loadDimensionThings();
 }
 
 $(document).ready(()=> {
+
+  recieveDimensionsOfUser();
 
   if($('#currentDimension').text()){
     axios.get('/api/dimension/' + $('#currentDimension').text()).then((res) => {
@@ -67,20 +82,20 @@ $(document).ready(()=> {
     })
   }else{
     $('body').css({
-      background: 'url("body-bg.gif")',
+      background: 'url("/components/body-bg.gif")',
     })
     $('.raygun').css({
       display : 'flex'
     })
   }
 
-  recieveDimensionsOfUser();
-
   $('.dashNewDimensionBtn').on("click", (e) => {
-    $.post('/api/dimension/new', (data) => {
-      changeToEditor(data);
-      addDimOption(data);
-    })
+    let newDim = new Dimension();
+    let newDimGun = raygun.get('dimension/' + newDim.id).put(newDim, () => {
+      raygun.get('dimension').set(newDimGun);
+      usergun.get('dimension').set(newDimGun);
+      changeToEditor(newDim);
+    });
   })
 
 })

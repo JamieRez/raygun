@@ -79,18 +79,18 @@ $(document).ready(() => {
   ideaEditor.session.setTabSize(2)
   ideaEditor.resize();
 
-  //Initialize Prototype Dimension
-  ideaEditorDimension = new Dimension();
-  ideaEditorDimension.name = "prototype";
-  ideaEditorDimension.id = "prototype";
-  ideaEditorDimension.things = {};
-  ideaEditorDimension.renderAt('.prototypePreview');
-  $(ideaEditorDimension.element).css({
-    display : "flex",
-    flexDirection : "column"
-    // justifyContent : "center",
-    // alignItems : "center"
-  })
+  // //Initialize Prototype Dimension
+  // ideaEditorDimension = new Dimension();
+  // ideaEditorDimension.name = "prototype";
+  // ideaEditorDimension.id = "prototype";
+  // ideaEditorDimension.things = {};
+  // ideaEditorDimension.renderAt('.prototypePreview');
+  // $(ideaEditorDimension.element).css({
+  //   display : "flex",
+  //   flexDirection : "column"
+  //   // justifyContent : "center",
+  //   // alignItems : "center"
+  // })
 
   //Go back to editor on back button Click
   $('.protoCodeNavBackBtn').on('click', () => {
