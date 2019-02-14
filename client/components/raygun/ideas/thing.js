@@ -1,8 +1,27 @@
 window.Thing = class {
 
   constructor(thing){
-    Object.assign(this, thing);
-    this.id = this._id || this.id;
+    if(thing){
+      this.id = thing.id || UUID();
+      this.name = thing.name || "Untitled Idea";
+      let userId = $('#userId').text();
+      let username = $('#username').text();
+      this.creatorId = thing.creatorId || userId;
+      this.creatorName = thing.creatorName || username;
+      this.isPrivate = thing.isPrivate || false;
+      this.dimension = thing.dimension || {name : "prototype"}
+      this.idea = thing.idea || {name : "Untitled Idea"};
+    }else{
+      this.id = UUID();
+      this.name = "Untitled Idea";
+      let userId = $('#userId').text();
+      let username = $('#username').text();
+      this.creatorId = userId;
+      this.creatorName = username;
+      this.isPrivate = false;
+      this.dimension = {name : "prototype"};
+      this.idea = {name : "Untitled Idea"}
+    }
   }
 
   render(){

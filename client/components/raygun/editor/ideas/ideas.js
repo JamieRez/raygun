@@ -19,6 +19,7 @@ function openIdeaPrototypeEditor(){
   })
   $('.prototype').css('display', 'flex');
   $(ideaEditorDimension.element).empty();
+  loadedIdeas = {};
   eval(ideaBeingEdited.classCode);
   let protoThingData = {
     id : "proto-" + ideaBeingEdited.className,

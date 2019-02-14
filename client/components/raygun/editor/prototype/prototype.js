@@ -1,13 +1,52 @@
 window.ideaEditor = null;
 window.ideaEditorDimension = null;
 
+function createClassCode(idea){
+  let ideaClassName = idea.name;
+  ideaClassName = ideaClassName[0].toUpperCase() + ideaClassName.substr(1, ideaClassName.length);
+  ideaClassName = ideaClassName.split('');
+  for(var i=0; i < ideaClassName.length; i++) {
+    if (ideaClassName[i] === " "){
+      let nextLetter = ideaClassName[i+1].toUpperCase()
+      ideaClassName.splice(i, 2, nextLetter);
+      i -= 1;
+    }
+  }
+  ideaClassName = ideaClassName.join('');
+  let codeStart = `
+  window.${ideaClassName} = class {
+
+    constructor(thing){
+      Object.assign(this, thing);
+    }
+
+    build(){
+  `
+  let codeEnd = `
+    }
+  }
+  `
+  return {
+    className : ideaClassName,
+    classCode : codeStart + "\t" + idea.code + codeEnd
+  }
+}
+
 function saveCodeInEditor(cb){
   ideaBeingEdited.code = ideaEditor.getValue();
-  axios.post('/api/idea/' + ideaBeingEdited._id, ideaBeingEdited).then((res) => {
-    if(typeof cb == 'function' && res.data){
-      cb(res.data)
+
+  let ideaClassData = createClassCode(ideaBeingEdited);
+
+  ideaBeingEdited.classCode= ideaClassData.classCode;
+  ideaBeingEdited.className = ideaClassData.className;
+  raygun.get(`idea/${ideaBeingEdited.id}`).get('className').put(ideaClassData.className);
+  raygun.get(`idea/${ideaBeingEdited.id}`).get('code').put(ideaBeingEdited.code);
+  raygun.get(`idea/${ideaBeingEdited.id}`).get('classCode').put(ideaClassData.classCode, () => {
+    if(cb && typeof cb == 'function'){
+      cb(ideaBeingEdited);
     }
   });
+
 }
 
 function runCodeInIdeaEditor(){
@@ -79,18 +118,18 @@ $(document).ready(() => {
   ideaEditor.session.setTabSize(2)
   ideaEditor.resize();
 
-  // //Initialize Prototype Dimension
-  // ideaEditorDimension = new Dimension();
-  // ideaEditorDimension.name = "prototype";
-  // ideaEditorDimension.id = "prototype";
-  // ideaEditorDimension.things = {};
-  // ideaEditorDimension.renderAt('.prototypePreview');
-  // $(ideaEditorDimension.element).css({
-  //   display : "flex",
-  //   flexDirection : "column"
-  //   // justifyContent : "center",
-  //   // alignItems : "center"
-  // })
+  //Initialize Prototype Dimension
+  ideaEditorDimension = new Dimension();
+  ideaEditorDimension.name = "prototype";
+  ideaEditorDimension.id = "prototype";
+  ideaEditorDimension.things = {};
+  ideaEditorDimension.renderAt('.prototypePreview');
+  $(ideaEditorDimension.element).css({
+    display : "flex",
+    flexDirection : "column"
+    // justifyContent : "center",
+    // alignItems : "center"
+  })
 
   //Go back to editor on back button Click
   $('.protoCodeNavBackBtn').on('click', () => {

@@ -11,9 +11,9 @@ window.Idea = class {
         i -= 1;
       }
     }
-    this.className = ideaClassName.join('');
+    ideaClassName = ideaClassName.join('');
     let codeStart = `
-    window.${this.className} = class {
+    window.${ideaClassName} = class {
 
       constructor(thing){
         Object.assign(this, thing);
@@ -25,7 +25,10 @@ window.Idea = class {
       }
     }
     `
-    return codeStart + "\t" + this.code + codeEnd;
+    return {
+      className : ideaClassName,
+      classCode : codeStart + "\t" + this.code + codeEnd
+    }
   }
 
   constructor(idea){
@@ -39,7 +42,9 @@ window.Idea = class {
       this.creatorName = idea.creatorName || username;
       this.isPrivate = idea.isPrivate || false;
       this.code = idea.code || `//Write code for ${this.name}`;
-      this.classCode = idea.classCode || this.createClassCode();
+      let classData = this.createClassCode()
+      this.classCode = idea.classCode || classData.classCode;
+      this.className = idea.className || classData.className;
     }else{
       this.id = UUID();
       this.name = "Untitled Idea";
@@ -50,7 +55,9 @@ window.Idea = class {
       this.creatorName = username;
       this.isPrivate = false;
       this.code = `//Write code for ${this.name}`;
-      this.classCode = this.createClassCode();
+      let classData = this.createClassCode()
+      this.classCode = classData.classCode;
+      this.className = classData.className;
     }
   }
 
