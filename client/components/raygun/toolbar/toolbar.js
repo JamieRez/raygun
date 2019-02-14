@@ -78,10 +78,7 @@ $(document).ready(() => {
       let newIdeaName = $('.toolbarLabel').text();
       if(newIdeaName.length > 0){
         ideaBeingEdited.name = newIdeaName;
-        axios.post('/api/idea/' + ideaBeingEdited._id, ideaBeingEdited).then((res) => {
-          let idea = res.data;
-          $('#ideaBtn-' + idea._id).find('.ideaBtnLabel').text(idea.name);
-        });
+        raygun.get(`idea/${ideaBeingEdited.id}`).get('name').put(newDimName);
       }
     }
   })

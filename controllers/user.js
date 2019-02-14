@@ -22,8 +22,17 @@ module.exports = (app, raygun) => {
           }
           let token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: "60 days"});
           res.cookie('userToken', token);
-          res.cookie('userGun', userGun);
-          res.redirect('/')
+
+          //Create a raygun user with id and hashedPassword
+          raygun.user().create(user._id.toString(), user.password, () => {
+            raygun.user().put({
+              name : user.username,
+              id : user._id.toString()
+            }, () => {
+              res.redirect('/')
+            })
+          });
+
         });
       }
     })

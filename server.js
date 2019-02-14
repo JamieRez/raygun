@@ -17,7 +17,6 @@ let gun = Gun({
   web: server
 });
 
-let userGun = gun.user();
 let raygun = gun.get('raygun');
 
 //App Setting

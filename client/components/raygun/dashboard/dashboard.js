@@ -1,13 +1,9 @@
 window.thisUsername = $('#username').text();
 window.thisUserId = $('#userId').text();
-if(thisUserId.length > 0 && thisUsername.length > 0){
-  window.usergun = raygun.get('user').get(thisUserId);
-  usergun.not(() => {
-    usergun.put({
-      name : thisUsername,
-      id : thisUserId,
-    });
-  })
+window.thisUserHash = $('#userHash').text()
+window.usergun = raygun.user()
+if(thisUserId.length > 0 && thisUserHash.length > 0){
+  usergun.auth(thisUserId, thisUserHash);
 }
 
 
@@ -34,15 +30,15 @@ function addDimOption(dim){
 
 }
 
-function recieveDimensionsOfUser(){
+gun.on('auth', () => {
   usergun.get('dimension').map().once((dim) => {
     let thisDim = new Dimension(dim);
     addDimOption(thisDim)
   })
-}
+})
 
 function changeToEditor(dim){
-
+  loadedIdeas = {};
   currentRaygunScreen = "editor";
   //Change to Editor
   $('.dashboard').css({
@@ -73,7 +69,6 @@ function changeToEditor(dim){
 
 $(document).ready(()=> {
 
-  recieveDimensionsOfUser();
 
   if($('#currentDimension').text()){
     axios.get('/api/dimension/' + $('#currentDimension').text()).then((res) => {

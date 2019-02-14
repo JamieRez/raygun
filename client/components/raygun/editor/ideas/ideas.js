@@ -1,5 +1,7 @@
 window.ideaBeingEdited = null;
 
+window.loadedIdeas = {};
+
 function openIdeaPrototypeEditor(){
   currentRaygunScreen = "prototype";
   //Move the editor windows out
@@ -41,12 +43,6 @@ function openIdeaPrototypeEditor(){
   }, 250)
 }
 
-function saveIdea(idea){
-  axios.post('/api/idea/' + idea._id, idea).then((res) => {
-
-  })
-}
-
 function addNewIdea(idea){
   //Run the idea code
   eval(idea.classCode);
@@ -83,15 +79,29 @@ function addNewIdea(idea){
         display : "none"
       })
     }, 20)
+  });
+
+  raygun.get(`idea/${idea.id}`).get('name').on((newName) => {
+    idea.name = newName;
+    $('.editIdeaName').text(newName);
+    $(`#ideaBtn-${idea.id}`).find('.ideaBtnLabel').text(newName);
+  })
+
+  raygun.get(`idea/${idea.id}`).get('desc').on((newDesc) => {
+    idea.desc = newDesc;
+    $('.editIdeaDesc').text(newDesc);
   })
 
 }
 
 function loadDimensionIdeas(){
   let dimGun = raygun.get('dimension/' + dimBeingEdited.id);
-  dimGun.get('ideas').map().once((idea) => {
-    let thisIdea = new Idea(idea)
-    addNewIdea(thisIdea)
+  dimGun.get('idea').map().once((idea) => {
+    if(!loadedIdeas[idea.id]){
+      loadedIdeas[idea.id] = idea;
+      let thisIdea = new Idea(idea)
+      addNewIdea(thisIdea)
+    }
   })
 }
 
@@ -100,22 +110,25 @@ $(document).ready(() => {
   //Add New Idea on newIdeaBtn click
   $('.newIdeaBtn').on("click", (e) => {
     let newIdea = new Idea();
-    raygun.get('ideas').set(newIdea);
-    usergun.get('ideas').set(newIdea);
-    raygun.get('dimension/' + dimBeingEdited.id).get('ideas').set(newIdea);
+    let newIdeaGun = raygun.get('idea/' + newIdea.id).put(newIdea, () => {
+      usergun.get('idea').set(newIdeaGun);
+      raygun.get('dimension/' + dimBeingEdited.id).get('idea').set(newIdeaGun);
+      raygun.get('idea').set(newIdeaGun);
+    })
   })
 
   //Blur on Name or Description, saves the idea
   $('.editIdeaName').on('blur', (e) => {
     if($('.editIdeaName').text().length > 0){
       ideaBeingEdited.name = $('.editIdeaName').text()
-      saveIdea(ideaBeingEdited);
+      raygun.get(`idea/${ideaBeingEdited.id}`).get('name').put(ideaBeingEdited.name);
     }
   })
   $('.editIdeaDesc').on('blur', () => {
     if($('.editIdeaDesc').text().length > 0){
       ideaBeingEdited.desc = $('.editIdeaDesc').text()
-      saveIdea(ideaBeingEdited);
+      raygun.get(`idea/${ideaBeingEdited.id}`).get('desc').put(ideaBeingEdited.desc);
+
     }
   })
 

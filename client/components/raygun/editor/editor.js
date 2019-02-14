@@ -30,5 +30,5 @@ function resetEditor(){
 
 $(document).ready(() => {
 
-  
+
 })
