@@ -3,39 +3,45 @@ window.Thing = class {
   constructor(thing){
     if(thing){
       this.id = thing.id || UUID();
-      this.name = thing.name || "Untitled Idea";
+      this.name = thing.name || ideaBeingEdited.name;
       let userId = $('#userId').text();
       let username = $('#username').text();
       this.creatorId = thing.creatorId || userId;
       this.creatorName = thing.creatorName || username;
       this.isPrivate = thing.isPrivate || false;
-      this.dimension = thing.dimension || {name : "prototype"}
-      this.idea = thing.idea || {name : "Untitled Idea"};
+      this.dimension = thing.dimension || dimBeingEdited.id
+      this.ideaId = thing.ideaId || ideaBeingEdited.id;
+      this.ideaClassName = thing.ideaClassName || ideaBeingEdited.className;
     }else{
       this.id = UUID();
-      this.name = "Untitled Idea";
+      this.name = ideaBeingEdited.name;
       let userId = $('#userId').text();
       let username = $('#username').text();
       this.creatorId = userId;
       this.creatorName = username;
       this.isPrivate = false;
-      this.dimension = {name : "prototype"};
-      this.idea = {name : "Untitled Idea"}
+      this.dimension = dimBeingEdited.id;
+      this.ideaId = ideaBeingEdited.id;
+      this.ideaClassName = ideaBeingEdited.className;
     }
   }
 
   render(){
-    this.element = document.createElement('div');
-    this.element.id = this.id;
-    this.element.classList.add("thing");
-    $(this.dimension.element).append(this.element);
-    let thisDimension = this.dimension;
     let thisThing = this;
-    let thisIdea = this.idea;
-    eval(`
-      thisDimension.things[thisThing.id] = new ${thisIdea.className}(thisThing);
-    `)
-    thisDimension.things[thisThing.id].build();
+    let thisDimensionId = this.dimension;
+    this.element = document.createElement('div');
+    this.element.id = this.ideaClassName + this.id;
+    this.element.classList.add("thing");
+    raygun.get(`idea/${this.ideaId}`).once((thisIdea) => {
+      if(thisDimensionId){
+        $(`#${thisDimensionId}`).append(this.element);
+      }else{
+        $('#prototype').append(this.element);
+      }
+      eval(`
+        new ${thisIdea.className}(thisThing).build();
+      `)
+    })
   }
 
 

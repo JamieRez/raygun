@@ -39,6 +39,7 @@ gun.on('auth', () => {
 
 function changeToEditor(dim){
   loadedIdeas = {};
+  loadedThings = {};
   currentRaygunScreen = "editor";
   //Change to Editor
   $('.dashboard').css({

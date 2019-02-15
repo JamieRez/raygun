@@ -57,8 +57,9 @@ function runCodeInIdeaEditor(){
       eval(idea.classCode);
       let protoThingData = {
         id : "proto-" + idea.className,
-        dimension : ideaEditorDimension,
-        idea : idea
+        dimension : 'prototype',
+        ideaId : idea.id,
+        ideaClassName : idea.className
       }
       let protoThing = new Thing(protoThingData);
       protoThing.render();
@@ -94,6 +95,8 @@ function prototypeToEditor(){
       $('.toolbarLabel').text(dimBeingEdited.name);
       dimBeingEdited.ideas = {};
       dimBeingEdited.things = {};
+      loadedIdeas = {};
+      loadedThings = {};
       $('.ideaBtn').remove();
       $('.thingOptionBtn').remove();
       $('.editorDimPreview').empty();

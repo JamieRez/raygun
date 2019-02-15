@@ -4,14 +4,20 @@ window.Dimension = class {
     if(dim){
       this.id = dim.id || UUID();
       this.name = dim.name || "Untitled Dimension";
-      this.creatorId = dim.creatorId || $('#userId').text();
-      this.creatorName = dim.creatorName || $('#username').text();
+      let userId = $('#userId').text();
+      let username = $('#username').text();
+      this.creatorId = dim.creatorId || userId;
+      this.creatorName = dim.creatorName || username;
+      this.editors = dim.editors || [userId];
       this.isPrivate = dim.isPrivate || false;
     }else{
       this.id = UUID();
       this.name = "Untitled Dimension";
-      this.creatorId = $('#userId').text();
-      this.creatorName = $('#username').text();
+      let userId = $('#userId').text();
+      let username = $('#username').text();
+      this.creatorId = userId
+      this.creatorName = username;
+      this.editors = [userId];
       this.isPrivate = false;
     }
   }

@@ -23,8 +23,9 @@ function openIdeaPrototypeEditor(){
   eval(ideaBeingEdited.classCode);
   let protoThingData = {
     id : "proto-" + ideaBeingEdited.className,
-    dimension : ideaEditorDimension,
-    idea : ideaBeingEdited
+    dimension : 'prototype',
+    ideaId : ideaBeingEdited.id,
+    ideaClassName : ideaBeingEdited.className
   }
   let protoThing = new Thing(protoThingData);
   protoThing.render();
@@ -159,14 +160,11 @@ $(document).ready(() => {
 
   //Click on Make Thing Button makes a new thing in this dimension
   $('.editIdeaMakeThingBtn').on('click', () => {
-    let dataDim = dimBeingEdited;
-    dataDim.ideas = {};
-    dataDim.things = {};
-    axios.post('/api/thing/new', {
-      dimension : dataDim,
-      idea : ideaBeingEdited
-    }).then((res) => {
-      createNewThing(res.data);
+    let newThing = new Thing();
+    let newThingGun = raygun.get('thing/' + newThing.id).put(newThing, () => {
+      usergun.get('thing').set(newThingGun);
+      raygun.get('dimension/' + dimBeingEdited.id).get('thing').set(newThingGun);
+      raygun.get('thing').set(newThingGun);
     })
   })
 
