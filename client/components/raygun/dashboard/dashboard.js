@@ -70,20 +70,22 @@ function changeToEditor(dim){
 
 $(document).ready(()=> {
 
-
-  if($('#currentDimension').text()){
-    axios.get('/api/dimension/' + $('#currentDimension').text()).then((res) => {
-      changeToEditor(res.data);
-      enterDimensionInEditor();
-    })
-  }else{
-    $('body').css({
-      background: 'url("/components/body-bg.gif")',
-    })
-    $('.raygun').css({
-      display : 'flex'
-    })
-  }
+  //Going to domain dimension if applicable
+  raygun.get(`domain/${window.location.host}`).once((dimId) => {
+    if(dimId){
+      raygun.get(`dimension/${dimId}`).once((dim) => {
+        changeToEditor(dim);
+        enterDimensionInEditor();
+      })
+    }else{
+      $('body').css({
+        background: 'url("/components/body-bg.gif")',
+      })
+      $('.raygun').css({
+        display : 'flex'
+      })
+    }
+  })
 
   $('.dashNewDimensionBtn').on("click", (e) => {
     let newDim = new Dimension();
