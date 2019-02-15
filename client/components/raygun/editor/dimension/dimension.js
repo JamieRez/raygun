@@ -1,15 +1,9 @@
 function enterDimensionInEditor(){
   currentRaygunScreen = 'dimension';
-  $(dimBeingEdited.element).css({
+  currentDimension = dimBeingEdited || currentDimension;
+  $(currentDimension.element).css({
     transform : "perspective(500px) translate3d(0px, 0px, 0px)"
   });
-  let raygunElem = $('.raygun');
-  raygunElem.remove();
-  raygun.get(`dimension/${dimBeingEdited.id}`).get('editors').map().once((editorId) => {
-    if(editorId){
-      $('body').append(raygunElem);
-    }
-  })
 }
 
 function escapeDimensionToRaygun(){
@@ -20,7 +14,7 @@ function escapeDimensionToRaygun(){
   $('.raygun').css({
     display : 'flex'
   })
-  $(dimBeingEdited.element).css({
+  $(currentDimension.element).css({
     transform : "perspective(500px) translate3d(575px, -100px, -500px)",
     boxShadow : "0px 0px 3px 3px #2ed17c"
   })
@@ -38,7 +32,7 @@ $(document).ready(() => {
       enterDimensionInEditor();
     }
     else if(e.keyCode == 192 && currentRaygunScreen == 'dimension'){
-      raygun.get(`dimension/${dimBeingEdited.id}`).get('editors').map().once((editorId) => {
+      raygun.get(`dimension/${currentDimension.id}`).get('editors').map().once((editorId) => {
         if(thisUserId == editorId){
           escapeDimensionToRaygun();
         }

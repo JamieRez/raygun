@@ -1,12 +1,3 @@
-window.thisUsername = $('#username').text();
-window.thisUserId = $('#userId').text();
-window.thisUserHash = $('#userHash').text()
-window.usergun = raygun.user()
-if(thisUserId.length > 0 && thisUserHash.length > 0){
-  usergun.auth(thisUserId, thisUserHash);
-}
-
-
 function addDimOption(dim){
   //Create a Dimension Option on the dashboard
   let newDimElem = document.createElement('div');
