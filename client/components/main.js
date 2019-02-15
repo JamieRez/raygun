@@ -1,6 +1,8 @@
 window.currentRaygunScreen = null;
 let gun = Gun([`${window.location.href}gun`])
 window.raygun = gun.get('raygun');
+window.hostName = window.location.host;
+console.log(hostName);
 
 
 $(document).ready(() => {
