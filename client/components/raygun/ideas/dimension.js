@@ -8,8 +8,13 @@ window.Dimension = class {
       let username = $('#username').text();
       this.creatorId = dim.creatorId || userId;
       this.creatorName = dim.creatorName || username;
-      this.editors = dim.editors || [userId];
       this.isPrivate = dim.isPrivate || false;
+      if(dim.editors){
+        this.editors = dim.editors
+      }else{
+        this.editors = {};
+        this.editors[userId] = userId;
+      }
     }else{
       this.id = UUID();
       this.name = "Untitled Dimension";
@@ -17,8 +22,9 @@ window.Dimension = class {
       let username = $('#username').text();
       this.creatorId = userId
       this.creatorName = username;
-      this.editors = [userId];
       this.isPrivate = false;
+      this.editors = {};
+      this.editors[userId] = userId;
     }
   }
 
