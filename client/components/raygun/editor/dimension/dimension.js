@@ -27,16 +27,15 @@ $(document).ready(() => {
 
   //Tilde to go to dimension
   $(window).on("keydown", (e) => {
-    console.log(thisUserId);
-    console.log(dimBeingEdited.editors);
-    console.log(currentRaygunScreen);
     if(currentRaygunScreen == 'editor' && e.keyCode == 192){
       enterDimensionInEditor();
     }
-    else if(e.keyCode == 192 && currentRaygunScreen == 'dimension'
-         && dimBeingEdited.editors[thisUserId]
-    ){
-      escapeDimensionToRaygun();
+    else if(e.keyCode == 192 && currentRaygunScreen == 'dimension'){
+      raygun.get(`dimension/${dimBeingEdited.id}`).get('editors').map().once((editorId) => {
+        if(thisUserId == editorId){
+          escapeDimensionToRaygun();
+        }
+      })
     }
   })
 

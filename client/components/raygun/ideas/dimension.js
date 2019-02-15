@@ -9,12 +9,6 @@ window.Dimension = class {
       this.creatorId = dim.creatorId || userId;
       this.creatorName = dim.creatorName || username;
       this.isPrivate = dim.isPrivate || false;
-      if(dim.editors){
-        this.editors = dim.editors
-      }else{
-        this.editors = {};
-        this.editors[userId] = userId;
-      }
     }else{
       this.id = UUID();
       this.name = "Untitled Dimension";
@@ -23,8 +17,6 @@ window.Dimension = class {
       this.creatorId = userId
       this.creatorName = username;
       this.isPrivate = false;
-      this.editors = {};
-      this.editors[userId] = userId;
     }
   }
 

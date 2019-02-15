@@ -91,6 +91,7 @@ $(document).ready(()=> {
   $('.dashNewDimensionBtn').on("click", (e) => {
     let newDim = new Dimension();
     let newDimGun = raygun.get('dimension/' + newDim.id).put(newDim, () => {
+      newDimGun.get('editors').set(thisUserId);
       raygun.get('dimension').set(newDimGun);
       usergun.get('dimension').set(newDimGun);
       changeToEditor(newDim);
