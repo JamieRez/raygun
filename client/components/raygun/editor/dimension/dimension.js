@@ -7,7 +7,7 @@ function enterDimensionInEditor(){
   raygunElem.remove();
   raygun.get(`dimension/${dimBeingEdited.id}`).get('editors').map().once((editorId) => {
     if(editorId){
-      $('body').append(raygun);
+      $('body').append(raygunElem);
     }
   })
 }
