@@ -27,6 +27,8 @@ $(document).ready(() => {
 
   //Tilde to go to dimension
   $(window).on("keydown", (e) => {
+    console.log(dimBeingEdited.editors[thisUserId]);
+    console.log(currentRaygunScreen);
     if(currentRaygunScreen == 'editor' && e.keyCode == 192){
       enterDimensionInEditor();
     }
