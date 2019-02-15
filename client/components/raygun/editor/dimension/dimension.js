@@ -31,7 +31,7 @@ $(document).ready(() => {
       enterDimensionInEditor();
     }
     else if(e.keyCode == 192 && currentRaygunScreen == 'dimension'
-         && dimBeingEdited.editors[thisUserId])
+         && dimBeingEdited.editors[thisUserId]
     ){
       escapeDimensionToRaygun();
     }
