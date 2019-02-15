@@ -3,12 +3,11 @@ function enterDimensionInEditor(){
   $(dimBeingEdited.element).css({
     transform : "perspective(500px) translate3d(0px, 0px, 0px)"
   });
-  raygun.get(`dimension/${dimBeingEdited.id}`).get('editors').map(
-    userId => userId === thisUserId? userId : undefined
-  ).once((editorId) => {
-    console.log(editorId);
-    if(!editorId){
-      $('.raygun').remove();
+  let raygunElem = $('.raygun');
+  raygunElem.remove();
+  raygun.get(`dimension/${dimBeingEdited.id}`).get('editors').map().once((editorId) => {
+    if(editorId){
+      $('body').append(raygun);
     }
   })
 }
