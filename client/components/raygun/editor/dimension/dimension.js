@@ -6,6 +6,7 @@ function enterDimensionInEditor(){
   raygun.get(`dimension/${dimBeingEdited.id}`).get('editors').map(
     userId => userId === thisUserId? userId : undefined
   ).once((editorId) => {
+    console.log(editorId);
     if(!editorId){
       $('.raygun').remove();
     }
