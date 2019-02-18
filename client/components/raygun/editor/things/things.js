@@ -12,11 +12,24 @@ function createNewThing(thing){
   newThingOptionLabel.classList.add('thingOptionBtnLabel');
   newThingOptionLabel.textContent = thing.name;
   $(newThingOption).append(newThingOptionLabel);
+
+  $(newThingOption).on('click', () => {
+    if(!inDeleteMode){
+
+    }else{
+      //Delete this thing
+      let thisThingGun = raygun.get('thing/' + thing.id);
+      thisThingGun.get('exists').put(false);
+      $(`#thingOptionBtn-${thing.id}`).remove();
+    }
+  })
+
 }
 
 function loadDimensionThings(){
-  raygun.get(`dimension/${dimBeingEdited.id}`).get('thing').map().once((thing) => {
-    if(!loadedThings[thing.id]){
+  let dimGun = raygun.get('dimension/' + dimBeingEdited.id);
+  dimGun.get('things').map().on((thing) => {
+    if(thing && thing.exists && !loadedThings[thing.id]){
       loadedThings[thing.id] = thing;
       let newThing = new Thing(thing);
       createNewThing(newThing);

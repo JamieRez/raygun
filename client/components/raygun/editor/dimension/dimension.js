@@ -26,18 +26,4 @@ $(document).ready(() => {
     enterDimensionInEditor();
   })
 
-  //Tilde to go to dimension
-  $(window).on("keydown", (e) => {
-    if(currentRaygunScreen == 'editor' && e.keyCode == 192){
-      enterDimensionInEditor();
-    }
-    else if(e.keyCode == 192 && currentRaygunScreen == 'dimension'){
-      raygun.get(`dimension/${currentDimension.id}`).get('editors').map().once((editorId) => {
-        if(thisUserId == editorId){
-          escapeDimensionToRaygun();
-        }
-      })
-    }
-  })
-
 })

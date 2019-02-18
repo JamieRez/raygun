@@ -31,6 +31,12 @@ window.Idea = class {
     }
   }
 
+  getData(){
+    raygun.get(`idea/${this.id}`).get('data').once((data) => {
+      this.data = data || {};
+    })
+  }
+
   constructor(idea){
     if(idea){
       this.id = idea.id || UUID();
@@ -49,6 +55,7 @@ window.Idea = class {
       this.id = UUID();
       this.name = "Untitled Idea";
       this.desc = "This is an idea!";
+      this.data = {};
       let userId = $('#userId').text();
       let username = $('#username').text();
       this.creatorId = userId;

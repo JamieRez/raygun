@@ -60,27 +60,38 @@ function addNewIdea(idea){
 
   //Clicking on an idea, goes to the idea editor
   $(newIdeaElem).on("click", (e) => {
-    ideaBeingEdited = idea;
-    $('.editorIdeasList').css({
-      transform : "translate3d(-750px, 0px, 0px)"
-    })
-    $('.editIdeaContainer').css({
-      display : "flex"
-    })
-    setTimeout(() => {
-      $('.editIdeaContainer').css({
-        transform : "translate3d(0px, 0px, 0px)"
-      })
-      $('.editIdeaName').text(idea.name);
-      $('.editIdeaCreator').text("Created by: " + idea.creatorName);
-      $('.editIdeaDesc').text(idea.desc);
-    }, 10);
-
-    setTimeout(() => {
+    if(!inDeleteMode){
+      ideaBeingEdited = idea;
       $('.editorIdeasList').css({
-        display : "none"
+        transform : "translate3d(-750px, 0px, 0px)"
       })
-    }, 20)
+      $('.editIdeaContainer').css({
+        display : "flex"
+      })
+      setTimeout(() => {
+        $('.editIdeaContainer').css({
+          transform : "translate3d(0px, 0px, 0px)"
+        })
+        $('.editIdeaName').text(idea.name);
+        $('.editIdeaCreator').text("Created by: " + idea.creatorName);
+        $('.editIdeaDesc').text(idea.desc);
+      }, 10);
+
+      setTimeout(() => {
+        $('.editorIdeasList').css({
+          display : "none"
+        })
+      }, 20)
+    }else{
+      //Delete this idea
+      let thisIdeaGun = raygun.get(`idea/${idea.id}`);
+      usergun.get('idea').unset(thisIdeaGun);
+      raygun.get('dimension/' + dimBeingEdited.id).get('idea').unset(thisIdeaGun);
+      raygun.get('idea').unset(thisIdeaGun);
+      thisIdeaGun.put(null, () => {
+        $(newIdeaElem).remove();
+      });
+    }
   });
 
   raygun.get(`idea/${idea.id}`).get('name').on((newName) => {
@@ -98,10 +109,11 @@ function addNewIdea(idea){
 
 function loadDimensionIdeas(){
   let dimGun = raygun.get('dimension/' + dimBeingEdited.id);
-  dimGun.get('idea').map().once((idea) => {
-    if(!loadedIdeas[idea.id]){
+  dimGun.get('idea').map().on((idea) => {
+    if(idea && !loadedIdeas[idea.id]){
       loadedIdeas[idea.id] = idea;
-      let thisIdea = new Idea(idea)
+      let thisIdea = new Idea(idea);
+      thisIdea.getData();
       addNewIdea(thisIdea)
     }
   })
@@ -161,11 +173,10 @@ $(document).ready(() => {
   //Click on Make Thing Button makes a new thing in this dimension
   $('.editIdeaMakeThingBtn').on('click', () => {
     let newThing = new Thing();
-    let newThingGun = raygun.get('thing/' + newThing.id).put(newThing, () => {
-      usergun.get('thing').set(newThingGun);
-      raygun.get('dimension/' + dimBeingEdited.id).get('thing').set(newThingGun);
-      raygun.get('thing').set(newThingGun);
-    })
+    let newThingGun = raygun.get('thing/' + newThing.id).put(newThing);
+    usergun.get('thing').set(newThingGun);
+    raygun.get('dimension/' + dimBeingEdited.id).get('things').set(newThingGun);
+    raygun.get('thing').set(newThingGun);
   })
 
 

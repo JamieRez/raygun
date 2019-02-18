@@ -4,6 +4,7 @@ window.Thing = class {
     if(thing){
       this.id = thing.id || UUID();
       this.name = thing.name || ideaBeingEdited.name;
+      this.data = thing.data || ideaBeingEdited.data;
       let userId = $('#userId').text();
       let username = $('#username').text();
       this.creatorId = thing.creatorId || userId;
@@ -12,9 +13,11 @@ window.Thing = class {
       this.dimension = thing.dimension || dimBeingEdited.id
       this.ideaId = thing.ideaId || ideaBeingEdited.id;
       this.ideaClassName = thing.ideaClassName || ideaBeingEdited.className;
+      this.exists = thing.exists || true;
     }else{
       this.id = UUID();
       this.name = ideaBeingEdited.name;
+      this.data = ideaBeingEdited.data;
       let userId = $('#userId').text();
       let username = $('#username').text();
       this.creatorId = userId;
@@ -23,6 +26,7 @@ window.Thing = class {
       this.dimension = dimBeingEdited.id;
       this.ideaId = ideaBeingEdited.id;
       this.ideaClassName = ideaBeingEdited.className;
+      this.exists = true;
     }
   }
 
