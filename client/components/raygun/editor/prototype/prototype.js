@@ -113,6 +113,40 @@ function prototypeToEditor(){
 }
 
 
+function codeEditorToDataValues(){
+  $('#protoCodeEditor').css('display', 'none');
+  $('.protoCodeEditDataBtn').css('display', 'none');
+  $('.protoCodeDataValues').css('display', 'flex');
+  $('.protoCodeEditCodeBtn').css('display', 'flex');
+}
+
+function dataValuesToCodeEditor(){
+  $('.protoCodeDataValues').css('display', 'none');
+  $('.protoCodeEditCodeBtn').css('display', 'none');
+  $('#protoCodeEditor').css('display', 'flex');
+  $('.protoCodeEditDataBtn').css('display', 'flex');
+}
+
+function addNewDataValue(dataValue){
+  let newDataValue = document.createElement('div');
+  newDataValue.classList.add('dataValue');
+
+  let newDataValueKey = document.createElement('div');
+  newDataValueKey.classList.add('dataValueKey');
+  newDataValueKey.textContent = 'dataKey';
+  newDataValueKey.contentEditable = true;
+
+  let newDataValueValue = document.createElement('div');
+  newDataValueValue.classList.add('dataValueValue');
+  newDataValueValue.textContent = 'dataValue';
+  newDataValueValue.contentEditable = true;
+
+  $(newDataValue).append(newDataValueKey);
+  $(newDataValue).append(newDataValueValue);
+  $('.dataValuesList').append(newDataValue);
+}
+
+
 $(document).ready(() => {
 
   //Initialize Code Editor
@@ -139,8 +173,20 @@ $(document).ready(() => {
     prototypeToEditor();
   })
 
+  $('.protoCodeEditDataBtn').on('click', () => {
+    codeEditorToDataValues();
+  })
+
+  $('.protoCodeEditCodeBtn').on('click', () => {
+    dataValuesToCodeEditor();
+  })
+
   $('.protoCodeRunBtn').on('click', () => {
     runCodeInIdeaEditor();
+  })
+
+  $('.createNewDataValueBtn').on('click', () => {
+    addNewDataValue();
   })
 
   $('#protoCodeEditor').on('keydown', (e) => {

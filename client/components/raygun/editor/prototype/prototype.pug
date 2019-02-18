@@ -6,9 +6,21 @@ script(src='/editor/prototype/prototype.js')
     .protoCodeNav
       .protoCodeNavBackBtn
         .protoCodeNavBackBtnLabel Back to Dimension
+      .protoCodeEditDataBtn
+        .protoCodeEditDataBtnLabel Edit Data Values
+      .protoCodeEditCodeBtn
+        .protoCodeEditCodeBtnLabel Edit Code
       .protoCodeRunBtn
         .protoCodeRunBtnLabel Build (Shift + Enter)
     #protoCodeEditor.ace-tomorrow-night-eighties
-    
-    
+    .protoCodeDataValues
+      .dataValuesLabel Data Values
+      .dataValuesDesc These will be the default values you can access in your code with "this.data.dataKey"
+      .createNewDataValueBtn
+        .createNewDataValueBtnLabel Create New Data Value
+      .dataValuesList
+        //- .dataValue
+        //-   .dataValueKey buttonText
+        //-   .dataValueValue Click here
+  
   .prototypePreview

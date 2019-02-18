@@ -29,7 +29,7 @@
   width : 100%;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .protoCodeNavBackBtn{
@@ -43,6 +43,7 @@
   border-radius : 15px;
   padding: 5px 10px;
   cursor : pointer;
+  text-align: center;
 }
 
 #protoCodeEditor{
@@ -52,6 +53,125 @@
   border : 1px solid #fc70bf;
   padding: 5px;
 }
+
+.protoCodeDataValues{
+  width : 90%;
+  height : 75%;
+  margin-top: 5px;
+  border : 2px solid #fc70bf;
+  padding: 5px;
+  display : none;
+  color : white;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dataValuesLabel{
+  font-size: 30px;
+  text-align: center;
+  margin-top: : 10px;
+}
+
+.dataValuesDesc{
+  font-size: 16px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.createNewDataValueBtn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border : 2px solid #fdfd00;
+  color : #fdfd00;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  padding : 5px 8px;
+  font-size: 16px;
+  cursor : pointer;
+}
+
+.dataValuesList {
+  border-top: 1px solid #fc70bf;
+  margin-top: 5px;
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow-y: scroll;
+  width : 90%;
+  padding: 10px;
+  margin-left: 10px;
+}
+
+
+.dataValue{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.dataValueKey{
+  color : #fc70bf;
+  font-size: 14px;
+  border : 2px solid #fc70bf;
+  border-radius: 20px;
+  border-right: 2px solid #fdfd00;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  padding: 5px 8px;
+}
+
+.dataValueValue{
+  padding: 5px 8px;
+  color : #2ed17c;
+  font-size: 14px;
+  border : 2px solid #2ed17c;
+  border-radius: 20px;
+  border-left: 2px solid #fdfd00;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+
+.protoCodeEditDataBtn{
+  margin: 10px;
+  margin-left: 22px;
+  margin-right: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color : #fdfd00;
+  border : 2px solid #fdfd00;
+  border-radius : 15px;
+  padding: 5px 25px;
+  background-color: #211119;
+  cursor : pointer;
+  text-align: center;
+
+}
+
+
+.protoCodeEditCodeBtn{
+  margin: 10px;
+  margin-left: 40px;
+  margin-right: 40px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  color : #fdfd00;
+  border : 2px solid #fdfd00;
+  border-radius : 15px;
+  padding: 5px 25px;
+  background-color: #211119;
+  cursor : pointer;
+  text-align: center;
+}
+
 
 .protoCodeRunBtn{
   margin: 10px;
@@ -65,6 +185,8 @@
   padding: 5px 25px;
   background-color: #211119;
   cursor : pointer;
+  text-align: center;
+
 }
 
 .protoCodeRunBtn:hover{
