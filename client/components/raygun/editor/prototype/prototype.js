@@ -38,6 +38,12 @@ function saveCodeInEditor(cb){
 
   let ideaClassData = createClassCode(ideaBeingEdited);
 
+  raygun.get(`idea/${ideaBeingEdited.id}`).get('data').once().map().once((dataValue) => {
+    if(dataValue && dataValue.exists && !ideaBeingEdited.data[dataValue.key]){
+      ideaBeingEdited.data[dataValue.key] = dataValue.value;
+    }
+  })
+
   ideaBeingEdited.classCode= ideaClassData.classCode;
   ideaBeingEdited.className = ideaClassData.className;
   raygun.get(`idea/${ideaBeingEdited.id}`).get('className').put(ideaClassData.className);
@@ -60,7 +66,8 @@ function runCodeInIdeaEditor(){
         id : "proto-" + idea.className,
         dimension : 'prototype',
         ideaId : idea.id,
-        ideaClassName : idea.className
+        ideaClassName : idea.className,
+        data : idea.data
       }
       let protoThing = new Thing(protoThingData);
       protoThing.render();
@@ -161,7 +168,10 @@ function addNewDataValue(dataValue){
   $(newDataValueKey).on('blur', () => {
     let newKey = $(newDataValueKey).text();
     if(newKey.length > 0){
-      raygun.get(`ideaData/${dataValue.id}`).get('key').put(newKey)
+      raygun.get(`ideaData/${dataValue.id}`).get('key').put(newKey);
+      ideaBeingEdited.data[dataValue.key] = null;
+      ideaBeingEdited.data[newKey] = dataValue.value;
+      runCodeInIdeaEditor();
     }
   })
 
@@ -169,7 +179,9 @@ function addNewDataValue(dataValue){
   $(newDataValueValue).on('blur', () => {
     let newValue = $(newDataValueValue).text();
     if(newValue.length > 0){
-      raygun.get(`ideaData/${dataValue.id}`).get('value').put(newValue)
+      raygun.get(`ideaData/${dataValue.id}`).get('value').put(newValue);
+      ideaBeingEdited.data[dataValue.key] = newValue;
+      runCodeInIdeaEditor();
     }
   })
 
