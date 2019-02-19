@@ -1,5 +1,6 @@
 window.ideaEditor = null;
 window.ideaEditorDimension = null;
+window.loadedIdeaData = {};
 
 function createClassCode(idea){
   let ideaClassName = idea.name;
@@ -96,7 +97,9 @@ function prototypeToEditor(){
       dimBeingEdited.ideas = {};
       dimBeingEdited.things = {};
       loadedIdeas = {};
+      loadedIdeaData = {};
       loadedThings = {};
+      $('.dataValue').remove();
       $('.ideaBtn').remove();
       $('.thingOptionBtn').remove();
       $('.editorDimPreview').empty();
@@ -112,6 +115,14 @@ function prototypeToEditor(){
   }, 250);
 }
 
+function loadIdeaData(){
+  raygun.get(`idea/${ideaBeingEdited.id}`).get('data').map().on((dataValue) => {
+    if(dataValue && dataValue.exists && !loadedIdeaData[dataValue.id]){
+      loadedIdeaData[dataValue.id] = dataValue;
+      addNewDataValue(dataValue)
+    }
+  })
+}
 
 function codeEditorToDataValues(){
   $('#protoCodeEditor').css('display', 'none');
@@ -130,20 +141,46 @@ function dataValuesToCodeEditor(){
 function addNewDataValue(dataValue){
   let newDataValue = document.createElement('div');
   newDataValue.classList.add('dataValue');
+  newDataValue.id = dataValue.id;
 
   let newDataValueKey = document.createElement('div');
   newDataValueKey.classList.add('dataValueKey');
-  newDataValueKey.textContent = 'dataKey';
+  newDataValueKey.textContent = dataValue.key;
   newDataValueKey.contentEditable = true;
 
   let newDataValueValue = document.createElement('div');
   newDataValueValue.classList.add('dataValueValue');
-  newDataValueValue.textContent = 'dataValue';
+  newDataValueValue.textContent = dataValue.value;
   newDataValueValue.contentEditable = true;
 
   $(newDataValue).append(newDataValueKey);
   $(newDataValue).append(newDataValueValue);
   $('.dataValuesList').append(newDataValue);
+
+  //Update Data Key
+  $(newDataValueKey).on('blur', () => {
+    let newKey = $(newDataValueKey).text();
+    if(newKey.length > 0){
+      raygun.get(`ideaData/${dataValue.id}`).get('key').put(newKey)
+    }
+  })
+
+  //Update Data Value
+  $(newDataValueValue).on('blur', () => {
+    let newValue = $(newDataValueValue).text();
+    if(newValue.length > 0){
+      raygun.get(`ideaData/${dataValue.id}`).get('value').put(newValue)
+    }
+  })
+
+  //Delete
+  $(newDataValue).on('click', (e) => {
+    if(inDeleteMode){
+      raygun.get(`ideaData/${dataValue.id}`).get('exists').put(false, () => {
+        $(newDataValue).remove();
+      });
+    }
+  });
 }
 
 
@@ -186,7 +223,14 @@ $(document).ready(() => {
   })
 
   $('.createNewDataValueBtn').on('click', () => {
-    addNewDataValue();
+    let newIdeaData = {
+      id : UUID(),
+      key : "dataKey",
+      value : "dataValue",
+      exists : true
+    }
+    let newIdeaDataGun = raygun.get(`ideaData/${newIdeaData.id}`).put(newIdeaData);
+    raygun.get(`idea/${ideaBeingEdited.id}`).get('data').set(newIdeaDataGun);
   })
 
   $('#protoCodeEditor').on('keydown', (e) => {
@@ -197,6 +241,6 @@ $(document).ready(() => {
       e.preventDefault();
       runCodeInIdeaEditor()
     }
-  })
+  });
 
 })

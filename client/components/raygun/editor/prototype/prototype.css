@@ -58,7 +58,7 @@
   width : 90%;
   height : 75%;
   margin-top: 5px;
-  border : 2px solid #fc70bf;
+  border : 2px solid #3ce3f1;
   padding: 5px;
   display : none;
   color : white;
@@ -83,8 +83,8 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  border : 2px solid #fdfd00;
-  color : #fdfd00;
+  border : 2px solid #3ce3f1;
+  color : #3ce3f1;
   margin-top: 15px;
   margin-bottom: 5px;
   padding : 5px 8px;
@@ -93,7 +93,7 @@
 }
 
 .dataValuesList {
-  border-top: 1px solid #fc70bf;
+  border-top: 1px solid #3ce3f1;
   margin-top: 5px;
   justify-content: center;
   display: flex;
@@ -120,21 +120,25 @@
   font-size: 14px;
   border : 2px solid #fc70bf;
   border-radius: 20px;
-  border-right: 2px solid #fdfd00;
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
+  border-right: 2px solid #fc70bf;
   padding: 5px 8px;
+  outline: none;
+  cursor: text;
 }
 
 .dataValueValue{
+  outline: none;
   padding: 5px 8px;
   color : #2ed17c;
   font-size: 14px;
   border : 2px solid #2ed17c;
   border-radius: 20px;
-  border-left: 2px solid #fdfd00;
+  border-left: 0px solid white;
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
+  cursor: text;
 }
 
 
@@ -145,8 +149,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color : #fdfd00;
-  border : 2px solid #fdfd00;
+  color : #3ce3f1;
+  border : 2px solid #3ce3f1;
   border-radius : 15px;
   padding: 5px 25px;
   background-color: #211119;
@@ -163,8 +167,8 @@
   display: none;
   justify-content: center;
   align-items: center;
-  color : #fdfd00;
-  border : 2px solid #fdfd00;
+  color : #3ce3f1;
+  border : 2px solid #3ce3f1;
   border-radius : 15px;
   padding: 5px 25px;
   background-color: #211119;

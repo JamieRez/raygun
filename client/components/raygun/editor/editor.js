@@ -34,7 +34,6 @@ $(document).ready(() => {
 
   $(window).on("keydown", (e) => {
     if(currentRaygunScreen == 'editor' && e.keyCode == 192){
-      console.log("Ay")
       enterDimensionInEditor();
     }
     else if(e.keyCode == 192 && currentRaygunScreen == 'dimension'){
@@ -53,6 +52,21 @@ $(document).ready(() => {
         borderColor : "#c76a6a",
         color : "#c76a6a"
       })
+    }else if(currentRaygunScreen == 'prototype' && e.keyCode == 70){
+      inDeleteMode = true;
+      $('.dataValueKey').css({
+        borderColor : "#c76a6a",
+        color : "#c76a6a",
+        cursor : 'pointer'
+      })
+      $('.dataValueValue').css({
+        borderColor : "#c76a6a",
+        color : "#c76a6a",
+        cursor : 'pointer'
+      })
+      $('.dataValue').css('cursor', 'pointer');
+      $('.dataValueKey').attr('contentEditable', false);
+      $('.dataValueValue').attr('contentEditable', false);
     }
   })
 
@@ -67,6 +81,21 @@ $(document).ready(() => {
         borderColor : "#3ea26e",
         color : "#2ed17c"
       })
+    }else if(currentRaygunScreen == 'prototype' && e.keyCode == 70){
+      inDeleteMode = false;
+      $('.dataValueKey').css({
+        borderColor : '#fc70bf',
+        color : '#fc70bf',
+        cursor : 'text'
+      });
+      $('.dataValueValue').css({
+        borderColor : '#2ed17c',
+        color : '#2ed17c',
+        cursor : 'text'
+      })
+      $('.dataValue').css('cursor', 'default');
+      $('.dataValueKey').attr('contentEditable', true);
+      $('.dataValueValue').attr('contentEditable', true);
     }
   })
 
