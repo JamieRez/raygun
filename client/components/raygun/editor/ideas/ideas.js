@@ -116,7 +116,6 @@ function loadDimensionIdeas(){
     if(idea && !loadedIdeas[idea.id]){
       loadedIdeas[idea.id] = idea;
       let thisIdea = new Idea(idea);
-      thisIdea.getData();
       addNewIdea(thisIdea)
     }
   })

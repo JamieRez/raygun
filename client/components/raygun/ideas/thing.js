@@ -42,9 +42,20 @@ window.Thing = class {
       }else{
         $('#prototype').append(this.element);
       }
-      eval(`
-        new ${thisIdea.className}(thisThing).build();
-      `)
+
+      //Load Thing Data
+      let loadedDataCount = 0;
+      raygun.get(`idea/${this.ideaId}`).get('data').once().map().once((dataValue) => {
+        if(dataValue && dataValue.exists && !this.data[dataValue.key]){
+          loadedDataCount += 1;
+          this.data[dataValue.key] = dataValue.value;
+          if(loadedDataCount == thisIdea.dataCount){
+            eval(`
+              new ${thisIdea.className}(thisThing).build();
+            `)
+          }
+        }
+      })
     })
   }
 

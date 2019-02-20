@@ -31,17 +31,13 @@ window.Idea = class {
     }
   }
 
-  getData(){
-    raygun.get(`idea/${this.id}`).get('data').once((data) => {
-      this.data = data || {};
-    })
-  }
-
   constructor(idea){
     if(idea){
       this.id = idea.id || UUID();
       this.name = idea.name || "Untitled Idea";
       this.desc = idea.desc || "This is an idea!";
+      this.data = idea.data;
+      this.dataCount = idea.dataCount || 0;
       let userId = $('#userId').text();
       let username = $('#username').text();
       this.creatorId = idea.creatorId || userId;
@@ -56,6 +52,7 @@ window.Idea = class {
       this.name = "Untitled Idea";
       this.desc = "This is an idea!";
       this.data = {};
+      this.dataCount = 0;
       let userId = $('#userId').text();
       let username = $('#username').text();
       this.creatorId = userId;

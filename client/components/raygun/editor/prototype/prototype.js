@@ -189,6 +189,8 @@ function addNewDataValue(dataValue){
   $(newDataValue).on('click', (e) => {
     if(inDeleteMode){
       raygun.get(`ideaData/${dataValue.id}`).get('exists').put(false, () => {
+        raygun.get(`idea/${ideaBeingEdited.id}`).get('dataCount').put(ideaBeingEdited.dataCount - 1)
+        ideaBeingEdited.dataCount -= 1;
         $(newDataValue).remove();
       });
     }
@@ -243,6 +245,8 @@ $(document).ready(() => {
     }
     let newIdeaDataGun = raygun.get(`ideaData/${newIdeaData.id}`).put(newIdeaData);
     raygun.get(`idea/${ideaBeingEdited.id}`).get('data').set(newIdeaDataGun);
+    raygun.get(`idea/${ideaBeingEdited.id}`).get('dataCount').put(ideaBeingEdited.dataCount + 1);
+    ideaBeingEdited.dataCount += 1;
   })
 
   $('#protoCodeEditor').on('keydown', (e) => {
