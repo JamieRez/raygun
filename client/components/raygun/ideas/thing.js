@@ -3,11 +3,13 @@ window.Thing = class {
   createThingData(cb){
     let loadedIdeaData = 0;
     let thisData = this.data;
+    let thisDataFromGun = this.dataFromGun;
     let thisId = this.id;
     let thisIdeaId = this.ideaId;
+    let seenData = {};
     raygun.get(`idea/${thisIdeaId}`).get('data').once().map().once((dataValue) => {
-      if(dataValue && dataValue.exists && !thisData[dataValue.key]){
-        thisData[dataValue.key] = dataValue.value;
+      if(dataValue && dataValue.exists && !seenData[dataValue.key]){
+        seenData[dataValue.key] = true;
         //Create a raygun for each data value from the idea
         let thisThingData = {
           id : UUID(),
@@ -32,6 +34,8 @@ window.Thing = class {
       this.id = thing.id || UUID();
       this.name = thing.name || ideaBeingEdited.name;
       this.data = thing.data || {};
+      this.dataFromGun = thing.dataFromGun || {};
+      this.dataCount = thing.dataCount || ideaBeingEdited.dataCount;
       let userId = $('#userId').text();
       let username = $('#username').text();
       this.creatorId = thing.creatorId || userId;
@@ -45,6 +49,8 @@ window.Thing = class {
       this.id = UUID();
       this.name = ideaBeingEdited.name;
       this.data = {};
+      this.dataFromGun = {};
+      this.dataCount = ideaBeingEdited.dataCount;
       let userId = $('#userId').text();
       let username = $('#username').text();
       this.creatorId = userId;
@@ -57,10 +63,11 @@ window.Thing = class {
     }
   }
 
-  render(){
+  render(dataIsAlreadyLoaded=false){
     let thisThing = this;
     let thisDimensionId = this.dimension;
     let thisData = this.data;
+    let thisDataFromGun = this.dataFromGun;
     let thisId = this.id;
     this.element = document.createElement('div');
     this.element.id = this.ideaClassName + this.id;
@@ -72,19 +79,25 @@ window.Thing = class {
         $('#prototype').append(this.element);
       }
       //Load Thing Data
-      let loadedDataCount = 0;
-      raygun.get(`thing/${thisId}`).get('data').once().map().once((dataValue) => {
-        if(dataValue && dataValue.exists && !thisData[dataValue.key]){
-          console.log(dataValue);
-          loadedDataCount += 1;
-          thisData[dataValue.key] = dataValue.value;
-          if(loadedDataCount == thisIdea.dataCount){
-            eval(`
-              new ${thisIdea.className}(thisThing).build();
-            `)
+      if(!dataIsAlreadyLoaded){
+        let loadedDataCount = 0;
+        raygun.get(`thing/${thisId}`).get('data').once().map().once((dataValue) => {
+          if(dataValue && dataValue.exists && !thisData[dataValue.key]){
+            loadedDataCount += 1;
+            thisData[dataValue.key] = dataValue.value;
+            thisDataFromGun[dataValue.id] = dataValue;
+            if(loadedDataCount == thisIdea.dataCount){
+              eval(`
+                new ${thisIdea.className}(thisThing).build();
+              `)
+            }
           }
-        }
-      })
+        })
+      }else{
+        eval(`
+          new ${thisIdea.className}(thisThing).build();
+        `)
+      }
     })
   }
 

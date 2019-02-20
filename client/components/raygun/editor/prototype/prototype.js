@@ -70,7 +70,7 @@ function runCodeInIdeaEditor(){
         data : idea.data
       }
       let protoThing = new Thing(protoThingData);
-      protoThing.render();
+      protoThing.render(true);
     });
   } catch (e) {
     console.log(e.message);
@@ -110,6 +110,9 @@ function prototypeToEditor(){
       $('.ideaBtn').remove();
       $('.thingOptionBtn').remove();
       $('.editorDimPreview').empty();
+      $('.thingDataValuesList').empty();
+      $('.editorThingsEditor').css('display', 'none');
+      $('.editorThingsList').css('display', 'flex');
       $(dimBeingEdited.element).remove();
       dimBeingEdited.renderAt($('body')[0]);
       $(dimBeingEdited.element).css({

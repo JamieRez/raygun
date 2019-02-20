@@ -44,3 +44,106 @@
 .thingOptionBtn:hover{
   background-color: #d9fae9;
 }
+
+.editorThingsEditor{
+  display: none;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow-y: scroll;
+  padding: 10px;
+  width : 90%;
+}
+
+.thingEditorBackBtn{
+  width : 20px;
+  height : 20px;
+  border : 2px solid #3ea26e;
+  border-radius: 15px;
+  padding : 5px 20px;
+  margin-right : 10px;
+  margin-top: 3px;
+  cursor: pointer;
+}
+
+.thingEditorName{
+  font-size: 16px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.thingEditorNameKey{
+  text-align: center;
+  border : 2px solid #3ea26e;
+  border-radius: 20px;
+  padding: 5px 15px;
+  padding-right: 10px;
+  border-right: 0px solid #fa73be;
+  color: #2ed17c;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.thingEditorNameValue{
+  text-align: center;
+  border : 2px solid #fa73be;
+  border-radius: 20px;
+  cursor: text;
+  padding: 5px 15px;
+  padding-left: 10px;
+  border-left: 2px solid #fa73be;
+  color : #fa73be;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  outline: none;
+}
+
+.thingEditorNameValue:hover{
+  background-color: #ffeeee;
+}
+
+.thingDataValuesList{
+  display: flex;
+  flex-direction: row;
+}
+
+.thingDataValue{
+  font-size: 16px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.thingDataValueKey{
+  text-align: center;
+  border : 2px solid #3ea26e;
+  border-radius: 20px;
+  padding: 5px 15px;
+  padding-right: 10px;
+  border-right: 0px solid #fa73be;
+  color: #2ed17c;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.thingDataValueValue{
+  text-align: center;
+  border : 2px solid #fa73be;
+  border-radius: 20px;
+  cursor: text;
+  padding: 5px 15px;
+  padding-left: 10px;
+  border-left: 2px solid #fa73be;
+  color : #fa73be;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  outline: none;
+}
+
+.thingDataValueValue:hover{
+  background-color: #ffeeee;
+}

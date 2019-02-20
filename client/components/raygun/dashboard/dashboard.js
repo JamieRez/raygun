@@ -49,6 +49,9 @@ function changeToEditor(dim){
   $('.ideaBtn').remove();
   $('.thingOptionBtn').remove();
   $('.editorDimPreview').empty();
+  $('.thingDataValuesList').empty();
+  $('.editorThingsEditor').css('display', 'none');
+  $('.editorThingsList').css('display', 'flex');
   dim.renderAt('body');
   $(dim.element).css({
     transform : "perspective(500px) translate3d(575px, -100px, -500px)",
