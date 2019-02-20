@@ -1,10 +1,37 @@
 window.Thing = class {
 
+  createThingData(cb){
+    let loadedIdeaData = 0;
+    let thisData = this.data;
+    let thisId = this.id;
+    let thisIdeaId = this.ideaId;
+    raygun.get(`idea/${thisIdeaId}`).get('data').once().map().once((dataValue) => {
+      if(dataValue && dataValue.exists && !thisData[dataValue.key]){
+        thisData[dataValue.key] = dataValue.value;
+        //Create a raygun for each data value from the idea
+        let thisThingData = {
+          id : UUID(),
+          key : dataValue.key,
+          value : dataValue.value,
+          exists : true
+        }
+        let thisThingDataGun = raygun.get(`thingData/${thisThingData.id}`).put(thisThingData);
+        loadedIdeaData += 1;
+        raygun.get(`thing/${thisId}`).get('data').set(thisThingDataGun);
+        if(loadedIdeaData == ideaBeingEdited.dataCount){
+          if(cb && typeof cb == 'function'){
+            cb();
+          }
+        }
+      }
+    })
+  }
+
   constructor(thing){
     if(thing){
       this.id = thing.id || UUID();
       this.name = thing.name || ideaBeingEdited.name;
-      this.data = thing.data || ideaBeingEdited.data;
+      this.data = thing.data || {};
       let userId = $('#userId').text();
       let username = $('#username').text();
       this.creatorId = thing.creatorId || userId;
@@ -17,7 +44,7 @@ window.Thing = class {
     }else{
       this.id = UUID();
       this.name = ideaBeingEdited.name;
-      this.data = ideaBeingEdited.data;
+      this.data = {};
       let userId = $('#userId').text();
       let username = $('#username').text();
       this.creatorId = userId;
@@ -33,6 +60,8 @@ window.Thing = class {
   render(){
     let thisThing = this;
     let thisDimensionId = this.dimension;
+    let thisData = this.data;
+    let thisId = this.id;
     this.element = document.createElement('div');
     this.element.id = this.ideaClassName + this.id;
     this.element.classList.add("thing");
@@ -42,13 +71,13 @@ window.Thing = class {
       }else{
         $('#prototype').append(this.element);
       }
-
       //Load Thing Data
       let loadedDataCount = 0;
-      raygun.get(`idea/${this.ideaId}`).get('data').once().map().once((dataValue) => {
-        if(dataValue && dataValue.exists && !this.data[dataValue.key]){
+      raygun.get(`thing/${thisId}`).get('data').once().map().once((dataValue) => {
+        if(dataValue && dataValue.exists && !thisData[dataValue.key]){
+          console.log(dataValue);
           loadedDataCount += 1;
-          this.data[dataValue.key] = dataValue.value;
+          thisData[dataValue.key] = dataValue.value;
           if(loadedDataCount == thisIdea.dataCount){
             eval(`
               new ${thisIdea.className}(thisThing).build();

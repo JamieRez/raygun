@@ -177,8 +177,10 @@ $(document).ready(() => {
     let newThing = new Thing();
     let newThingGun = raygun.get('thing/' + newThing.id).put(newThing);
     usergun.get('thing').set(newThingGun);
-    raygun.get('dimension/' + dimBeingEdited.id).get('things').set(newThingGun);
     raygun.get('thing').set(newThingGun);
+    newThing.createThingData(() => {
+      raygun.get('dimension/' + dimBeingEdited.id).get('things').set(newThingGun);
+    });
   })
 
 
