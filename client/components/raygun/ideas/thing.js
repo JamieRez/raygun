@@ -7,23 +7,31 @@ window.Thing = class {
     let thisId = this.id;
     let thisIdeaId = this.ideaId;
     let seenData = {};
-    raygun.get(`idea/${thisIdeaId}`).get('data').once().map().once((dataValue) => {
-      if(dataValue && dataValue.exists && !seenData[dataValue.key]){
-        seenData[dataValue.key] = true;
-        //Create a raygun for each data value from the idea
-        let thisThingData = {
-          id : UUID(),
-          key : dataValue.key,
-          value : dataValue.value,
-          exists : true
-        }
-        let thisThingDataGun = raygun.get(`thingData/${thisThingData.id}`).put(thisThingData);
-        loadedIdeaData += 1;
-        raygun.get(`thing/${thisId}`).get('data').set(thisThingDataGun);
-        if(loadedIdeaData == ideaBeingEdited.dataCount){
-          if(cb && typeof cb == 'function'){
-            cb();
+    raygun.get(`idea/${thisIdeaId}`).get('dataCount').once((dataCount) => {
+      if(dataCount > 0){
+        raygun.get(`idea/${this.ideaId}`).get('data').map().once((dataValue) => {
+          if(dataValue && dataValue.exists && !seenData[dataValue.key]){
+            seenData[dataValue.key] = true;
+            //Create a raygun for each data value from the idea
+            let thisThingData = {
+              id : UUID(),
+              key : dataValue.key,
+              value : dataValue.value,
+              exists : true
+            }
+            let thisThingDataGun = raygun.get(`thingData/${thisThingData.id}`).put(thisThingData);
+            loadedIdeaData += 1;
+            raygun.get(`thing/${thisId}`).get('data').set(thisThingDataGun);
+            if(loadedIdeaData == ideaBeingEdited.dataCount){
+              if(cb && typeof cb == 'function'){
+                cb();
+              }
+            }
           }
+        })
+      }else{
+        if(cb && typeof cb == 'function'){
+          cb();
         }
       }
     })
@@ -35,7 +43,7 @@ window.Thing = class {
       this.name = thing.name || ideaBeingEdited.name;
       this.data = thing.data || {};
       this.dataFromGun = thing.dataFromGun || {};
-      this.dataCount = thing.dataCount || ideaBeingEdited.dataCount;
+      this.dataCount = thing.dataCount || 0;
       let userId = $('#userId').text();
       let username = $('#username').text();
       this.creatorId = thing.creatorId || userId;
@@ -67,6 +75,7 @@ window.Thing = class {
     let thisThing = this;
     let thisDimensionId = this.dimension;
     let thisData = this.data;
+    let thisDataCount = this.dataCount;
     let thisDataFromGun = this.dataFromGun;
     let thisId = this.id;
     this.element = document.createElement('div');
@@ -79,7 +88,7 @@ window.Thing = class {
         $('#prototype').append(this.element);
       }
       //Load Thing Data
-      if(!dataIsAlreadyLoaded){
+      if(!dataIsAlreadyLoaded && thisIdea.dataCount != 0){
         let loadedDataCount = 0;
         raygun.get(`thing/${thisId}`).get('data').once().map().once((dataValue) => {
           if(dataValue && dataValue.exists && !thisData[dataValue.key]){
