@@ -18,7 +18,7 @@ function openIdeaPrototypeEditor(){
     transform : "perspective(500px) translate3d(2075px, -100px, -500px)"
   })
   $('.prototype').css('display', 'flex');
-  $(ideaEditorDimension.element).empty();
+  $(ideaEditorDimension.element).children('.space').empty();
   loadedIdeas = {};
   loadedIdeaData = {};
   $('.dataValue').remove();

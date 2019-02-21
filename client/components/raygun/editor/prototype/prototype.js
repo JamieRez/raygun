@@ -60,7 +60,7 @@ function runCodeInIdeaEditor(){
   let codeInEditor = ideaEditor.getValue();
   try {
     saveCodeInEditor((idea) => {
-      $(ideaEditorDimension.element).empty();
+      $(ideaEditorDimension.element).children('.space').empty();
       eval(idea.classCode);
       let protoThingData = {
         id : "proto-" + idea.className,
@@ -215,12 +215,6 @@ $(document).ready(() => {
   ideaEditorDimension.id = "prototype";
   ideaEditorDimension.things = {};
   ideaEditorDimension.renderAt('.prototypePreview');
-  $(ideaEditorDimension.element).css({
-    display : "flex",
-    flexDirection : "column"
-    // justifyContent : "center",
-    // alignItems : "center"
-  })
 
   //Go back to editor on back button Click
   $('.protoCodeNavBackBtn').on('click', () => {
