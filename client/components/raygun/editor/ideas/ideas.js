@@ -88,12 +88,8 @@ function addNewIdea(idea){
     }else{
       //Delete this idea
       let thisIdeaGun = raygun.get(`idea/${idea.id}`);
-      usergun.get('idea').unset(thisIdeaGun);
       raygun.get('dimension/' + dimBeingEdited.id).get('idea').unset(thisIdeaGun);
-      raygun.get('idea').unset(thisIdeaGun);
-      thisIdeaGun.put(null, () => {
-        $(newIdeaElem).remove();
-      });
+      $(newIdeaElem).remove();
     }
   });
 
@@ -127,6 +123,7 @@ $(document).ready(() => {
   $('.newIdeaBtn').on("click", (e) => {
     let newIdea = new Idea();
     let newIdeaGun = raygun.get('idea/' + newIdea.id).put(newIdea, () => {
+      usergun.get(`idea/${newIdea.id}`).put(newIdea);
       usergun.get('idea').set(newIdeaGun);
       raygun.get('dimension/' + dimBeingEdited.id).get('idea').set(newIdeaGun);
       raygun.get('idea').set(newIdeaGun);

@@ -167,8 +167,17 @@ function addNewDataValue(dataValue){
   $(newDataValue).append(newDataValueValue);
   $('.dataValuesList').append(newDataValue);
 
+  $(newDataValueKey).on('focus', () => {
+    userIsTyping = true;
+  })
+
+  $(newDataValueValue).on('focus', () => {
+    userIsTyping = true;
+  })
+
   //Update Data Key
   $(newDataValueKey).on('blur', () => {
+    userIsTyping = false;
     let newKey = $(newDataValueKey).text();
     if(newKey.length > 0){
       raygun.get(`ideaData/${dataValue.id}`).get('key').put(newKey);
@@ -180,6 +189,7 @@ function addNewDataValue(dataValue){
 
   //Update Data Value
   $(newDataValueValue).on('blur', () => {
+    userIsTyping = false;
     let newValue = $(newDataValueValue).text();
     if(newValue.length > 0){
       raygun.get(`ideaData/${dataValue.id}`).get('value').put(newValue);
