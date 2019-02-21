@@ -61,6 +61,7 @@
   border-radius: 15px;
   padding : 5px 20px;
   margin-right : 10px;
+  margin-bottom: 10px;
   margin-top: 3px;
   cursor: pointer;
 }
@@ -72,6 +73,7 @@
   justify-content: center;
   align-items: center;
   margin-right: 10px;
+  margin-bottom: 10px;
 }
 
 .thingEditorNameKey{
@@ -107,6 +109,7 @@
 .thingDataValuesList{
   display: flex;
   flex-direction: row;
+  flex-wrap : wrap;
 }
 
 .thingDataValue{
@@ -116,6 +119,7 @@
   justify-content: center;
   align-items: center;
   margin-right: 10px;
+  margin-bottom: 10px;
 }
 
 .thingDataValueKey{
