@@ -28,12 +28,25 @@ window.Dimension = class {
       width : "100%",
       height : "100%",
       backgroundColor : "black",
-      display : "flex",
+      overflowY : "hidden",
+      overflowX : "hidden",
       transition : "transform 0.5s ease-in",
       transform : "perspective(500px) translate3d(0px, 0px, 0px)",
     })
+    let space = document.createElement('div');
+    space.id = 'space-' + this.id;
+    space.classList.add('space');
+    $(space).css({
+      backgroundColor : "black",
+      display : "flex",
+      flexWrap : "wrap",
+      overflowY : "hidden",
+      overflowX : "hidden",
+      transition : "transform 0.5s ease-in",
+      transform : "perspective(500px) translate3d(0px, 0px, 0px)",
+    })
+    $(this.element).append(space);
     $(parentElement).append(this.element);
-
   }
 
 }

@@ -83,9 +83,9 @@ window.Thing = class {
     this.element.classList.add("thing");
     raygun.get(`idea/${this.ideaId}`).once((thisIdea) => {
       if(thisDimensionId){
-        $(`#${thisDimensionId}`).append(this.element);
+        $(`#${thisDimensionId}`).find('.space').append(this.element);
       }else{
-        $('#prototype').append(this.element);
+        $('#prototype').find('.space').append(this.element);
       }
       //Load Thing Data
       if(!dataIsAlreadyLoaded && thisIdea.dataCount != 0){

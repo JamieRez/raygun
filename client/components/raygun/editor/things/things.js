@@ -64,6 +64,7 @@ function createNewThing(thing){
       let thisThingGun = raygun.get('thing/' + thing.id);
       thisThingGun.get('exists').put(false);
       $(`#thingOptionBtn-${thing.id}`).remove();
+      $(thing.element).remove();
     }
   })
 
