@@ -119,7 +119,7 @@ function prototypeToEditor(){
         transform : "perspective(500px) translate3d(575px, -100px, -500px)",
       })
       loadDimensionIdeas();
-      loadDimensionThings();
+      loadDimensionThings(true);
       changeToolbarColorsToDefault();
     }, 500)
   }, 250);

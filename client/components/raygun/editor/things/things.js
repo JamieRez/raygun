@@ -43,9 +43,9 @@ function openThingEditor(thing){
   }
 }
 
-function createNewThing(thing){
+function createNewThing(thing, thingHasData = false){
   //Add to dimension
-  thing.render();
+  thing.render(thingHasData);
   //Add to things list in editor
   let newThingOption = document.createElement('div');
   newThingOption.classList.add('thingOptionBtn');
@@ -70,13 +70,13 @@ function createNewThing(thing){
 
 }
 
-function loadDimensionThings(){
+function loadDimensionThings(thingsHaveData = false){
   let dimGun = raygun.get('dimension/' + dimBeingEdited.id);
   dimGun.get('things').map().on((thing) => {
     if(thing && thing.exists && !loadedThings[thing.id]){
       loadedThings[thing.id] = thing;
       let newThing = new Thing(thing);
-      createNewThing(newThing);
+      createNewThing(newThing, thingsHaveData);
     }
   })
 }
