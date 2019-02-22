@@ -122,11 +122,9 @@ $(document).ready(() => {
   //Add New Idea on newIdeaBtn click
   $('.newIdeaBtn').on("click", (e) => {
     let newIdea = new Idea();
-    let newIdeaGun = raygun.get('idea/' + newIdea.id).put(newIdea, () => {
-      usergun.get(`idea/${newIdea.id}`).put(newIdea);
-      usergun.get('idea').set(newIdeaGun);
+    let newIdeaGun = raygun.get(`idea/${newIdea.id}`).put((newIdea), () => {
+      raygun.get('idea').set(newIdea);
       raygun.get('dimension/' + dimBeingEdited.id).get('idea').set(newIdeaGun);
-      raygun.get('idea').set(newIdeaGun);
     })
   })
 
@@ -141,7 +139,6 @@ $(document).ready(() => {
     if($('.editIdeaDesc').text().length > 0){
       ideaBeingEdited.desc = $('.editIdeaDesc').text()
       raygun.get(`idea/${ideaBeingEdited.id}`).get('desc').put(ideaBeingEdited.desc);
-
     }
   })
 
@@ -173,7 +170,6 @@ $(document).ready(() => {
   $('.editIdeaMakeThingBtn').on('click', () => {
     let newThing = new Thing();
     let newThingGun = raygun.get('thing/' + newThing.id).put(newThing);
-    usergun.get('thing').set(newThingGun);
     raygun.get('thing').set(newThingGun);
     newThing.createThingData(() => {
       raygun.get('dimension/' + dimBeingEdited.id).get('things').set(newThingGun);
