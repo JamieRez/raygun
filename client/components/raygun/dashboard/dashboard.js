@@ -32,6 +32,7 @@ function changeToEditor(dim){
   loadedIdeas = {};
   loadedThings = {};
   currentRaygunScreen = "editor";
+  let thingsHaveData = dimBeingEdited ? true : false;
   //Change to Editor
   $('.dashboard').css({
     display : "none"
@@ -59,7 +60,7 @@ function changeToEditor(dim){
   })
   dimBeingEdited = dim;
   loadDimensionIdeas();
-  loadDimensionThings();
+  loadDimensionThings(thingsHaveData)
 }
 
 $(document).ready(()=> {

@@ -39,8 +39,6 @@ $(document).ready(() => {
       }
       else if(e.keyCode == 192 && currentRaygunScreen == 'dimension'){
         raygun.get(`dimension/${currentDimension.id}`).get('editors').map().once((editorId) => {
-          console.log(editorId);
-          console.log(thisUserId);
           if(thisUserId == editorId){
             escapeDimensionToRaygun();
           }
