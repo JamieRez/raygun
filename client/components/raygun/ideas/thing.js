@@ -3,6 +3,7 @@ window.Thing = class {
   getDataFromIdea(){
     let ideaData = ideaBeingEdited.data;
     this.data = {};
+    this.dataGun = ideaData;
     for(soul in ideaData){
       if(ideaData[soul] && ideaData[soul].exists){
         let newThingData = {
@@ -10,7 +11,7 @@ window.Thing = class {
           id : UUID(),
           key : ideaData[soul].key,
           value : ideaData[soul].value,
-          exists : ideaData[soul].exists
+          exists : ideaData[soul].exists,
         }
         this.data[newThingData.key] = newThingData.value;
         let thingDataGun = raygun.get(`thingData/${newThingData.id}`).put(newThingData, () => {
@@ -40,9 +41,9 @@ window.Thing = class {
       this.creatorName = thing.creatorName || username;
       this.isPrivate = thing.isPrivate || false;
       this.dimension = thing.dimension || dimBeingEdited.id
-      this.ideaId = thing.ideaId || ideaBeingEdited.id;
-      this.ideaSoul = thing.ideaSoul || ideaBeingEdited.soul;
-      this.ideaClassName = thing.ideaClassName || ideaBeingEdited.className;
+      this.ideaId = thing.ideaId || null;
+      this.ideaSoul = thing.ideaSoul || null;
+      this.ideaClassName = thing.ideaClassName || null;
       this.exists = thing.exists || true;
       this.dataGun = thing.dataGun || {};
     }else{
@@ -62,20 +63,13 @@ window.Thing = class {
     }
   }
 
-  render(dataIsAlreadyLoaded=false){
-    let thisThing = this;
-    let thisDimensionId = this.dimension;
-    let thisData = this.data;
-    let thisDataCount = this.dataCount;
-    let thisDataFromGun = this.dataFromGun;
-    let thisId = this.id;
-    let thisIdea = dimBeingEdited.ideas[this.ideaSoul] || ideaBeingEdited;
+  render(){
     this.element = document.createElement('div');
     this.element.id = this.ideaClassName + this.id;
     this.element.classList.add("thing");
-    $(`#${thisDimensionId}`).find('.space').append(this.element);
+    $(`#${this.dimension}`).find('.space').append(this.element);
     eval(`
-      new ${thisIdea.className}(thisThing).build();
+      new ${this.ideaClassName}(this).build();
     `)
   }
 

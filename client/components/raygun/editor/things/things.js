@@ -4,7 +4,7 @@ function openThingEditor(thing){
   $('.editorThingsList').css('display', 'none');
   $('.editorThingsEditor').css('display', 'flex');
   $('.thingEditorNameValue').text(thing.name);
-  let thingDataGun = thing.dataGun;
+  let thingDataGun = thing.dataGun || thing.data;
   let thingData = thing.data;
   for(soul in thingDataGun){
     if(thingDataGun[soul] && thingDataGun[soul].exists){

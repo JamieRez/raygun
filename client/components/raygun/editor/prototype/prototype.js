@@ -143,6 +143,8 @@ function dataValuesToCodeEditor(){
 }
 
 function addNewDataValue(dataValue){
+  ideaBeingEdited.data[dataValue.id] = dataValue;
+
   let newDataValue = document.createElement('div');
   newDataValue.classList.add('dataValue');
   newDataValue.id = dataValue.id;
@@ -174,9 +176,9 @@ function addNewDataValue(dataValue){
     userIsTyping = false;
     let newKey = $(newDataValueKey).text();
     if(newKey.length > 0){
+      dataValue.key = newKey;
       raygun.get(`ideaData/${dataValue.id}`).get('key').put(newKey);
-      ideaBeingEdited.data[dataValue.key] = null;
-      ideaBeingEdited.data[newKey] = dataValue.value;
+      ideaBeingEdited.data[dataValue.id] = dataValue;
       runCodeInIdeaEditor();
     }
   })
@@ -186,8 +188,9 @@ function addNewDataValue(dataValue){
     userIsTyping = false;
     let newValue = $(newDataValueValue).text();
     if(newValue.length > 0){
+      dataValue.value = newValue;
       raygun.get(`ideaData/${dataValue.id}`).get('value').put(newValue);
-      ideaBeingEdited.data[dataValue.key] = newValue;
+      ideaBeingEdited.data[dataValue.id] = dataValue;
       runCodeInIdeaEditor();
     }
   })
@@ -249,7 +252,6 @@ $(document).ready(() => {
     let newIdeaDataGun = raygun.get(`ideaData/${newIdeaData.id}`).put(newIdeaData);
     raygun.get(`idea/${ideaBeingEdited.id}`).get('data').set(newIdeaDataGun);
     raygun.get(`idea/${ideaBeingEdited.id}`).get('dataCount').put(ideaBeingEdited.dataCount + 1);
-    ideaBeingEdited.dataCount += 1;
   })
 
   $('#protoCodeEditor').on('keydown', (e) => {
