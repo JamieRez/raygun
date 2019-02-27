@@ -48,11 +48,15 @@ function addDimOption(dim){
 
 }
 
+//LOADING THE USER. THIS IS LIKE THE MOST IMPORTANT THING
 gun.on('auth', () => {
-  usergun.get('dimension').map().once((dim) => {
-    if(dim && dim.exists){
-      let thisDim = new Dimension(dim);
-      addDimOption(thisDim)
+  usergun.get('dimensions').load((dimensions) => {
+    let userDims = dimensions;
+    for(soul in userDims){
+      if(userDims[soul] && userDims[soul].exists){
+        let thisDim = new Dimension(userDims[soul]);
+        addDimOption(thisDim)
+      }
     }
   })
 })
@@ -112,9 +116,10 @@ $(document).ready(()=> {
   $('.dashNewDimensionBtn').on("click", (e) => {
     if(!inDeleteMode){
       let newDim = new Dimension();
+      addDimOption(newDim)
       let newDimGun = raygun.get('dimension/' + newDim.id).put(newDim, () => {
         newDimGun.get('editors').set(thisUserId);
-        usergun.get('dimension').set(newDimGun);
+        usergun.get('dimensions').set(newDimGun);
       });
     }
   })

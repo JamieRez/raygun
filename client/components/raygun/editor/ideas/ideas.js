@@ -62,7 +62,7 @@ function addNewIdea(idea){
   //Clicking on an idea, goes to the idea editor
   $(newIdeaElem).on("click", (e) => {
     if(!inDeleteMode){
-      ideaBeingEdited = dimBeingEdited.ideas[idea.soul];
+      ideaBeingEdited = dimBeingEdited.ideas[idea.soul] || ideaBeingEdited;
       $('.editorIdeasList').css({
         transform : "translate3d(-750px, 0px, 0px)"
       })
@@ -123,6 +123,7 @@ $(document).ready(() => {
     dimBeingEdited.ideas[newIdea.id] = newIdea;
     addNewIdea(newIdea);
     let newIdeaGun = raygun.get(`idea/${newIdea.id}`).put((newIdea), () => {
+      ideaBeingEdited = newIdea;
       raygun.get('idea').set(newIdea);
       raygun.get('dimension/' + dimBeingEdited.id).get('ideas').set(newIdeaGun);
     })

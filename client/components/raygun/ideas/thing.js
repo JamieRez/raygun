@@ -1,7 +1,7 @@
 window.Thing = class {
 
   getDataFromIdea(){
-    let ideaData = dimBeingEdited.ideas[this.ideaSoul].data;
+    let ideaData = ideaBeingEdited.data;
     this.data = {};
     for(soul in ideaData){
       if(ideaData[soul] && ideaData[soul].exists){
@@ -69,7 +69,7 @@ window.Thing = class {
     let thisDataCount = this.dataCount;
     let thisDataFromGun = this.dataFromGun;
     let thisId = this.id;
-    let thisIdea = dimBeingEdited.ideas[this.ideaSoul]
+    let thisIdea = dimBeingEdited.ideas[this.ideaSoul] || ideaBeingEdited;
     this.element = document.createElement('div');
     this.element.id = this.ideaClassName + this.id;
     this.element.classList.add("thing");
