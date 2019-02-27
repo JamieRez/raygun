@@ -1,7 +1,5 @@
 window.ideaBeingEdited = null;
 
-window.loadedIdeas = {};
-
 function openIdeaPrototypeEditor(){
   currentRaygunScreen = "prototype";
   //Move the editor windows out
@@ -19,8 +17,6 @@ function openIdeaPrototypeEditor(){
   })
   $('.prototype').css('display', 'flex');
   $(ideaEditorDimension.element).children('.space').empty();
-  loadedIdeas = {};
-  loadedIdeaData = {};
   $('.dataValue').remove();
   loadIdeaData();
   eval(ideaBeingEdited.classCode);
@@ -28,9 +24,11 @@ function openIdeaPrototypeEditor(){
     id : "proto-" + ideaBeingEdited.className,
     dimension : 'prototype',
     ideaId : ideaBeingEdited.id,
-    ideaClassName : ideaBeingEdited.className
+    ideaClassName : ideaBeingEdited.className,
+    dataGun : ideaBeingEdited.data
   }
   let protoThing = new Thing(protoThingData);
+  protoThing.loadData();
   protoThing.render();
   //Bring in the prototype scree
   setTimeout(() => {
@@ -64,7 +62,7 @@ function addNewIdea(idea){
   //Clicking on an idea, goes to the idea editor
   $(newIdeaElem).on("click", (e) => {
     if(!inDeleteMode){
-      ideaBeingEdited = idea;
+      ideaBeingEdited = dimBeingEdited.ideas[idea.soul];
       $('.editorIdeasList').css({
         transform : "translate3d(-750px, 0px, 0px)"
       })
@@ -88,7 +86,8 @@ function addNewIdea(idea){
     }else{
       //Delete this idea
       let thisIdeaGun = raygun.get(`idea/${idea.id}`);
-      raygun.get('dimension/' + dimBeingEdited.id).get('idea').unset(thisIdeaGun);
+      thisIdeaGun.get('exists').put(false);
+      raygun.get('dimension/' + dimBeingEdited.id).get('ideas').unset(thisIdeaGun);
       $(newIdeaElem).remove();
     }
   });
@@ -107,14 +106,13 @@ function addNewIdea(idea){
 }
 
 function loadDimensionIdeas(){
-  let dimGun = raygun.get('dimension/' + dimBeingEdited.id);
-  dimGun.get('idea').map().on((idea) => {
-    if(idea && !loadedIdeas[idea.id]){
-      loadedIdeas[idea.id] = idea;
-      let thisIdea = new Idea(idea);
-      addNewIdea(thisIdea)
+  let dimIdeas = dimBeingEdited.ideas;
+  for(soul in dimIdeas){
+    if(dimIdeas[soul] && dimIdeas[soul].exists){
+      dimIdeas[soul] = new Idea(dimIdeas[soul], soul);
+      addNewIdea(dimIdeas[soul]);
     }
-  })
+  }
 }
 
 $(document).ready(() => {
@@ -122,9 +120,11 @@ $(document).ready(() => {
   //Add New Idea on newIdeaBtn click
   $('.newIdeaBtn').on("click", (e) => {
     let newIdea = new Idea();
+    dimBeingEdited.ideas[newIdea.id] = newIdea;
+    addNewIdea(newIdea);
     let newIdeaGun = raygun.get(`idea/${newIdea.id}`).put((newIdea), () => {
       raygun.get('idea').set(newIdea);
-      raygun.get('dimension/' + dimBeingEdited.id).get('idea').set(newIdeaGun);
+      raygun.get('dimension/' + dimBeingEdited.id).get('ideas').set(newIdeaGun);
     })
   })
 
@@ -169,11 +169,12 @@ $(document).ready(() => {
   //Click on Make Thing Button makes a new thing in this dimension
   $('.editIdeaMakeThingBtn').on('click', () => {
     let newThing = new Thing();
+    dimBeingEdited.things[newThing.id] = newThing;
     let newThingGun = raygun.get('thing/' + newThing.id).put(newThing);
     raygun.get('thing').set(newThingGun);
-    newThing.createThingData(() => {
-      raygun.get('dimension/' + dimBeingEdited.id).get('things').set(newThingGun);
-    });
+    raygun.get('dimension/' + dimBeingEdited.id).get('things').set(newThingGun);
+    dimBeingEdited.things[newThing.id].getDataFromIdea();
+    createNewThing(dimBeingEdited.things[newThing.id])
   })
 
 

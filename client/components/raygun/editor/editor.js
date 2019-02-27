@@ -68,6 +68,12 @@ $(document).ready(() => {
         $('.dataValue').css('cursor', 'pointer');
         $('.dataValueKey').attr('contentEditable', false);
         $('.dataValueValue').attr('contentEditable', false);
+      }else if(currentRaygunScreen == 'dashboard' && e.keyCode == 70){
+        inDeleteMode = true;
+        $('.dashDimOption').css({
+          borderColor : "#c76a6a",
+          color : "#c76a6a"
+        })
       }
     }
   })
@@ -99,6 +105,12 @@ $(document).ready(() => {
         $('.dataValue').css('cursor', 'default');
         $('.dataValueKey').attr('contentEditable', true);
         $('.dataValueValue').attr('contentEditable', true);
+      }else if (currentRaygunScreen == 'dashboard' && e.keyCode == 70){
+        inDeleteMode = false;
+        $('.dashDimOption').css({
+          borderColor : '#3ea26e',
+          color : '#2ed17c'
+        })
       }
     }
   })

@@ -65,6 +65,7 @@
   width : 100px;
   height : 100px;
   border : 2px solid #3ea26e;
+  color : #2ed17c;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -79,5 +80,4 @@
 .dashDimOptionLabel{
   font-size: 18px;
   text-align: center;
-  color : #2ed17c;
 }

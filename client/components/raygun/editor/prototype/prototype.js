@@ -38,12 +38,6 @@ function saveCodeInEditor(cb){
 
   let ideaClassData = createClassCode(ideaBeingEdited);
 
-  raygun.get(`idea/${ideaBeingEdited.id}`).get('data').once().map().once((dataValue) => {
-    if(dataValue && dataValue.exists && !ideaBeingEdited.data[dataValue.key]){
-      ideaBeingEdited.data[dataValue.key] = dataValue.value;
-    }
-  })
-
   ideaBeingEdited.classCode= ideaClassData.classCode;
   ideaBeingEdited.className = ideaClassData.className;
   raygun.get(`idea/${ideaBeingEdited.id}`).get('className').put(ideaClassData.className);
@@ -67,9 +61,9 @@ function runCodeInIdeaEditor(){
         dimension : 'prototype',
         ideaId : idea.id,
         ideaClassName : idea.className,
-        data : idea.data
       }
       let protoThing = new Thing(protoThingData);
+      protoThing.getDataFromIdea();
       protoThing.render(true);
     });
   } catch (e) {
@@ -126,12 +120,12 @@ function prototypeToEditor(){
 }
 
 function loadIdeaData(){
-  raygun.get(`idea/${ideaBeingEdited.id}`).get('data').map().on((dataValue) => {
-    if(dataValue && dataValue.exists && !loadedIdeaData[dataValue.id]){
-      loadedIdeaData[dataValue.id] = dataValue;
-      addNewDataValue(dataValue)
+  let ideaData = ideaBeingEdited.data;
+  for(soul in ideaData){
+    if(ideaData[soul] && ideaData[soul].exists){
+      addNewDataValue(ideaData[soul]);
     }
-  })
+  }
 }
 
 function codeEditorToDataValues(){
@@ -248,8 +242,10 @@ $(document).ready(() => {
       id : UUID(),
       key : "dataKey",
       value : "dataValue",
-      exists : true
+      exists : true,
+      soul : null
     }
+    addNewDataValue(newIdeaData);
     let newIdeaDataGun = raygun.get(`ideaData/${newIdeaData.id}`).put(newIdeaData);
     raygun.get(`idea/${ideaBeingEdited.id}`).get('data').set(newIdeaDataGun);
     raygun.get(`idea/${ideaBeingEdited.id}`).get('dataCount').put(ideaBeingEdited.dataCount + 1);

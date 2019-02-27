@@ -11,7 +11,34 @@ function addDimOption(dim){
 
   //Clicking on Dimension option brings you the to editor
   $(newDimElem).on("click", (e) => {
-    changeToEditor(dim);
+    if(!inDeleteMode){
+      //Load the whole dimension
+      raygun.get(`dimension/${dim.id}`).load((dim) => {
+        let thisDim = new Dimension(dim);
+        changeToEditor(thisDim);
+      })
+    }else{
+      raygun.get(`dimension/${dim.id}`).get('exists').put(false);
+      $(newDimElem).remove();
+    }
+  })
+
+  $(newDimElem).on('mouseenter', (e) => {
+    if(inDeleteMode){
+      $(newDimElem).css({
+        backgroundColor : '#ffeeee'
+      })
+    }else{
+      $(newDimElem).css({
+        backgroundColor : '#d9fae9'
+      })
+    }
+  })
+
+  $(newDimElem).on('mouseleave', (e) => {
+    $(newDimElem).css({
+      backgroundColor : '#f0f0f0'
+    })
   })
 
   //Updates for this dim name affect the option box
@@ -23,16 +50,16 @@ function addDimOption(dim){
 
 gun.on('auth', () => {
   usergun.get('dimension').map().once((dim) => {
-    let thisDim = new Dimension(dim);
-    addDimOption(thisDim)
+    if(dim && dim.exists){
+      let thisDim = new Dimension(dim);
+      addDimOption(thisDim)
+    }
   })
 })
 
 function changeToEditor(dim){
-  loadedIdeas = {};
-  loadedThings = {};
+  dimBeingEdited = dim;
   currentRaygunScreen = "editor";
-  let thingsHaveData = dimBeingEdited ? true : false;
   //Change to Editor
   $('.dashboard').css({
     display : "none"
@@ -58,9 +85,8 @@ function changeToEditor(dim){
     transform : "perspective(500px) translate3d(575px, -100px, -500px)",
     boxShadow : "0px 0px 3px 3px #2ed17c"
   })
-  dimBeingEdited = dim;
   loadDimensionIdeas();
-  loadDimensionThings(thingsHaveData)
+  loadDimensionThings();
 }
 
 $(document).ready(()=> {
@@ -84,12 +110,13 @@ $(document).ready(()=> {
   })
 
   $('.dashNewDimensionBtn').on("click", (e) => {
-    let newDim = new Dimension();
-    let newDimGun = raygun.get('dimension/' + newDim.id).put(newDim, () => {
-      newDimGun.get('editors').set(thisUserId);
-      usergun.get('dimension').set(newDimGun);
-      changeToEditor(newDim);
-    });
+    if(!inDeleteMode){
+      let newDim = new Dimension();
+      let newDimGun = raygun.get('dimension/' + newDim.id).put(newDim, () => {
+        newDimGun.get('editors').set(thisUserId);
+        usergun.get('dimension').set(newDimGun);
+      });
+    }
   })
 
 })

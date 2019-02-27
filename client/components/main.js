@@ -1,4 +1,4 @@
-window.currentRaygunScreen = null;
+window.currentRaygunScreen = 'dashboard';
 let gun = Gun([`${window.location.href}gun`])
 window.raygun = gun.get('raygun');
 window.hostName = window.location.host;

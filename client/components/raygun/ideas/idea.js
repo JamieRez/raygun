@@ -31,9 +31,10 @@ window.Idea = class {
     }
   }
 
-  constructor(idea){
+  constructor(idea, soul = null){
     if(idea){
       this.id = idea.id || UUID();
+      this.soul = idea.soul || soul;
       this.name = idea.name || "Untitled Idea";
       this.desc = idea.desc || "This is an idea!";
       this.data = idea.data;
@@ -47,8 +48,10 @@ window.Idea = class {
       let classData = this.createClassCode()
       this.classCode = idea.classCode || classData.classCode;
       this.className = idea.className || classData.className;
+      this.exists = idea.exists || true;
     }else{
       this.id = UUID();
+      this.soul = soul;
       this.name = "Untitled Idea";
       this.desc = "This is an idea!";
       this.data = {};
@@ -62,6 +65,7 @@ window.Idea = class {
       let classData = this.createClassCode()
       this.classCode = classData.classCode;
       this.className = classData.className;
+      this.exists = true;
     }
   }
 

@@ -4,24 +4,28 @@ function openThingEditor(thing){
   $('.editorThingsList').css('display', 'none');
   $('.editorThingsEditor').css('display', 'flex');
   $('.thingEditorNameValue').text(thing.name);
-  let seenData = {};
-  let loadedThingCount = 0;
-  for(id in thing.dataFromGun){
-    let dataValue = thing.dataFromGun[id];
-    if(dataValue && dataValue.exists && !seenData[dataValue.key]){
-      seenData[dataValue.key] = true;
+  let thingDataGun = thing.dataGun;
+  let thingData = thing.data;
+  for(soul in thingDataGun){
+    if(thingDataGun[soul] && thingDataGun[soul].exists){
+
+      let thisKey = thingDataGun[soul].key;
+      let thisValue = thingDataGun[soul].value;
+      let thisId = thingDataGun[soul].id;
+      let thisSoul = soul;
+
       //Now we add the data value to the dom
       let thingDataValue = document.createElement('div');
       thingDataValue.classList.add('thingDataValue');
-      thingDataValue.id = dataValue.id;
+      thingDataValue.id = thisId;
 
       let thingDataValueKey = document.createElement('div');
       thingDataValueKey.classList.add('thingDataValueKey');
-      thingDataValueKey.textContent = dataValue.key;
+      thingDataValueKey.textContent = thisKey;
 
       let thingDataValueValue = document.createElement('div');
       thingDataValueValue.classList.add('thingDataValueValue');
-      thingDataValueValue.textContent = dataValue.value;
+      thingDataValueValue.textContent = thisValue;
       thingDataValueValue.contentEditable = true;
 
       $(thingDataValue).append(thingDataValueKey);
@@ -32,11 +36,11 @@ function openThingEditor(thing){
       $(thingDataValueValue).on('blur', () => {
         let newValue = $(thingDataValueValue).text();
         if(newValue.length > 0){
-          raygun.get(`thingData/${dataValue.id}`).get('value').put(newValue, () => {
-            thing.data[dataValue.key] = newValue;
-            $(thing.element).remove();
-            thing.render(true);
-          });
+          thing.data[thisKey] = newValue;
+          thing.dataGun[thisSoul].value = newValue;
+          $(thing.element).remove();
+          thing.render(true);
+          raygun.get(`thingData/${thingDataGun[thisSoul].id}`).get('value').put(newValue)
         }
       })
     }
@@ -45,7 +49,7 @@ function openThingEditor(thing){
 
 function createNewThing(thing, thingHasData = false){
   //Add to dimension
-  thing.render(thingHasData);
+  thing.render(true);
   //Add to things list in editor
   let newThingOption = document.createElement('div');
   newThingOption.classList.add('thingOptionBtn');
@@ -71,14 +75,14 @@ function createNewThing(thing, thingHasData = false){
 }
 
 function loadDimensionThings(thingsHaveData = false){
-  let dimGun = raygun.get('dimension/' + dimBeingEdited.id);
-  dimGun.get('things').map().on((thing) => {
-    if(thing && thing.exists && !loadedThings[thing.id]){
-      loadedThings[thing.id] = thing;
-      let newThing = new Thing(thing);
-      createNewThing(newThing, thingsHaveData);
+  let dimThings = dimBeingEdited.things;
+  for(id in dimThings){
+    if(dimThings[id] && dimThings[id].exists){
+      dimThings[id] = new Thing(dimThings[id]);
+      dimThings[id].loadData();
+      createNewThing(dimThings[id], true);
     }
-  })
+  }
 }
 
 $(document).ready(() => {

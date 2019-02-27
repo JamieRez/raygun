@@ -9,6 +9,9 @@ window.Dimension = class {
       this.creatorId = dim.creatorId || userId;
       this.creatorName = dim.creatorName || username;
       this.isPrivate = dim.isPrivate || false;
+      this.exists = dim.exists || true;
+      this.ideas = dim.ideas || {};
+      this.things = dim.things || {};
     }else{
       this.id = UUID();
       this.name = "Untitled Dimension";
@@ -17,6 +20,9 @@ window.Dimension = class {
       this.creatorId = userId
       this.creatorName = username;
       this.isPrivate = false;
+      this.exists = true;
+      this.ideas = {};
+      this.things = {};
     }
   }
 
