@@ -4,11 +4,12 @@ function openThingEditor(thing){
   $('.editorThingsList').css('display', 'none');
   $('.editorThingsEditor').css('display', 'flex');
   $('.thingEditorNameValue').text(thing.name);
-  let thingDataGun = thing.dataGun || thing.data;
+  let thingDataGun = thing.dataGun;
   let thingData = thing.data;
   for(soul in thingDataGun){
     if(thingDataGun[soul] && thingDataGun[soul].exists){
 
+      let thingData = thingDataGun[soul];
       let thisKey = thingDataGun[soul].key;
       let thisValue = thingDataGun[soul].value;
       let thisId = thingDataGun[soul].id;
@@ -38,9 +39,10 @@ function openThingEditor(thing){
         if(newValue.length > 0){
           thing.data[thisKey] = newValue;
           thing.dataGun[thisSoul].value = newValue;
+          let thingDataId = thing.dataGun[thisSoul].id;
           $(thing.element).remove();
           thing.render(true);
-          raygun.get(`thingData/${thingDataGun[thisSoul].id}`).get('value').put(newValue)
+          raygun.get(`thingData/${thingData.id}`).get('value').put(newValue)
         }
       })
     }

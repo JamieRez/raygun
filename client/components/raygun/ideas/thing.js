@@ -3,7 +3,6 @@ window.Thing = class {
   getDataFromIdea(){
     let ideaData = ideaBeingEdited.data;
     this.data = {};
-    this.dataGun = ideaData;
     for(soul in ideaData){
       if(ideaData[soul] && ideaData[soul].exists){
         let newThingData = {
@@ -14,6 +13,7 @@ window.Thing = class {
           exists : ideaData[soul].exists,
         }
         this.data[newThingData.key] = newThingData.value;
+        this.dataGun[newThingData.id] = newThingData;
         let thingDataGun = raygun.get(`thingData/${newThingData.id}`).put(newThingData, () => {
           raygun.get(`thing/${this.id}`).get('dataGun').set(thingDataGun);
         });
