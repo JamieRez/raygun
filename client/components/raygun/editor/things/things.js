@@ -72,6 +72,16 @@ function createNewThing(thing, thingHasData = false){
       $(`#thingOptionBtn-${thing.id}`).remove();
       $(thing.element).remove();
     }
+  });
+
+  //Change the name of a thing
+  $('.thingEditorNameValue').on('blur', () => {
+    let newName = $('.thingEditorNameValue').text();
+    if(newName.length > 0){
+      thing.name = newName;
+      newThingOptionLabel.textContent = newName;
+      raygun.get('thing/' + thing.id).get('name').put(newName);
+    }
   })
 
 }
@@ -93,7 +103,7 @@ $(document).ready(() => {
   $('.thingEditorBackBtn').on('click', () => {
     $('.editorThingsEditor').css('display', 'none');
     $('.editorThingsList').css('display', 'flex');
-    $('.thingDataValuesList').empty();
+    $('.thingDataValue').remove();
   })
 
 })

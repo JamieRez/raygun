@@ -81,7 +81,7 @@ function changeToEditor(dim){
   $('.ideaBtn').remove();
   $('.thingOptionBtn').remove();
   $('.editorDimPreview').empty();
-  $('.thingDataValuesList').empty();
+  $('.thingDataValue').remove();
   $('.editorThingsEditor').css('display', 'none');
   $('.editorThingsList').css('display', 'flex');
   dim.renderAt('body');

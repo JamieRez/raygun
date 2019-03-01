@@ -95,11 +95,6 @@ function prototypeToEditor(){
     setTimeout(() => {
       //Change toolbar label to be the dimension being worked on
       $('.toolbarLabel').text(dimBeingEdited.name);
-      dimBeingEdited.ideas = {};
-      dimBeingEdited.things = {};
-      loadedIdeas = {};
-      loadedIdeaData = {};
-      loadedThings = {};
       $('.dataValue').remove();
       $('.ideaBtn').remove();
       $('.thingOptionBtn').remove();
