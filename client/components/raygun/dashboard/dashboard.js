@@ -98,7 +98,7 @@ $(document).ready(()=> {
   //Going to domain dimension if applicable
   raygun.get(`domain/${window.location.host}`).once((dimId) => {
     if(dimId){
-      raygun.get(`dimension/${dimId}`).once((dim) => {
+      raygun.get(`dimension/${dimId}`).load((dim) => {
         let thisDim = new Dimension(dim);
         changeToEditor(thisDim);
         enterDimensionInEditor();
