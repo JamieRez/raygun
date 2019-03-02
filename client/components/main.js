@@ -6,7 +6,6 @@ window.currentDimension = null;
 window.userIsTyping = false;
 
 
-
 $(document).ready(() => {
 
   window.thisUsername = $('#username').text();

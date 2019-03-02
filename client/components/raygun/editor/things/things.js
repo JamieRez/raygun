@@ -3,7 +3,32 @@ window.loadedThings = {};
 function openThingEditor(thing){
   $('.editorThingsList').css('display', 'none');
   $('.editorThingsEditor').css('display', 'flex');
-  $('.thingEditorNameValue').text(thing.name);
+
+  //Create the Thing Name Data Value
+  let thingNameData = document.createElement('div');
+  thingNameData.classList.add('thingEditorName');
+  thingNameData.classList.add('thingDataValue');
+  let thingNameKey = document.createElement('div');
+  thingNameKey.classList.add('thingEditorNameKey');
+  thingNameKey.textContent = 'Thing Name';
+  let thingNameValue = document.createElement('div');
+  thingNameValue.classList.add('thingEditorNameValue');
+  thingNameValue.textContent = thing.name;
+  thingNameValue.contentEditable = true;
+  $(thingNameData).append(thingNameKey);
+  $(thingNameData).append(thingNameValue);
+  $('.thingDataValuesList').append(thingNameData);
+
+  //Changing the thing name
+  $(thingNameValue).on('blur', () => {
+    let newName = $(thingNameValue).text()
+    if(newName.length > 0){
+      thing.name = newName;
+      $(`#thingOptionBtn-${thing.id}`).children('.thingOptionBtnLabel').text(newName);
+      raygun.get(`thing/${thing.id}`).get('name').put(newName);
+    }
+  })
+
   let thingDataGun = thing.dataGun;
   let thingData = thing.data;
   for(soul in thingDataGun){
@@ -56,11 +81,36 @@ function createNewThing(thing, thingHasData = false){
   let newThingOption = document.createElement('div');
   newThingOption.classList.add('thingOptionBtn');
   newThingOption.id = 'thingOptionBtn-' + thing.id;
+  newThingOption.thingId = thing.id;
+  newThingOption.thingSoul = thing.soul || thing.id;
   $('.editorThingsList').append(newThingOption);
+
+  let newThingOptionContent = document.createElement('div');
+  newThingOptionContent.classList.add('thingOptionBtnContent');
+  newThingOption.append(newThingOptionContent);
+
   let newThingOptionLabel = document.createElement('div');
   newThingOptionLabel.classList.add('thingOptionBtnLabel');
   newThingOptionLabel.textContent = thing.name;
-  $(newThingOption).append(newThingOptionLabel);
+  $(newThingOptionContent).append(newThingOptionLabel);
+
+  var sortable = Sortable.create($('.editorThingsList')[0], {
+    direction: 'horizontal',
+    onEnd : function(e){
+
+      //Empty the Dimension Space
+      $(dimBeingEdited.element).children('.space').empty();
+
+      let thingOptions = $('.editorThingsList').children();
+      for(var i=0; i<thingOptions.length;i++){
+        let soul = thingOptions[i].thingSoul;
+        let thingId = thingOptions[i].thingId;
+        dimBeingEdited.things[soul].loadOrder = i;
+        dimBeingEdited.things[soul].render();
+        raygun.get(`thing/${thingId}`).get('loadOrder').put(i);
+      }
+    }
+  })
 
   $(newThingOption).on('click', () => {
     if(!inDeleteMode){
@@ -74,26 +124,21 @@ function createNewThing(thing, thingHasData = false){
     }
   });
 
-  //Change the name of a thing
-  $('.thingEditorNameValue').on('blur', () => {
-    let newName = $('.thingEditorNameValue').text();
-    if(newName.length > 0){
-      thing.name = newName;
-      newThingOptionLabel.textContent = newName;
-      raygun.get('thing/' + thing.id).get('name').put(newName);
-    }
-  })
-
 }
 
 function loadDimensionThings(thingsHaveData = false){
   let dimThings = dimBeingEdited.things;
+  let thingsInOrder = {};
   for(id in dimThings){
     if(dimThings[id] && dimThings[id].exists){
-      dimThings[id] = new Thing(dimThings[id]);
-      dimThings[id].loadData();
-      createNewThing(dimThings[id], true);
+      dimThings[id].soul = id;
+      thingsInOrder[dimThings[id].loadOrder] = id;
     }
+  }
+  for(let i=0; i < dimBeingEdited.thingCount; i++){
+    dimThings[thingsInOrder[i]] = new Thing(dimThings[thingsInOrder[i]]);
+    dimThings[thingsInOrder[i]].loadData();
+    createNewThing(dimThings[thingsInOrder[i]]);
   }
 }
 

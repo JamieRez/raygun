@@ -171,9 +171,11 @@ $(document).ready(() => {
   $('.editIdeaMakeThingBtn').on('click', () => {
     let newThing = new Thing();
     dimBeingEdited.things[newThing.id] = newThing;
+    dimBeingEdited.thingCount += 1;
     let newThingGun = raygun.get('thing/' + newThing.id).put(newThing);
     raygun.get('thing').set(newThingGun);
     raygun.get('dimension/' + dimBeingEdited.id).get('things').set(newThingGun);
+    raygun.get('dimension/' + dimBeingEdited.id).get('thingCount').put(dimBeingEdited.thingCount)
     dimBeingEdited.things[newThing.id].getDataFromIdea();
     createNewThing(dimBeingEdited.things[newThing.id])
   })

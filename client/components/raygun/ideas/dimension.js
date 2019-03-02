@@ -12,6 +12,7 @@ window.Dimension = class {
       this.exists = dim.exists || true;
       this.ideas = dim.ideas || {};
       this.things = dim.things || {};
+      this.thingCount = dim.thingCount || 0;
     }else{
       this.id = UUID();
       this.name = "Untitled Dimension";
@@ -23,6 +24,7 @@ window.Dimension = class {
       this.exists = true;
       this.ideas = {};
       this.things = {};
+      this.thingCount = 0;
     }
   }
 
