@@ -3,20 +3,21 @@ window.Thing = class {
   getDataFromIdea(){
     let ideaData = ideaBeingEdited.data;
     this.data = {};
+    let seenKeys = {};
     for(soul in ideaData){
-      if(ideaData[soul] && ideaData[soul].exists){
+      if(ideaData[soul] && ideaData[soul].exists && !seenKeys[ideaData[soul].key]){
+        seenKeys[ideaData[soul].key] = true;
         let newThingData = {
-          soul : null,
           id : UUID(),
           key : ideaData[soul].key,
           value : ideaData[soul].value,
           exists : ideaData[soul].exists,
         }
+        let thingDataGun = raygun.get(`thingData/${newThingData.id}`).put(newThingData)
+        newThingData.soul = thingDataGun._.link;
         this.data[newThingData.key] = newThingData.value;
-        this.dataGun[newThingData.id] = newThingData;
-        let thingDataGun = raygun.get(`thingData/${newThingData.id}`).put(newThingData, () => {
-          raygun.get(`thing/${this.id}`).get('dataGun').set(thingDataGun);
-        });
+        this.dataGun[newThingData.soul] = newThingData;
+        raygun.get(`thing/${this.id}`).get('dataGun').set(thingDataGun);
       }
     }
   }
@@ -24,8 +25,10 @@ window.Thing = class {
   loadData(){
     this.data = {};
     let thisDataGun = this.dataGun;
+    let seenKeys = {};
     for(soul in thisDataGun){
-      if(thisDataGun[soul] && thisDataGun[soul].exists){
+      if(thisDataGun[soul] && thisDataGun[soul].exists && !seenKeys[thisDataGun[soul].key]){
+        seenKeys[thisDataGun[soul].key] = true;
         this.data[thisDataGun[soul].key] = thisDataGun[soul].value;
       }
     }
@@ -67,10 +70,12 @@ window.Thing = class {
   }
 
   render(){
-    this.element = document.createElement('div');
-    this.element.id = this.ideaClassName + this.id;
-    this.element.classList.add("thing");
-    $(`#${this.dimension}`).find('.space').append(this.element);
+    if(!this.element || $(`#${this.ideaClassName + this.id}`).length == 0){
+      this.element = document.createElement('div');
+      this.element.id = this.ideaClassName + this.id;
+      this.element.classList.add("thing");
+      $(`#${this.dimension}`).find('.space').append(this.element);
+    }
     eval(`
       new ${this.ideaClassName}(this).build();
     `)

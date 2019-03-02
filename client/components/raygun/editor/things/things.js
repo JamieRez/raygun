@@ -24,15 +24,18 @@ function openThingEditor(thing){
     let newName = $(thingNameValue).text()
     if(newName.length > 0){
       thing.name = newName;
-      $(`#thingOptionBtn-${thing.id}`).children('.thingOptionBtnLabel').text(newName);
+      $(`#thingOptionBtn-${thing.id}`).find('.thingOptionBtnLabel').text(newName);
       raygun.get(`thing/${thing.id}`).get('name').put(newName);
     }
   })
 
   let thingDataGun = thing.dataGun;
   let thingData = thing.data;
+  let seenKeys = {}
   for(soul in thingDataGun){
-    if(thingDataGun[soul] && thingDataGun[soul].exists){
+    if(thingDataGun[soul] && thingDataGun[soul].exists && !seenKeys[thingDataGun[soul].key]){
+
+      seenKeys[thingDataGun[soul].key] = true;
 
       let thingData = thingDataGun[soul];
       let thisKey = thingDataGun[soul].key;
@@ -65,7 +68,6 @@ function openThingEditor(thing){
           thing.data[thisKey] = newValue;
           thing.dataGun[thisSoul].value = newValue;
           let thingDataId = thing.dataGun[thisSoul].id;
-          $(thing.element).remove();
           thing.render(true);
           raygun.get(`thingData/${thingData.id}`).get('value').put(newValue)
         }
@@ -81,8 +83,8 @@ function createNewThing(thing, thingHasData = false){
   let newThingOption = document.createElement('div');
   newThingOption.classList.add('thingOptionBtn');
   newThingOption.id = 'thingOptionBtn-' + thing.id;
-  newThingOption.thingId = thing.id;
-  newThingOption.thingSoul = thing.soul || thing.id;
+  newThingOption.setAttribute('thingId', thing.id);
+  newThingOption.setAttribute('thingSoul', thing.soul);
   $('.editorThingsList').append(newThingOption);
 
   let newThingOptionContent = document.createElement('div');
@@ -102,12 +104,18 @@ function createNewThing(thing, thingHasData = false){
       $(dimBeingEdited.element).children('.space').empty();
 
       let thingOptions = $('.editorThingsList').children();
-      for(var i=0; i<thingOptions.length;i++){
-        let soul = thingOptions[i].thingSoul;
-        let thingId = thingOptions[i].thingId;
-        dimBeingEdited.things[soul].loadOrder = i;
-        dimBeingEdited.things[soul].render();
-        raygun.get(`thing/${thingId}`).get('loadOrder').put(i);
+      for(var i=0; i < thingOptions.length;i++){
+        let soul = thingOptions[i].getAttribute('thingSoul');
+        let thingId = thingOptions[i].getAttribute('thingId');
+        if(dimBeingEdited.things[soul]){
+          dimBeingEdited.things[soul].loadOrder = i;
+          if(!dimBeingEdited.things[soul].render){
+            dimBeingEdited.things[soul] = new Thing(dimBeingEdited.things[soul])
+            dimBeingEdited.things[soul].loadData();
+          }
+          dimBeingEdited.things[soul].render();
+          raygun.get(`thing/${thingId}`).get('loadOrder').put(i);
+        }
       }
     }
   })
@@ -129,16 +137,19 @@ function createNewThing(thing, thingHasData = false){
 function loadDimensionThings(thingsHaveData = false){
   let dimThings = dimBeingEdited.things;
   let thingsInOrder = {};
-  for(id in dimThings){
-    if(dimThings[id] && dimThings[id].exists){
-      dimThings[id].soul = id;
-      thingsInOrder[dimThings[id].loadOrder] = id;
+  for(soul in dimThings){
+    if(dimThings[soul] && dimThings[soul].exists){
+      thingsInOrder[dimThings[soul].loadOrder] = soul;
     }
   }
   for(let i=0; i < dimBeingEdited.thingCount; i++){
-    dimThings[thingsInOrder[i]] = new Thing(dimThings[thingsInOrder[i]]);
-    dimThings[thingsInOrder[i]].loadData();
-    createNewThing(dimThings[thingsInOrder[i]]);
+    if(thingsInOrder[i]){
+      dimThings[thingsInOrder[i]] = new Thing(dimThings[thingsInOrder[i]]);
+      dimThings[thingsInOrder[i]].soul = thingsInOrder[i];
+      dimBeingEdited.things[thingsInOrder[i]] = dimThings[thingsInOrder[i]];
+      dimBeingEdited.things[thingsInOrder[i]].loadData();
+      createNewThing(dimBeingEdited.things[thingsInOrder[i]]);
+    }
   }
 }
 

@@ -34,7 +34,7 @@ window.Idea = class {
   constructor(idea, soul = null){
     if(idea){
       this.id = idea.id || UUID();
-      this.soul = idea.soul || soul;
+      this.soul = idea.soul || soul || null;
       this.name = idea.name || "Untitled Idea";
       this.desc = idea.desc || "This is an idea!";
       this.data = idea.data;
@@ -51,7 +51,7 @@ window.Idea = class {
       this.exists = idea.exists || true;
     }else{
       this.id = UUID();
-      this.soul = soul;
+      this.soul = soul || null;
       this.name = "Untitled Idea";
       this.desc = "This is an idea!";
       this.data = {};

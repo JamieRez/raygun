@@ -40,6 +40,9 @@ function saveCodeInEditor(cb){
 
   ideaBeingEdited.classCode= ideaClassData.classCode;
   ideaBeingEdited.className = ideaClassData.className;
+  dimBeingEdited.ideas[ideaBeingEdited.soul] = ideaBeingEdited;
+  dimBeingEdited.ideas[ideaBeingEdited.soul].code = ideaBeingEdited.code;
+
   raygun.get(`idea/${ideaBeingEdited.id}`).get('className').put(ideaClassData.className);
   raygun.get(`idea/${ideaBeingEdited.id}`).get('code').put(ideaBeingEdited.code);
   raygun.get(`idea/${ideaBeingEdited.id}`).get('classCode').put(ideaClassData.classCode, () => {
@@ -99,7 +102,7 @@ function prototypeToEditor(){
       $('.ideaBtn').remove();
       $('.thingOptionBtn').remove();
       $('.editorDimPreview').empty();
-      $('.thingDataValuesList').empty();
+      $('.thingDataValue').remove();
       $('.editorThingsEditor').css('display', 'none');
       $('.editorThingsList').css('display', 'flex');
       $(dimBeingEdited.element).remove();
@@ -138,7 +141,7 @@ function dataValuesToCodeEditor(){
 }
 
 function addNewDataValue(dataValue){
-  ideaBeingEdited.data[dataValue.id] = dataValue;
+  ideaBeingEdited.data[dataValue.soul] = dataValue;
 
   let newDataValue = document.createElement('div');
   newDataValue.classList.add('dataValue');
@@ -173,7 +176,7 @@ function addNewDataValue(dataValue){
     if(newKey.length > 0){
       dataValue.key = newKey;
       raygun.get(`ideaData/${dataValue.id}`).get('key').put(newKey);
-      ideaBeingEdited.data[dataValue.id] = dataValue;
+      ideaBeingEdited.data[dataValue.soul] = dataValue;
       runCodeInIdeaEditor();
     }
   })
@@ -185,7 +188,7 @@ function addNewDataValue(dataValue){
     if(newValue.length > 0){
       dataValue.value = newValue;
       raygun.get(`ideaData/${dataValue.id}`).get('value').put(newValue);
-      ideaBeingEdited.data[dataValue.id] = dataValue;
+      ideaBeingEdited.data[dataValue.soul] = dataValue;
       runCodeInIdeaEditor();
     }
   })
@@ -241,10 +244,10 @@ $(document).ready(() => {
       key : "dataKey",
       value : "dataValue",
       exists : true,
-      soul : null
     }
-    addNewDataValue(newIdeaData);
     let newIdeaDataGun = raygun.get(`ideaData/${newIdeaData.id}`).put(newIdeaData);
+    newIdeaData.soul = newIdeaDataGun._.link;
+    addNewDataValue(newIdeaData);
     raygun.get(`idea/${ideaBeingEdited.id}`).get('data').set(newIdeaDataGun);
     raygun.get(`idea/${ideaBeingEdited.id}`).get('dataCount').put(ideaBeingEdited.dataCount + 1);
   })
