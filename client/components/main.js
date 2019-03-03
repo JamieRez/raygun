@@ -1,9 +1,10 @@
 window.currentRaygunScreen = 'dashboard';
 
+let gun;
 if(window.location.href == 'http://localhost:3000/'){
-  let gun = Gun([`${window.location.href}gun`])
+  gun = Gun([`${window.location.href}gun`])
 }else{
-  let gun = Gun([`${window.location.href}gun`, `https://www.raygun.live/gun`])
+  gun = Gun([`${window.location.href}gun`, `https://www.raygun.live/gun`])
 }
 window.raygun = gun.get('raygun');
 window.hostName = window.location.host;
