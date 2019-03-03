@@ -1,5 +1,4 @@
 window.currentRaygunScreen = 'dashboard';
-window.userDims;
 
 let gun;
 if(window.location.href == 'http://localhost:3000/'){
