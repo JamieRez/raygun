@@ -51,7 +51,7 @@ function addDimOption(dim){
 //LOADING THE USER. THIS IS LIKE THE MOST IMPORTANT THING
 gun.on('auth', () => {
   usergun.get('dimensions').load((dimensions) => {
-    let userDims = dimensions;
+    userDims = dimensions;
     for(soul in userDims){
       if(userDims[soul] && userDims[soul].exists){
         let thisDim = new Dimension(userDims[soul]);
