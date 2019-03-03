@@ -12,6 +12,8 @@ $(this.element).css({
   transform : "perspective(500px) " + this.data.transform,
 });
 
+
+
 //Separate the toolbar into 3 sections (left - center - right)
 let leftToolbar = document.createElement('div');
 let centerToolbar = document.createElement('div');
@@ -49,6 +51,7 @@ $(this.element).append(centerToolbar);
 $(this.element).append(rightToolbar);
 
 
+
 //Add the Main Dashboard Button (Combo of logo and label)
 //This goes to the left side of the toolbar
 let mainDashBtn = document.createElement('div');
@@ -74,7 +77,32 @@ $(toolbarRaygunLabel).css({
 })
 toolbarLogo.setAttribute('data', this.data.brandLogo)
 toolbarRaygunLabel.textContent = this.data.brandText
-
 $(mainDashBtn).append(toolbarLogo);
 $(mainDashBtn).append(toolbarRaygunLabel);
 $(leftToolbar).append(mainDashBtn)
+
+
+
+//Create the toolbar location label. Starts off as Dashboard.
+//This goes to the center side of the toolbar
+let toolbarLocLabel = document.createElement('div');
+toolbarLocLabel.textContent = this.data.locationLabelText;
+$(toolbarLocLabel).css({
+  textAlign : "center",
+  fontSize : "30px",
+  fontWeight : "250",
+  color : this.data.locLabelTextColor
+})
+$(centerToolbar).append(toolbarLocLabel);
+
+
+
+//Create the Profile Icon. This goes to the right side of the toolbar
+let toolbarProfileIcon = document.createElement('object');
+$(toolbarProfileIcon).css({
+  width : "48px",
+  height : "48px",
+  cursor : "pointer"
+})
+toolbarProfileIcon.setAttribute('data', this.data.profileIcon);
+$(rightToolbar).append(toolbarProfileIcon)

@@ -50,6 +50,10 @@ window.Dimension = class {
       flexWrap : "wrap",
       overflowY : "hidden",
       overflowX : "hidden",
+      width : "100%",
+      height : "100%",
+      position : "absolute",
+      zIndex : "0",
       transition : "transform 0.5s ease-in",
       transform : "perspective(500px) translate3d(0px, 0px, 0px)",
     })
