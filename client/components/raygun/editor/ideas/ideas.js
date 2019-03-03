@@ -1,6 +1,6 @@
 window.ideaBeingEdited = null;
 
-function openIdeaPrototypeEditor(){
+function openIdeaPrototypeEditor(idea){
   currentRaygunScreen = "prototype";
   //Move the editor windows out
   $('.editorIdeas').css({
@@ -19,13 +19,14 @@ function openIdeaPrototypeEditor(){
   $(ideaEditorDimension.element).children('.space').empty();
   $('.dataValue').remove();
   loadIdeaData();
-  eval(ideaBeingEdited.classCode);
+  eval(idea.classCode);
   let protoThingData = {
-    id : "proto-" + ideaBeingEdited.className,
+    id : "proto-" + idea.className,
     dimension : 'prototype',
-    ideaId : ideaBeingEdited.id,
-    ideaClassName : ideaBeingEdited.className,
-    dataGun : ideaBeingEdited.data
+    ideaId : idea.id,
+    ideaSoul : idea.soul,
+    ideaClassName : idea.className,
+    dataGun : idea.data
   }
   let protoThing = new Thing(protoThingData);
   protoThing.loadData();
@@ -38,7 +39,7 @@ function openIdeaPrototypeEditor(){
     //Update Toolbar
     setTimeout(() => {
       //Change toolbar label to be the idea being worked on
-      $('.toolbarLabel').text(ideaBeingEdited.name);
+      $('.toolbarLabel').text(idea.name);
       runCodeInIdeaEditor();
       changeToolbarColorsForIdeaBuilder();
     }, 500)
@@ -91,6 +92,11 @@ function addNewIdea(idea){
       $(newIdeaElem).remove();
     }
   });
+
+  //Click on View/Edit Code Btn opens the prototype screen
+  $('.editIdeaCodeBtn').on('click', () => {
+    openIdeaPrototypeEditor(idea);
+  })
 
   raygun.get(`idea/${idea.id}`).get('name').on((newName) => {
     idea.name = newName;
@@ -159,11 +165,6 @@ $(document).ready(() => {
         transform : "translate3d(0px, 0px, 0px)"
       })
     })
-  })
-
-  //Click on View/Edit Code Btn opens the prototype screen
-  $('.editIdeaCodeBtn').on('click', () => {
-    openIdeaPrototypeEditor();
   })
 
   //Click on Make Thing Button makes a new thing in this dimension

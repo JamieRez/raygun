@@ -43,13 +43,13 @@ function saveCodeInEditor(cb){
   dimBeingEdited.ideas[ideaBeingEdited.soul] = ideaBeingEdited;
   dimBeingEdited.ideas[ideaBeingEdited.soul].code = ideaBeingEdited.code;
 
+  if(cb && typeof cb == 'function'){
+    cb(ideaBeingEdited);
+  }
+  
   raygun.get(`idea/${ideaBeingEdited.id}`).get('className').put(ideaClassData.className);
   raygun.get(`idea/${ideaBeingEdited.id}`).get('code').put(ideaBeingEdited.code);
-  raygun.get(`idea/${ideaBeingEdited.id}`).get('classCode').put(ideaClassData.classCode, () => {
-    if(cb && typeof cb == 'function'){
-      cb(ideaBeingEdited);
-    }
-  });
+  raygun.get(`idea/${ideaBeingEdited.id}`).get('classCode').put(ideaClassData.classCode);
 
 }
 
