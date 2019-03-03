@@ -46,7 +46,7 @@ function saveCodeInEditor(cb){
   if(cb && typeof cb == 'function'){
     cb(ideaBeingEdited);
   }
-  
+
   raygun.get(`idea/${ideaBeingEdited.id}`).get('className').put(ideaClassData.className);
   raygun.get(`idea/${ideaBeingEdited.id}`).get('code').put(ideaBeingEdited.code);
   raygun.get(`idea/${ideaBeingEdited.id}`).get('classCode').put(ideaClassData.classCode);
@@ -81,7 +81,6 @@ function prototypeToEditor(){
     transform : "perspective(500px) translate3d(0px, -2000px, -5000px)"
   })
   setTimeout(() => {
-    //Bring back the editor!
     $('.editorIdeas').css({
       transform : "perspective(500px) translate3d(0px, 0px, 0px)"
     })
@@ -113,6 +112,10 @@ function prototypeToEditor(){
       loadDimensionIdeas();
       loadDimensionThings(true);
       changeToolbarColorsToDefault();
+      //Bring back the editor!
+      $('.editIdeaName').text(ideaBeingEdited.name);
+      $('.editIdeaCreator').text("Created by: " + ideaBeingEdited.creatorName);
+      $('.editIdeaDesc').text(ideaBeingEdited.desc);
     }, 500)
   }, 250);
 }

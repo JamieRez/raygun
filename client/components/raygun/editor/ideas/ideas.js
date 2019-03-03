@@ -73,6 +73,10 @@ function addNewIdea(idea){
         $('.editIdeaContainer').css({
           transform : "translate3d(0px, 0px, 0px)"
         })
+        //Click on View/Edit Code Btn opens the prototype screen
+        $('.editIdeaCodeBtn').on('click', () => {
+          openIdeaPrototypeEditor(idea);
+        })
         $('.editIdeaName').text(idea.name);
         $('.editIdeaCreator').text("Created by: " + idea.creatorName);
         $('.editIdeaDesc').text(idea.desc);
@@ -92,11 +96,6 @@ function addNewIdea(idea){
       $(newIdeaElem).remove();
     }
   });
-
-  //Click on View/Edit Code Btn opens the prototype screen
-  $('.editIdeaCodeBtn').on('click', () => {
-    openIdeaPrototypeEditor(idea);
-  })
 
   raygun.get(`idea/${idea.id}`).get('name').on((newName) => {
     idea.name = newName;
