@@ -11,7 +11,6 @@ window.hostName = window.location.host;
 window.currentDimension = null;
 window.userIsTyping = false;
 
-
 $(document).ready(() => {
 
   window.thisUsername = $('#username').text();
