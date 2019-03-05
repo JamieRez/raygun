@@ -9,7 +9,7 @@
 
 .editorIdeasAndDimension {
   width : 100%;
-  height : 60%;
+  height : 80%;
   display: flex;
   flex-direction: row;
   transition: transform 0.5s linear;
