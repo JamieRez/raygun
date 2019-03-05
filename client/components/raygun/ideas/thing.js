@@ -51,6 +51,8 @@ window.Thing = class {
       this.exists = thing.exists || true;
       this.dataGun = thing.dataGun || {};
       this.loadOrder = thing.loadOrder || dimBeingEdited.thingCount;
+      this.things = thing.things || {};
+      this.parentThing = thing.parentThing || false;
     }else{
       this.id = UUID();
       this.name = ideaBeingEdited.name;
@@ -66,6 +68,8 @@ window.Thing = class {
       this.ideaClassName = ideaBeingEdited.className;
       this.exists = true;
       this.loadOrder = dimBeingEdited.thingCount;
+      this.things = {};
+      this.parentThing = false;
     }
   }
 
@@ -73,8 +77,20 @@ window.Thing = class {
     if(!this.element || $(`#${this.ideaClassName + this.id}`).length == 0){
       this.element = document.createElement('div');
       this.element.id = this.ideaClassName + this.id;
+      if(this.dimension == 'prototype'){
+        this.element.id = 'prototype-thing';
+      }
       this.element.classList.add("thing");
-      $(`#${this.dimension}`).find('.space').append(this.element);
+      if(!this.parentThing){
+        $(`#${this.dimension}`).find('.space').append(this.element);
+      }else{
+        if(this.parentThing != 'prototype-soul-lol'){
+          let parentThingElement = dimBeingEdited.things[this.parentThing].element;
+          $(parentThingElement).append(this.element);
+        }else{
+          $('#prototype-thing').append(this.element);
+        }
+      }
     }
     eval(`
       new ${this.ideaClassName}(this).build();

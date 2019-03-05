@@ -60,6 +60,7 @@
   border-radius: 8px;
   color : #2ed17c;
   padding: 5px;
+  padding-bottom: 0px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -71,6 +72,10 @@
 
 .ideaBtn:hover{
   background-color: #d9fae9;
+}
+
+.ideaBtnLabel{
+  margin-bottom: 5px;
 }
 
 .editIdeaContainer{

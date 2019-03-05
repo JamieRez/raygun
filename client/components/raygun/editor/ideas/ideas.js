@@ -18,7 +18,7 @@ function openIdeaPrototypeEditor(idea){
   $('.prototype').css('display', 'flex');
   $(ideaEditorDimension.element).children('.space').empty();
   $('.dataValue').remove();
-  loadIdeaData();
+  loadIdeaData(idea);
   eval(idea.classCode);
   let protoThingData = {
     id : "proto-" + idea.className,
@@ -53,16 +53,52 @@ function addNewIdea(idea){
   let newIdeaElem = document.createElement('div');
   newIdeaElem.classList.add('ideaBtn');
   newIdeaElem.id = 'ideaBtn-' + idea.id;
-  $('.editorIdeasList').append(newIdeaElem);
+  newIdeaElem.ideaId = idea.id;
+  newIdeaElem.ideaSoul = idea.soul;
+  if(!idea.parentIdea){
+    $('.editorIdeasList').append(newIdeaElem);
+  }else{
+    let parentIdeaBtn = $('#ideaBtn-' + dimBeingEdited.ideas[idea.parentIdea].id);
+    $(parentIdeaBtn).append(newIdeaElem);
+  }
+
   let newIdeaElemLabel = document.createElement('div');
   newIdeaElemLabel.classList.add('ideaBtnLabel');
   newIdeaElemLabel.textContent = idea.name;
   $(newIdeaElem).append(newIdeaElemLabel);
 
+  let newIdeaElemIdeasList = document.createElement('div');
+  newIdeaElemIdeasList.classList.add('ideaBtnIdeasList');
+  $(newIdeaElem).append(newIdeaElemIdeasList);
+
+  var ideaListSortable = Sortable.create(newIdeaElem, {
+    direction : 'vertical',
+    group : 'ideas',
+    draggable : '.ideaBtn',
+    animation : 150,
+    onAdd : function(e){
+      let ideaMoved = e.item;
+      let ideaMovedGun = raygun.get(`idea/${ideaMoved.ideaId}`);
+      ideaMovedGun.get('parentIdea').put(idea.soul);
+      //Remove from the dimension ideas
+      raygun.get(`dimension/${dimBeingEdited.id}`).get('ideas').get(ideaMoved.ideaSoul).put(null);
+      //Add to the ideas of the idea it was added into.
+      raygun.get(`idea/${idea.id}`).get('ideas').set(ideaMovedGun);
+    }
+  })
+
+  var listSortable = Sortable.create($('.editorIdeasList')[0], {
+    direction: 'horizontal',
+    group : 'ideas',
+    draggable : '.ideaBtn',
+    animation : 150,
+  });
+
   //Clicking on an idea, goes to the idea editor
   $(newIdeaElem).on("click", (e) => {
+    e.stopPropagation();
     if(!inDeleteMode){
-      ideaBeingEdited = dimBeingEdited.ideas[idea.soul];
+      ideaBeingEdited = idea;
       $('.editorIdeasList').css({
         transform : "translate3d(-750px, 0px, 0px)"
       })
@@ -92,7 +128,12 @@ function addNewIdea(idea){
       //Delete this idea
       let thisIdeaGun = raygun.get(`idea/${idea.id}`);
       thisIdeaGun.get('exists').put(false);
-      raygun.get('dimension/' + dimBeingEdited.id).get('ideas').unset(thisIdeaGun);
+      if(!idea.parentIdea){
+        raygun.get('dimension/' + dimBeingEdited.id).get('ideas').unset(thisIdeaGun);
+      }else{
+        parentIdeaId = dimBeingEdited.ideas[idea.parentIdea].id;
+        raygun.get(`idea/${parentIdeaId}`).get('ideas').get(idea.soul).put(null);
+      }
       $(newIdeaElem).remove();
     }
   });
@@ -107,6 +148,12 @@ function addNewIdea(idea){
     idea.desc = newDesc;
     $('.editIdeaDesc').text(newDesc);
   })
+
+  //Add the idea's ideas if any
+  for(let soul in idea.ideas){
+    idea.ideas[soul] = new Idea(idea.ideas[soul], soul);
+    addNewIdea(idea.ideas[soul]);
+  }
 
 }
 
@@ -179,6 +226,21 @@ $(document).ready(() => {
     raygun.get('thing').set(newThingGun);
     raygun.get('dimension/' + dimBeingEdited.id).get('things').set(newThingGun);
     raygun.get('dimension/' + dimBeingEdited.id).get('thingCount').put(dimBeingEdited.thingCount)
+
+    // Create a thing for each idea inside this idea if any
+    let thisIdea = ideaBeingEdited;
+    for(let soul in thisIdea.ideas){
+      ideaBeingEdited = thisIdea.ideas[soul];
+      let thisNewThing = new Thing();
+      thisNewThing.parentThing = newThing.soul;
+      let thisNewThingGun = raygun.get(`thing/${thisNewThing.id}`).put(thisNewThing);
+      newThingGun.get('things').set(thisNewThingGun);
+      let thisNewThingSoul = thisNewThingGun._.link;
+      thisNewThing.soul = thisNewThingSoul;
+      newThing.things[thisNewThingSoul] = thisNewThing;
+    }
+    ideaBeingEdited = thisIdea;
+
   })
 
 

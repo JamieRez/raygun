@@ -64,10 +64,28 @@ function runCodeInIdeaEditor(){
         dimension : 'prototype',
         ideaId : idea.id,
         ideaClassName : idea.className,
+        soul : 'prototype-soul-lol'
       }
       let protoThing = new Thing(protoThingData);
       protoThing.getDataFromIdea();
       protoThing.render(true);
+
+      //Render the idea children if any
+      for(soul in idea.ideas){
+        let thisIdea = idea.ideas[soul];
+        eval(thisIdea.classCode);
+        let thisProtoThingData = {
+          id : "proto-" + thisIdea.className,
+          dimension : 'prototype',
+          ideaId : thisIdea.id,
+          ideaClassName : thisIdea.className,
+          parentThing : 'prototype-soul-lol'
+        }
+        let thisProtoThing = new Thing(thisProtoThingData);
+        thisProtoThing.getDataFromIdea();
+        thisProtoThing.render(true);
+      }
+
     });
   } catch (e) {
     console.log(e.message);
@@ -120,8 +138,8 @@ function prototypeToEditor(){
   }, 250);
 }
 
-function loadIdeaData(){
-  let ideaData = ideaBeingEdited.data;
+function loadIdeaData(idea){
+  let ideaData = idea.data;
   for(soul in ideaData){
     if(ideaData[soul] && ideaData[soul].exists){
       addNewDataValue(ideaData[soul]);

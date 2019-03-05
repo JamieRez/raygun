@@ -85,7 +85,13 @@ function createNewThing(thing, thingHasData = false){
   newThingOption.id = 'thingOptionBtn-' + thing.id;
   newThingOption.setAttribute('thingId', thing.id);
   newThingOption.setAttribute('thingSoul', thing.soul);
-  $('.editorThingsList').append(newThingOption);
+
+  if(!thing.parentThing){
+    $('.editorThingsList').append(newThingOption);
+  }else{
+    let parentThingBtnId = '#thingOptionBtn-' + dimBeingEdited.things[thing.parentThing].id
+    $(parentThingBtnId).append(newThingOption);
+  }
 
   let newThingOptionContent = document.createElement('div');
   newThingOptionContent.classList.add('thingOptionBtnContent');
@@ -131,6 +137,13 @@ function createNewThing(thing, thingHasData = false){
       $(thing.element).remove();
     }
   });
+
+  //Add the thing children too if any
+  for(soul in thing.things){
+    thing.things[soul] = new Thing(thing.things[soul]);
+    thing.things[soul].loadData()
+    createNewThing(thing.things[soul]);
+  }
 
 }
 

@@ -49,6 +49,8 @@ window.Idea = class {
       this.classCode = idea.classCode || classData.classCode;
       this.className = idea.className || classData.className;
       this.exists = idea.exists || true;
+      this.ideas = idea.ideas || {};
+      this.parentIdea = idea.parentIdea || false;
     }else{
       this.id = UUID();
       this.soul = soul || null;
@@ -66,6 +68,8 @@ window.Idea = class {
       this.classCode = classData.classCode;
       this.className = classData.className;
       this.exists = true;
+      this.ideas = {};
+      this.parentIdea = false;
     }
   }
 
