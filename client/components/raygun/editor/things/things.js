@@ -140,14 +140,20 @@ function createNewThing(thing, thingHasData = false){
   });
 
   //Add the thing children too if any
+  let thingThingsInOrder = {};
   for(soul in thing.things){
-    if(thing.things[soul]){
-      thing.things[soul] = new Thing(thing.things[soul]);
-      thing.things[soul].loadData()
-      createNewThing(thing.things[soul]);
+    if(thing.things[soul] && thing.things[soul].exists){
+      thingThingsInOrder[thing.things[soul].loadOrder] = soul;
     }
   }
-
+  for(let i=0; i < dimBeingEdited.thingCount; i++){
+    if(thingThingsInOrder[i]){
+      thing.things[thingThingsInOrder[i]] = new Thing(thing.things[thingThingsInOrder[i]]);
+      thing.things[thingThingsInOrder[i]].soul = thingThingsInOrder[i];
+      thing.things[thingThingsInOrder[i]].loadData();
+      createNewThing(thing.things[thingThingsInOrder[i]]);
+    }
+  }
 }
 
 function loadDimensionThings(thingsHaveData = false){

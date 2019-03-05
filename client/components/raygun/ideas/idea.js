@@ -50,7 +50,9 @@ window.Idea = class {
       this.className = idea.className || classData.className;
       this.exists = idea.exists || true;
       this.ideas = idea.ideas || {};
+      this.ideaCount = idea.ideaCount || 0;
       this.parentIdea = idea.parentIdea || false;
+      this.loadOrder = idea.loadOrder || 0;
     }else{
       this.id = UUID();
       this.soul = soul || null;
@@ -69,7 +71,9 @@ window.Idea = class {
       this.className = classData.className;
       this.exists = true;
       this.ideas = {};
+      this.ideaCount = 0;
       this.parentIdea = false;
+      this.loadOrder = 0;
     }
   }
 

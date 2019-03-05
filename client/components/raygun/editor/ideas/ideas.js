@@ -80,17 +80,31 @@ function addNewIdea(idea){
       let ideaMoved = e.item;
       let ideaMovedGun = raygun.get(`idea/${ideaMoved.ideaId}`);
       ideaMovedGun.get('parentIdea').put(idea.soul);
-
+      ideaMovedGun.get('loadOrder').put(idea.ideaCount);
       //Update the local variables
       let thisIdea = dimBeingEdited.ideas[ideaMoved.ideaSoul];
       thisIdea.parentIdea = idea.soul;
-      dimBeingEdited.ideas[idea.soul].ideas[ideaMoved.ideaSoul] = thisIdea;
+      thisIdea.loadOrder = 0;
+      idea.ideas[ideaMoved.ideaSoul] = thisIdea;
+      idea.ideaCount += 1;
       delete dimBeingEdited.ideas[ideaMoved.ideaSoul];
 
       //Remove from the dimension ideas
       raygun.get(`dimension/${dimBeingEdited.id}`).get('ideas').get(ideaMoved.ideaSoul).put(null);
       //Add to the ideas of the idea it was added into.
       raygun.get(`idea/${idea.id}`).get('ideas').set(ideaMovedGun);
+      raygun.get(`idea/${idea.id}`).get('ideaCount').put(idea.ideaCount);
+    },
+    onEnd : function(e){
+      let ideaOptions = $(newIdeaElem).children('.ideaBtn');
+      for(var i=0; i < ideaOptions.length;i++){
+        let soul = ideaOptions[i].ideaSoul;
+        let ideaId = ideaOptions[i].ideaId;
+        if(idea.ideas[soul]){
+          idea.ideas[soul].loadOrder = i;
+          raygun.get(`idea/${ideaId}`).get('loadOrder').put(i);
+        }
+      }
     }
   })
 
@@ -139,8 +153,9 @@ function addNewIdea(idea){
         raygun.get('dimension/' + dimBeingEdited.id).get('ideas').get(idea.soul).put(null);
       }else{
         parentIdeaId = dimBeingEdited.ideas[idea.parentIdea].id;
-        console.log(parentIdeaId);
+        dimBeingEdited.ideas[idea.parentIdea].ideaCount -= 1;
         raygun.get(`idea/${parentIdeaId}`).get('ideas').get(idea.soul).put(null);
+        raygun.get(`idea/${parentIdeaId}`).get('ideaCount').put(dimBeingEdited.ideas[idea.parentIdea].ideaCount)
       }
       $(newIdeaElem).remove();
     }
@@ -158,10 +173,16 @@ function addNewIdea(idea){
   })
 
   //Add the idea's ideas if any
+  let ideaIdeasSorted = {};
   for(let soul in idea.ideas){
     if(idea.ideas[soul] && $(`#ideaBtn-${idea.ideas[soul].id}`).length == 0){
-      idea.ideas[soul] = new Idea(idea.ideas[soul], soul);
-      addNewIdea(idea.ideas[soul]);
+      ideaIdeasSorted[idea.ideas[soul].loadOrder] = soul;
+    }
+  }
+  for(let i=0; i<idea.ideaCount; i++){
+    if(ideaIdeasSorted[i]){
+      idea.ideas[ideaIdeasSorted[i]] = new Idea(idea.ideas[ideaIdeasSorted[i]], ideaIdeasSorted[i]);
+      addNewIdea(idea.ideas[ideaIdeasSorted[i]]);
     }
   }
 
@@ -171,8 +192,10 @@ function loadDimensionIdeas(){
   let dimIdeas = dimBeingEdited.ideas;
   for(soul in dimBeingEdited.ideas){
     if(dimBeingEdited.ideas[soul] && dimBeingEdited.ideas[soul].exists){
-      dimBeingEdited.ideas[soul] = new Idea(dimBeingEdited.ideas[soul], soul);
-      addNewIdea(dimBeingEdited.ideas[soul]);
+      if($(`#ideaBtn-${dimBeingEdited.ideas[soul].id}`).length == 0){
+        dimBeingEdited.ideas[soul] = new Idea(dimBeingEdited.ideas[soul], soul);
+        addNewIdea(dimBeingEdited.ideas[soul]);
+      }
     }
   }
 }
@@ -242,6 +265,7 @@ $(document).ready(() => {
       ideaBeingEdited = thisIdea.ideas[soul];
       let thisNewThing = new Thing();
       thisNewThing.parentThing = newThing.soul;
+      thisNewThing.loadOrder = ideaBeingEdited.loadOrder;
       let thisNewThingGun = raygun.get(`thing/${thisNewThing.id}`).put(thisNewThing);
       newThingGun.get('things').set(thisNewThingGun);
       let thisNewThingSoul = thisNewThingGun._.link;
