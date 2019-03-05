@@ -64,7 +64,8 @@ function runCodeInIdeaEditor(){
         dimension : 'prototype',
         ideaId : idea.id,
         ideaClassName : idea.className,
-        soul : 'prototype-soul-lol'
+        soul : 'prototype-soul-lol',
+        parentElement : $('#space-prototype')[0]
       }
       let protoThing = new Thing(protoThingData);
       protoThing.getDataFromIdea();

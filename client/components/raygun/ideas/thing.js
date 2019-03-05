@@ -53,6 +53,7 @@ window.Thing = class {
       this.loadOrder = thing.loadOrder || dimBeingEdited.thingCount;
       this.things = thing.things || {};
       this.parentThing = thing.parentThing || false;
+      this.parentElement = thing.parentElement || `#space-${dimBeingEdited.id}`;
     }else{
       this.id = UUID();
       this.name = ideaBeingEdited.name;
@@ -70,6 +71,7 @@ window.Thing = class {
       this.loadOrder = dimBeingEdited.thingCount;
       this.things = {};
       this.parentThing = false;
+      this.parentElement = `#space-${dimBeingEdited.id}`;
     }
   }
 
@@ -81,16 +83,7 @@ window.Thing = class {
         this.element.id = 'prototype-thing';
       }
       this.element.classList.add("thing");
-      if(!this.parentThing){
-        $(`#${this.dimension}`).find('.space').append(this.element);
-      }else{
-        if(this.parentThing != 'prototype-soul-lol'){
-          let parentThingElement = dimBeingEdited.things[this.parentThing].element;
-          $(parentThingElement).append(this.element);
-        }else{
-          $('#prototype-thing').append(this.element);
-        }
-      }
+      $(this.parentElement).append(this.element);
     }
     eval(`
       new ${this.ideaClassName}(this).build();

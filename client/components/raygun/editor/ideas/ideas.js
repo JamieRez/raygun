@@ -308,6 +308,7 @@ $(document).ready(() => {
       let thisNewThing = new Thing();
       thisNewThing.parentThing = newThing.soul;
       thisNewThing.loadOrder = ideaBeingEdited.loadOrder;
+      thisNewThing.parentElement = `#${newThing.ideaClassName + newThing.id}`;
       let thisNewThingGun = raygun.get(`thing/${thisNewThing.id}`).put(thisNewThing);
       newThingGun.get('things').set(thisNewThingGun);
       let thisNewThingSoul = thisNewThingGun._.link;
@@ -316,7 +317,7 @@ $(document).ready(() => {
     }
     ideaBeingEdited = thisIdea;
 
-    createNewThing(dimBeingEdited.things[newThing.soul])
+    createNewThing(newThing)
 
 
   })
