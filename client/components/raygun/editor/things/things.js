@@ -126,7 +126,8 @@ function createNewThing(thing, thingHasData = false){
     }
   })
 
-  $(newThingOption).on('click', () => {
+  $(newThingOption).on('click', (e) => {
+    e.stopPropagation();
     if(!inDeleteMode){
       openThingEditor(thing);
     }else{
@@ -140,9 +141,11 @@ function createNewThing(thing, thingHasData = false){
 
   //Add the thing children too if any
   for(soul in thing.things){
-    thing.things[soul] = new Thing(thing.things[soul]);
-    thing.things[soul].loadData()
-    createNewThing(thing.things[soul]);
+    if(thing.things[soul]){
+      thing.things[soul] = new Thing(thing.things[soul]);
+      thing.things[soul].loadData()
+      createNewThing(thing.things[soul]);
+    }
   }
 
 }

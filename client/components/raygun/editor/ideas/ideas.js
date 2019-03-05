@@ -80,6 +80,13 @@ function addNewIdea(idea){
       let ideaMoved = e.item;
       let ideaMovedGun = raygun.get(`idea/${ideaMoved.ideaId}`);
       ideaMovedGun.get('parentIdea').put(idea.soul);
+
+      //Update the local variables
+      let thisIdea = dimBeingEdited.ideas[ideaMoved.ideaSoul];
+      thisIdea.parentIdea = idea.soul;
+      dimBeingEdited.ideas[idea.soul].ideas[ideaMoved.ideaSoul] = thisIdea;
+      delete dimBeingEdited.ideas[ideaMoved.ideaSoul];
+
       //Remove from the dimension ideas
       raygun.get(`dimension/${dimBeingEdited.id}`).get('ideas').get(ideaMoved.ideaSoul).put(null);
       //Add to the ideas of the idea it was added into.
@@ -129,9 +136,10 @@ function addNewIdea(idea){
       let thisIdeaGun = raygun.get(`idea/${idea.id}`);
       thisIdeaGun.get('exists').put(false);
       if(!idea.parentIdea){
-        raygun.get('dimension/' + dimBeingEdited.id).get('ideas').unset(thisIdeaGun);
+        raygun.get('dimension/' + dimBeingEdited.id).get('ideas').get(idea.soul).put(null);
       }else{
         parentIdeaId = dimBeingEdited.ideas[idea.parentIdea].id;
+        console.log(parentIdeaId);
         raygun.get(`idea/${parentIdeaId}`).get('ideas').get(idea.soul).put(null);
       }
       $(newIdeaElem).remove();
@@ -151,8 +159,10 @@ function addNewIdea(idea){
 
   //Add the idea's ideas if any
   for(let soul in idea.ideas){
-    idea.ideas[soul] = new Idea(idea.ideas[soul], soul);
-    addNewIdea(idea.ideas[soul]);
+    if(idea.ideas[soul] && $(`#ideaBtn-${idea.ideas[soul].id}`).length == 0){
+      idea.ideas[soul] = new Idea(idea.ideas[soul], soul);
+      addNewIdea(idea.ideas[soul]);
+    }
   }
 
 }
@@ -222,7 +232,6 @@ $(document).ready(() => {
     dimBeingEdited.things[newThing.soul].soul = newThing.soul;
     dimBeingEdited.thingCount += 1;
     dimBeingEdited.things[newThing.soul].getDataFromIdea();
-    createNewThing(dimBeingEdited.things[newThing.soul])
     raygun.get('thing').set(newThingGun);
     raygun.get('dimension/' + dimBeingEdited.id).get('things').set(newThingGun);
     raygun.get('dimension/' + dimBeingEdited.id).get('thingCount').put(dimBeingEdited.thingCount)
@@ -240,6 +249,9 @@ $(document).ready(() => {
       newThing.things[thisNewThingSoul] = thisNewThing;
     }
     ideaBeingEdited = thisIdea;
+
+    createNewThing(dimBeingEdited.things[newThing.soul])
+
 
   })
 

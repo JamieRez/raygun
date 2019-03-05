@@ -68,7 +68,9 @@ gun.on('auth', () => {
       })
     }
   })
-
+  $('.raygun').css({
+    display : 'flex'
+  })
   usergun.get('dimensions').load((dimensions) => {
     window.userDims = dimensions;
     for(soul in userDims){
