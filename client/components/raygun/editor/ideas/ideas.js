@@ -1,7 +1,5 @@
 window.ideaBeingEdited = null;
 
-window.ideaSortables = {};
-
 function openIdeaPrototypeEditor(idea){
   currentRaygunScreen = "prototype";
   //Move the editor windows out
@@ -73,68 +71,58 @@ function addNewIdea(idea){
   newIdeaElemIdeasList.classList.add('ideaBtnIdeasList');
   $(newIdeaElem).append(newIdeaElemIdeasList);
 
-  ideaSortables[idea.soul] = Sortable.create(newIdeaElem, {
+  let ideaElemSortable = Sortable.create(newIdeaElem, {
     direction : 'vertical',
     group : 'ideas',
     draggable : '.ideaBtn',
     animation : 150,
-    disabled : idea.parentIdea ? true : false,
     onAdd : function(e){
       let ideaMoved = e.item;
-      if(dimBeingEdited.ideas[ideaMoved.ideaSoul]){
-        let ideaMovedGun = raygun.get(`idea/${ideaMoved.ideaId}`);
-        ideaMovedGun.get('parentIdea').put(idea.soul);
-        ideaMovedGun.get('loadOrder').put(idea.ideaCount);
-        //Update the local variables
-        let thisIdea = dimBeingEdited.ideas[ideaMoved.ideaSoul];
-        thisIdea.parentIdea = idea.soul;
-        thisIdea.loadOrder = idea.ideaCount;
-        idea.ideas[ideaMoved.ideaSoul] = thisIdea;
-        idea.ideaCount += 1;
-        delete dimBeingEdited.ideas[ideaMoved.ideaSoul];
-        ideaSortables[ideaMoved.ideaSoul].options.disabled = true;
+      //Update the local variables
+      let thisIdea = dimBeingEdited.ideas[ideaMoved.ideaSoul];
+      thisIdea.parentIdea = idea.soul;
+      thisIdea.loadOrder = idea.ideaCount;
+      idea.ideas[thisIdea.ideaSoul] = thisIdea.soul;
+      idea.ideaCount += 1;
 
-        //Remove from the dimension ideas
-        raygun.get(`dimension/${dimBeingEdited.id}`).get('ideas').get(ideaMoved.ideaSoul).put(null);
-        //Add to the ideas of the idea it was added into.
-        raygun.get(`idea/${idea.id}`).get('ideas').set(ideaMovedGun);
-        raygun.get(`idea/${idea.id}`).get('ideaCount').put(idea.ideaCount);
-      }
+      let ideaMovedGun = raygun.get(`idea/${thisIdea.id}`);
+      ideaMovedGun.get('parentIdea').put(idea.soul);
+      ideaMovedGun.get('loadOrder').put(idea.ideaCount);
+      //Remove from the dimension ideas
+      //Add to the ideas of the idea it was added into.
+      raygun.get(`idea/${idea.id}`).get('ideas').get(thisIdea.soul).put(thisIdea.soul);
+      raygun.get(`idea/${idea.id}`).get('ideaCount').put(idea.ideaCount);
     },
 
     onRemove : function(e){
       //Remove the idea from this idea. Put it back in the dim ideas
-      dimBeingEdited.ideas[e.item.ideaSoul] = idea.ideas[e.item.ideaSoul];
       dimBeingEdited.ideas[e.item.ideaSoul].parentIdea = false;
       idea.ideaCount -= 1;
       raygun.get(`idea/${idea.id}`).get('ideas').get(e.item.ideaSoul).put(null);
       raygun.get(`idea/${idea.id}`).get('ideaCount').put(idea.ideaCount);
-      raygun.get(`dimension/${dimBeingEdited.id}`).get('ideas').get(e.item.ideaSoul).put(dimBeingEdited.ideas[e.item.ideaSoul]);
+      raygun.get(`idea/${e.item.ideaId}`).get('parentIdea').put(false);
       delete idea.ideas[e.item.ideaSoul];
 
       //Add it to the new Idea if there is one.
       if(e.to.className != 'editorIdeasList'){
         let ideaMoved = e.item;
-        let ideaMovedGun = raygun.get(`idea/${ideaMoved.ideaId}`);
-        let newParentIdea = dimBeingEdited.ideas[e.to.ideaSoul];
-        ideaMovedGun.get('parentIdea').put(newParentIdea.soul);
-        ideaMovedGun.get('loadOrder').put(newParentIdea.ideaCount);
+        let ideaTo = e.to;
         //Update the local variables
         let thisIdea = dimBeingEdited.ideas[ideaMoved.ideaSoul];
-        thisIdea.parentIdea = newParentIdea.soul;
-        thisIdea.loadOrder = newParentIdea.ideaCount;
-        newParentIdea.ideas[ideaMoved.ideaSoul] = thisIdea;
-        newParentIdea.ideaCount += 1;
-        delete dimBeingEdited.ideas[ideaMoved.ideaSoul];
-        ideaSortables[ideaMoved.ideaSoul].options.disabled = true;
+        let thisIdeaParent = dimBeingEdited.ideas[ideaTo.ideaSoul];
+        thisIdea.parentIdea = thisIdeaParent.soul;
+        thisIdea.loadOrder = thisIdeaParent.ideaCount;
+        thisIdeaParent.ideas[thisIdea.ideaSoul] = thisIdea.soul;
+        thisIdeaParent.ideaCount += 1;
 
+        let ideaMovedGun = raygun.get(`idea/${thisIdea.id}`);
+        ideaMovedGun.get('parentIdea').put(thisIdeaParent.soul);
+        ideaMovedGun.get('loadOrder').put(thisIdeaParent.ideaCount);
         //Remove from the dimension ideas
-        raygun.get(`dimension/${dimBeingEdited.id}`).get('ideas').get(ideaMoved.ideaSoul).put(null);
         //Add to the ideas of the idea it was added into.
-        raygun.get(`idea/${newParentIdea.id}`).get('ideas').set(ideaMovedGun);
-        raygun.get(`idea/${newParentIdea.id}`).get('ideaCount').put(newParentIdea.ideaCount);
+        raygun.get(`idea/${thisIdeaParent.id}`).get('ideas').get(thisIdea.soul).put(thisIdea.soul);
+        raygun.get(`idea/${thisIdeaParent.id}`).get('ideaCount').put(thisIdeaParent.ideaCount);
       }
-
     },
 
     onEnd : function(e){
@@ -217,14 +205,14 @@ function addNewIdea(idea){
   //Add the idea's ideas if any
   let ideaIdeasSorted = {};
   for(let soul in idea.ideas){
-    if(idea.ideas[soul] && $(`#ideaBtn-${idea.ideas[soul].id}`).length == 0){
-      ideaIdeasSorted[idea.ideas[soul].loadOrder] = soul;
+    if(idea.ideas[soul] && $(`#ideaBtn-${dimBeingEdited.ideas[idea.ideas[soul]].id}`).length == 0){
+      ideaIdeasSorted[dimBeingEdited.ideas[soul].loadOrder] = soul;
     }
   }
   for(let i=0; i<idea.ideaCount; i++){
     if(ideaIdeasSorted[i]){
-      idea.ideas[ideaIdeasSorted[i]] = new Idea(idea.ideas[ideaIdeasSorted[i]], ideaIdeasSorted[i]);
-      addNewIdea(idea.ideas[ideaIdeasSorted[i]]);
+      dimBeingEdited.ideas[ideaIdeasSorted[i]] = new Idea(dimBeingEdited.ideas[ideaIdeasSorted[i]], ideaIdeasSorted[i]);
+      addNewIdea(dimBeingEdited.ideas[ideaIdeasSorted[i]]);
     }
   }
 
