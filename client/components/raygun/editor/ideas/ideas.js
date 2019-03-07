@@ -82,14 +82,14 @@ function addNewIdea(idea){
       let thisIdea = dimBeingEdited.ideas[ideaMoved.ideaSoul];
       thisIdea.parentIdea = idea.soul;
       thisIdea.loadOrder = idea.ideaCount;
-      idea.ideas[thisIdea.ideaSoul] = thisIdea.soul;
-      idea.ideaCount += 1;
+      idea.ideas[thisIdea.soul] = thisIdea.soul;
 
       let ideaMovedGun = raygun.get(`idea/${thisIdea.id}`);
       ideaMovedGun.get('parentIdea').put(idea.soul);
       ideaMovedGun.get('loadOrder').put(idea.ideaCount);
       //Remove from the dimension ideas
       //Add to the ideas of the idea it was added into.
+      idea.ideaCount += 1;
       raygun.get(`idea/${idea.id}`).get('ideas').get(thisIdea.soul).put(thisIdea.soul);
       raygun.get(`idea/${idea.id}`).get('ideaCount').put(idea.ideaCount);
     },
@@ -286,27 +286,41 @@ $(document).ready(() => {
     dimBeingEdited.thingCount += 1;
     dimBeingEdited.things[newThing.soul].getDataFromIdea();
     raygun.get('thing').set(newThingGun);
-    raygun.get('dimension/' + dimBeingEdited.id).get('things').set(newThingGun);
+    raygun.get('dimension/' + dimBeingEdited.id).get('things').get(newThing.soul).put(newThing);
     raygun.get('dimension/' + dimBeingEdited.id).get('thingCount').put(dimBeingEdited.thingCount)
 
     // Create a thing for each idea inside this idea if any
-    let thisIdea = ideaBeingEdited;
-    for(let soul in thisIdea.ideas){
-      ideaBeingEdited = thisIdea.ideas[soul];
-      let thisNewThing = new Thing();
-      thisNewThing.parentThing = newThing.soul;
-      thisNewThing.loadOrder = ideaBeingEdited.loadOrder;
-      thisNewThing.parentElement = `#${newThing.ideaClassName + newThing.id}`;
-      let thisNewThingGun = raygun.get(`thing/${thisNewThing.id}`).put(thisNewThing);
-      newThingGun.get('things').set(thisNewThingGun);
-      let thisNewThingSoul = thisNewThingGun._.link;
-      thisNewThing.soul = thisNewThingSoul;
-      newThing.things[thisNewThingSoul] = thisNewThing;
+    let initialIdea = ideaBeingEdited;
+    function makeThingChildren(idea, parentThing){
+      let thisIdea = idea;
+      for(let soul in thisIdea.ideas){
+        ideaBeingEdited = dimBeingEdited.ideas[soul];
+        let thisNewThing = new Thing();
+        thisNewThing.parentThing = parentThing.soul;
+        thisNewThing.loadOrder = ideaBeingEdited.loadOrder;
+        thisNewThing.parentElement = `#${parentThing.ideaClassName + parentThing.id}`;
+        let thisNewThingGun = raygun.get(`thing/${thisNewThing.id}`).put(thisNewThing);
+        let thisNewThingSoul = thisNewThingGun._.link;
+        thisNewThing.soul = thisNewThingSoul;
+        dimBeingEdited.things[thisNewThingSoul] = thisNewThing;
+        dimBeingEdited.things[parentThing.soul].things[thisNewThingSoul] = thisNewThingSoul
+        raygun.get(`dimension/${dimBeingEdited.id}`).get('things').get(thisNewThingSoul).put(thisNewThing)
+        raygun.get(`dimension/${dimBeingEdited.id}`).get('things').get(parentThing.soul).get('things').get(thisNewThingSoul).put(thisNewThingSoul)
+        let thisIdea = ideaBeingEdited
+        if(ideaBeingEdited.ideas){
+          makeThingChildren(ideaBeingEdited, thisNewThing)
+        }
+        ideaBeingEdited = thisIdea
+      }
     }
-    ideaBeingEdited = thisIdea;
+
+    if(ideaBeingEdited.ideas){
+      makeThingChildren(ideaBeingEdited, newThing)
+    }
+
+    ideaBeingEdited = initialIdea;
 
     createNewThing(newThing)
-
 
   })
 

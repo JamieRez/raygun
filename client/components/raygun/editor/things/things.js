@@ -132,26 +132,37 @@ function createNewThing(thing, thingHasData = false){
       openThingEditor(thing);
     }else{
       //Delete this thing
-      let thisThingGun = raygun.get('thing/' + thing.id);
-      thisThingGun.get('exists').put(false);
-      $(`#thingOptionBtn-${thing.id}`).remove();
-      $(thing.element).remove();
+      function deleteThing(thing){
+        let thisThingGun = raygun.get('thing/' + thing.id);
+        thisThingGun.get('exists').put(false);
+        raygun.get(`dimension/${dimBeingEdited.id}`).get('things').get(thing.soul).put(null);
+        $(`#thingOptionBtn-${thing.id}`).remove();
+        $(thing.element).remove();
+        for(soul in thing.things){
+          if(thing.things[soul]){
+            raygun.get(`dimension/${dimBeingEdited.id}`).get('things').get(soul).put(null);
+          }
+        }
+      }
+      deleteThing(thing);
     }
   });
 
   //Add the thing children too if any
   let thingThingsInOrder = {};
   for(soul in thing.things){
-    if(thing.things[soul] && thing.things[soul].exists){
-      thingThingsInOrder[thing.things[soul].loadOrder] = soul;
+    if(thing.things[soul]){
+      thingThingsInOrder[dimBeingEdited.things[soul].loadOrder] = soul;
     }
   }
-  for(let i=0; i < dimBeingEdited.thingCount; i++){
+  console.log(thingThingsInOrder);
+  for(let i=0; i < dimBeingEdited.ideas[thing.ideaSoul].ideaCount; i++){
     if(thingThingsInOrder[i]){
-      thing.things[thingThingsInOrder[i]] = new Thing(thing.things[thingThingsInOrder[i]]);
-      thing.things[thingThingsInOrder[i]].soul = thingThingsInOrder[i];
-      thing.things[thingThingsInOrder[i]].loadData();
-      createNewThing(thing.things[thingThingsInOrder[i]]);
+      console.log(dimBeingEdited.things[thingThingsInOrder[i]])
+      dimBeingEdited.things[thingThingsInOrder[i]] = new Thing(dimBeingEdited.things[thingThingsInOrder[i]]);
+      dimBeingEdited.things[thingThingsInOrder[i]].soul = thingThingsInOrder[i];
+      dimBeingEdited.things[thingThingsInOrder[i]].loadData();
+      createNewThing(dimBeingEdited.things[thingThingsInOrder[i]]);
     }
   }
 }
@@ -160,7 +171,7 @@ function loadDimensionThings(thingsHaveData = false){
   let dimThings = dimBeingEdited.things;
   let thingsInOrder = {};
   for(soul in dimThings){
-    if(dimThings[soul] && dimThings[soul].exists){
+    if(dimThings[soul] && dimThings[soul].exists && !dimThings[soul].parentThing){
       thingsInOrder[dimThings[soul].loadOrder] = soul;
     }
   }
