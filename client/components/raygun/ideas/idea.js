@@ -49,7 +49,7 @@ window.Idea = class {
       this.classCode = idea.classCode || classData.classCode;
       this.className = idea.className || classData.className;
       this.exists = idea.exists || true;
-      this.ideas = idea.ideas || {};
+      this.ideas = idea.ideas || {null : null};
       this.ideaCount = idea.ideaCount || 0;
       this.parentIdea = idea.parentIdea || false;
       this.loadOrder = idea.loadOrder || 0;
@@ -58,7 +58,7 @@ window.Idea = class {
       this.soul = soul || null;
       this.name = "Untitled Idea";
       this.desc = "This is an idea!";
-      this.data = {};
+      this.data = {null : null};
       this.dataCount = 0;
       let userId = $('#userId').text();
       let username = $('#username').text();
@@ -70,10 +70,22 @@ window.Idea = class {
       this.classCode = classData.classCode;
       this.className = classData.className;
       this.exists = true;
-      this.ideas = {};
+      this.ideas = {null : null};
       this.ideaCount = 0;
       this.parentIdea = false;
       this.loadOrder = 0;
+    }
+  }
+
+  save(){
+    loadedIdeas[this.id] = this;
+    raygun.get('idea/' + this.id).put(this);
+    if(this.parentIdea){
+      loadedIdeas[this.parentIdea][this.id] = this.id;
+      raygun.get('idea/' + this.parentIdea).get('ideas').get(this.id).put(this.id);
+    }else{
+      dimBeingEdited.ideas[this.id] = this.id;
+      raygun.get('dimension/' + dimBeingEdited.id).get('ideas').get(this.id).put(this.id)
     }
   }
 

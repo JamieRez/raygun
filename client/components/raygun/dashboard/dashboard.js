@@ -12,13 +12,10 @@ function addDimOption(dim){
   //Clicking on Dimension option brings you the to editor
   $(newDimElem).on("click", (e) => {
     if(!inDeleteMode){
-      //Load the whole dimension
-      raygun.get(`dimension/${dim.id}`).load((dim) => {
-        let thisDim = new Dimension(dim);
-        changeToEditor(thisDim);
-      })
+      changeToEditor(dim);
     }else{
-      raygun.get(`dimension/${dim.id}`).get('exists').put(false);
+      raygun.get(`dimension/${dim.id}`).put(null);
+      raygun.get('dimension').get(dim.id).put(null);
       $(newDimElem).remove();
     }
   })
@@ -51,32 +48,33 @@ function addDimOption(dim){
 //LOADING THE USER. THIS IS LIKE THE MOST IMPORTANT THING
 gun.on('auth', () => {
 
-  //Going to domain dimension if applicable
-  raygun.get(`domain/${window.location.host}`).once((dimId) => {
-    if(dimId){
-      raygun.get(`dimension/${dimId}`).load((dim) => {
-        let thisDim = new Dimension(dim);
-        changeToEditor(thisDim);
-        enterDimensionInEditor();
-      })
-    }else{
-      $('body').css({
-        background: 'url("/components/body-bg.gif")',
-      })
-      $('.raygun').css({
-        display : 'flex'
-      })
-    }
-  })
+  // //Going to domain dimension if applicable
+  // raygun.get(`domain/${window.location.host}`).once((dimId) => {
+  //   if(dimId){
+  //     raygun.get(`dimension/${dimId}`).load((dim) => {
+  //       let thisDim = new Dimension(dim);
+  //       changeToEditor(thisDim);
+  //       enterDimensionInEditor();
+  //     })
+  //   }else{
+  //     $('body').css({
+  //       background: 'url("/components/body-bg.gif")',
+  //     })
+  //     $('.raygun').css({
+  //       display : 'flex'
+  //     })
+  //   }
+  // })
   // $('.raygun').css({
   //   display : 'flex'
   // })
-  usergun.get('dimensions').load((dimensions) => {
-    window.userDims = dimensions;
-    for(soul in userDims){
-      if(userDims[soul] && userDims[soul].exists){
-        let thisDim = new Dimension(userDims[soul]);
-        addDimOption(thisDim)
+  raygun.get('dimension').load((dimensions) => {
+    for(id in dimensions){
+      if(dimensions[id] && dimensions[id]){
+        raygun.get('dimension/' + id).load((thisDim) => {
+          thisDim = new Dimension(thisDim);
+          addDimOption(thisDim)
+        })
       }
     }
   })
@@ -106,7 +104,7 @@ function changeToEditor(dim){
   $('.editorThingsEditor').css('display', 'none');
   $('.editorThingsList').css('display', 'flex');
   dim.renderAt('body');
-  $(dim.element).css({
+  $('#' + dim.id).css({
     transform : "perspective(500px) translate3d(575px, -100px, -500px)",
     boxShadow : "0px 0px 3px 3px #2ed17c"
   })
@@ -119,11 +117,8 @@ $(document).ready(()=> {
   $('.dashNewDimensionBtn').on("click", (e) => {
     if(!inDeleteMode){
       let newDim = new Dimension();
+      newDim.save();
       addDimOption(newDim)
-      let newDimGun = raygun.get('dimension/' + newDim.id).put(newDim, () => {
-        newDimGun.get('editors').set(thisUserId);
-        usergun.get('dimensions').set(newDimGun);
-      });
     }
   })
 

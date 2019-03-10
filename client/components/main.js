@@ -1,4 +1,6 @@
 window.currentRaygunScreen = 'dashboard';
+window.loadedIdeas = {};
+window.loadedThings = {};
 
 let gun;
 if(window.location.href == 'http://localhost:3000/'){
@@ -6,7 +8,6 @@ if(window.location.href == 'http://localhost:3000/'){
 }else{
   gun = Gun([`${window.location.href}gun`, `https://www.raygun.live/gun`])
 }
-window.raygun = gun.get('raygun');
 window.hostName = window.location.host;
 window.currentDimension = null;
 window.userIsTyping = false;
@@ -16,9 +17,9 @@ $(document).ready(() => {
   window.thisUsername = $('#username').text();
   window.thisUserId = $('#userId').text();
   window.thisUserHash = $('#userHash').text()
-  window.usergun = raygun.user()
+  window.raygun = gun.user()
   if(thisUserId.length > 0 && thisUserHash.length > 0){
-    usergun.auth(thisUserId, thisUserHash);
+    raygun.auth(thisUserId, thisUserHash);
   }
 
   $(window).on('keydown', (e) => {

@@ -6,7 +6,7 @@ function switchToDashboard(){
   $('.dashboard').css({
     display : "flex"
   })
-  $(dimBeingEdited.element).remove();
+  $('#' + dimBeingEdited.id).remove();
   $('.toolbarLabel').text("Dashboard");
   $('.toolbarLabel')[0].contentEditable = false;
   $('.toolbarLabel').css({

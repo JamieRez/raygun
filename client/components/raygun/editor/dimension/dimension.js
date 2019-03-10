@@ -14,7 +14,7 @@ function escapeDimensionToRaygun(){
   $('.raygun').css({
     display : 'flex'
   })
-  $(currentDimension.element).css({
+  $('#' + currentDimension.id).css({
     transform : "perspective(500px) translate3d(575px, -100px, -500px)",
     boxShadow : "0px 0px 3px 3px #2ed17c"
   })

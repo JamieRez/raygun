@@ -10,8 +10,8 @@ window.Dimension = class {
       this.creatorName = dim.creatorName || username;
       this.isPrivate = dim.isPrivate || false;
       this.exists = dim.exists || true;
-      this.ideas = dim.ideas || {};
-      this.things = dim.things || {};
+      this.ideas = dim.ideas || {null : null};
+      this.things = dim.things || {null : null};
       this.thingCount = dim.thingCount || 0;
     }else{
       this.id = UUID();
@@ -22,17 +22,22 @@ window.Dimension = class {
       this.creatorName = username;
       this.isPrivate = false;
       this.exists = true;
-      this.ideas = {};
-      this.things = {};
+      this.ideas = {null : null};
+      this.things = {null : null};
       this.thingCount = 0;
     }
   }
 
+  save(){
+    raygun.get('dimension/' + this.id).put(this);
+    raygun.get('dimension').get(this.id).put(this.id);
+  }
+
   renderAt(parentElement){
-    this.element = document.createElement('div');
-    this.element.id = this.id;
-    this.element.classList.add("dimension");
-    $(this.element).css({
+    let thisElement = document.createElement('div');
+    thisElement.id = this.id;
+    thisElement.classList.add("dimension");
+    $(thisElement).css({
       width : "100%",
       height : "100%",
       backgroundColor : "black",
@@ -57,8 +62,8 @@ window.Dimension = class {
       transition : "transform 0.5s ease-in",
       transform : "perspective(500px) translate3d(0px, 0px, 0px)",
     })
-    $(this.element).append(space);
-    $(parentElement).append(this.element);
+    $(thisElement).append(space);
+    $(parentElement).append(thisElement);
   }
 
 }

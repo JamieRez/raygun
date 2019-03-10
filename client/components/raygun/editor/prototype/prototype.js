@@ -38,6 +38,7 @@ function saveCodeInEditor(cb){
 
   let ideaClassData = createClassCode(ideaBeingEdited);
 
+
   ideaBeingEdited.classCode= ideaClassData.classCode;
   ideaBeingEdited.className = ideaClassData.className;
   dimBeingEdited.ideas[ideaBeingEdited.soul] = ideaBeingEdited;
@@ -57,7 +58,7 @@ function runCodeInIdeaEditor(){
   let codeInEditor = ideaEditor.getValue();
   try {
     saveCodeInEditor((idea) => {
-      $(ideaEditorDimension.element).children('.space').empty();
+      $('#prototype').children('.space').empty();
       eval(idea.classCode);
       let protoThingData = {
         id : "proto-" + idea.className,
@@ -65,26 +66,27 @@ function runCodeInIdeaEditor(){
         ideaId : idea.id,
         ideaClassName : idea.className,
         soul : 'prototype-soul-lol',
-        parentElement : $('#space-prototype')[0]
+        parentElement : '#space-prototype'
       }
       let protoThing = new Thing(protoThingData);
-      protoThing.getDataFromIdea();
       protoThing.render(true);
 
       //Render the idea children if any
-      for(soul in idea.ideas){
-        let thisIdea = idea.ideas[soul];
-        eval(thisIdea.classCode);
-        let thisProtoThingData = {
-          id : "proto-" + thisIdea.className,
-          dimension : 'prototype',
-          ideaId : thisIdea.id,
-          ideaClassName : thisIdea.className,
-          parentThing : 'prototype-soul-lol'
+      for(id in idea.ideas){
+        if(idea.ideas[id]){
+          let thisIdea = idea.ideas[id];
+          eval(thisIdea.classCode);
+          let thisProtoThingData = {
+            id : "proto-" + thisIdea.className,
+            dimension : 'prototype',
+            ideaId : thisIdea.id,
+            ideaClassName : thisIdea.className,
+            parentThing : 'prototype-soul-lol'
+          }
+          let thisProtoThing = new Thing(thisProtoThingData);
+          thisProtoThing.getDataFromIdea();
+          thisProtoThing.render(true);
         }
-        let thisProtoThing = new Thing(thisProtoThingData);
-        thisProtoThing.getDataFromIdea();
-        thisProtoThing.render(true);
       }
 
     });
@@ -109,7 +111,7 @@ function prototypeToEditor(){
     $('.editorThings').css({
       transform : "perspective(500px) translate3d(0px, 0px, 0px)"
     })
-    $(dimBeingEdited.element).css({
+    $('#' + dimBeingEdited.id).css({
       transform : "perspective(500px) translate3d(575px, -100px, -500px)",
     })
     $('.prototype').css('display', 'none');
@@ -123,9 +125,9 @@ function prototypeToEditor(){
       $('.thingDataValue').remove();
       $('.editorThingsEditor').css('display', 'none');
       $('.editorThingsList').css('display', 'flex');
-      $(dimBeingEdited.element).remove();
+      $('#' + dimBeingEdited.id).remove();
       dimBeingEdited.renderAt($('body')[0]);
-      $(dimBeingEdited.element).css({
+      $('#' + dimBeingEdited.id).css({
         transform : "perspective(500px) translate3d(575px, -100px, -500px)",
       })
       loadDimensionIdeas();

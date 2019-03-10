@@ -49,15 +49,17 @@ window.Thing = class {
       this.ideaSoul = thing.ideaSoul || null;
       this.ideaClassName = thing.ideaClassName || null;
       this.exists = thing.exists || true;
-      this.dataGun = thing.dataGun || {};
+      this.data = thing.data || {null : null};
       this.loadOrder = thing.loadOrder || dimBeingEdited.thingCount;
-      this.things = thing.things || {};
+      this.things = thing.things || {null : null};
+      this.thingCount = thing.thingCount || 0;
       this.parentThing = thing.parentThing || false;
       this.parentElement = thing.parentElement || `#space-${dimBeingEdited.id}`;
+      this.element = thing.element || null;
     }else{
       this.id = UUID();
       this.name = ideaBeingEdited.name;
-      this.dataGun = {}
+      this.data = {null : null}
       let userId = $('#userId').text();
       let username = $('#username').text();
       this.creatorId = userId;
@@ -69,21 +71,34 @@ window.Thing = class {
       this.ideaClassName = ideaBeingEdited.className;
       this.exists = true;
       this.loadOrder = dimBeingEdited.thingCount;
-      this.things = {};
+      this.things = {null : null};
+      this.thingCount = 0;
       this.parentThing = false;
       this.parentElement = `#space-${dimBeingEdited.id}`;
+      this.element = null;
     }
   }
 
+  save(){
+    loadedThings[this.id] = this;
+    dimBeingEdited.things[this.id] = this.id;
+    raygun.get('thing/' + this.id).put(this);
+    raygun.get('dimension/' + dimBeingEdited.id).get('things').get(this.id).put(this.id)
+  }
+
   render(){
-    if(!this.element || $(`#${this.ideaClassName + this.id}`).length == 0){
-      this.element = document.createElement('div');
-      this.element.id = this.ideaClassName + this.id;
+    if($(`#${this.ideaClassName + this.id}`).length == 0){
+      let thisElement = document.createElement('div');
+      thisElement.id = this.ideaClassName + this.id;
+      thisElement.classList.add("thing");
+      this.element = '#' + this.ideaClassName + this.id;
       if(this.dimension == 'prototype'){
-        this.element.id = 'prototype-thing';
+        thisElement.id = 'prototype-thing';
+        this.element = '#prototype-thing';
+        $('#space-prototype').append(thisElement);
+      }else{
+        $(this.parentElement).append(thisElement);
       }
-      this.element.classList.add("thing");
-      $(this.parentElement).append(this.element);
     }
     eval(`
       new ${this.ideaClassName}(this).build();
