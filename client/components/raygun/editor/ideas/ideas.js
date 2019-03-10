@@ -285,8 +285,8 @@ $(document).ready(() => {
           parentThing.thingCount++;
           parentThing.save();
           thisNewThing.save();
-          let thisIdea = ideaBeingEdited
-          if(ideaBeingEdited.ideas){
+          let thisIdea = ideaBeingEdited;
+          if(ideaBeingEdited.ideaCount > 0){
             makeThingChildren(ideaBeingEdited, thisNewThing)
           }
           ideaBeingEdited = thisIdea
@@ -294,7 +294,7 @@ $(document).ready(() => {
       }
     }
 
-    if(ideaBeingEdited.ideas){
+    if(ideaBeingEdited.ideaCount > 0){
       makeThingChildren(ideaBeingEdited, newThing)
     }
 
