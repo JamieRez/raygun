@@ -32,21 +32,18 @@ function openThingEditor(thing){
   let thingDataGun = thing.dataGun;
   let thingData = thing.data;
   let seenKeys = {}
-  for(soul in thingDataGun){
-    if(thingDataGun[soul] && thingDataGun[soul].exists && !seenKeys[thingDataGun[soul].key]){
+  for(id in thingDataGun){
+    if(thingDataGun[id] && !seenKeys[thingDataGun[id].key]){
+      seenKeys[thingDataGun[id].key] = true;
 
-      seenKeys[thingDataGun[soul].key] = true;
-
-      let thingData = thingDataGun[soul];
-      let thisKey = thingDataGun[soul].key;
-      let thisValue = thingDataGun[soul].value;
-      let thisId = thingDataGun[soul].id;
-      let thisSoul = soul;
+      let thingData = thingDataGun[id];
+      let thisKey = thingDataGun[id].key;
+      let thisValue = thingDataGun[id].value;
 
       //Now we add the data value to the dom
       let thingDataValue = document.createElement('div');
       thingDataValue.classList.add('thingDataValue');
-      thingDataValue.id = thisId;
+      thingDataValue.id = id;
 
       let thingDataValueKey = document.createElement('div');
       thingDataValueKey.classList.add('thingDataValueKey');
@@ -65,11 +62,13 @@ function openThingEditor(thing){
       $(thingDataValueValue).on('blur', () => {
         let newValue = $(thingDataValueValue).text();
         if(newValue.length > 0){
-          thing.data[thisKey] = newValue;
-          thing.dataGun[thisSoul].value = newValue;
-          let thingDataId = thing.dataGun[thisSoul].id;
+          thing.data[thing.dataGun[id].key] = newValue;
+          thing.dataGun[id].value = newValue;
+          let thingDataId = thing.dataGun[id].id;
           thing.render(true);
-          raygun.get(`thingData/${thingData.id}`).get('value').put(newValue)
+          thing.save();
+          // raygun.get('thing/' + thing.id).get('dataGun').get(thingDataId).get('value').put(newValue)
+          // raygun.get('thing/' + thing.id).get('data').get(thing.dataGun[id].key).put(newValue)
         }
       })
     }
@@ -78,7 +77,7 @@ function openThingEditor(thing){
 
 function createNewThing(thing, thingHasData = false){
   //Add to dimension
-  thing.render(true);
+  thing.render();
   //Add to things list in editor
   let newThingOption = document.createElement('div');
   newThingOption.classList.add('thingOptionBtn');
@@ -113,8 +112,10 @@ function createNewThing(thing, thingHasData = false){
         let thingId = thingOptions[i].thingId;
         if(loadedThings[thingId]){
           loadedThings[thingId].loadOrder = i;
+          dimBeingEdited.things[i] = thingId;
           loadedThings[thingId].render();
           loadedThings[thingId].save()
+          dimBeingEdited.save();
         }
       }
     }
@@ -128,8 +129,9 @@ function createNewThing(thing, thingHasData = false){
       //Delete this thing
       function deleteThing(thing){
         raygun.get('thing/' + thing.id).put(null);
+        raygun.get('dimension/' + dimBeingEdited.id).get('things').get(thing.loadOrder).put(null);
         $(`#thingOptionBtn-${thing.id}`).remove();
-        dimBeingEdited.things[thing.id] = null;
+        dimBeingEdited.things[thing.loadOrder] = null;
         $(thing.element).remove();
         if(!thing.parentThing){
           dimBeingEdited.thingCount -= 1;
@@ -137,11 +139,12 @@ function createNewThing(thing, thingHasData = false){
           let dimThings = $('.editorThingsList').children('.thingOptionBtn');
           for(let i=0; i<dimThings.length;i++){
             loadedThings[dimThings[i].thingId].loadOrder = i;
+            dimBeingEdited.things[i] = loadedThings[dimThings[i].thingId].id;
             loadedThings[dimThings[i].thingId].save();
           }
         }else{
           loadedThings[thing.parentThing].thingCount -= 1;
-          loadedThings[thing.parentThing].things[thing.id] = null;
+          loadedThings[thing.parentThing].things[thing.loadOrder] = null;
           loadedThings[thing.parentThing].save();
           let thingThings = $('#thingOptionBtn-' + thing.parentThing).children('.thingOptionBtn');
           for(let i=0; i<thingThings.length;i++){
@@ -150,9 +153,9 @@ function createNewThing(thing, thingHasData = false){
           }
         }
         dimBeingEdited.save();
-        for(id in thing.things){
-          if(thing.things[id]){
-            deleteThing(loadedThings[id]);
+        for(i in thing.things){
+          if(thing.things[i]){
+            deleteThing(loadedThings[thing.things[i]]);
           }
         }
       }
@@ -163,25 +166,18 @@ function createNewThing(thing, thingHasData = false){
   //Add the thing children too if any
   raygun.get('thing/' + thing.id).get('things').load((thingIds) => {
     if(thingIds){
-      let thingThingsInOrder = {};
-      let count = 0;
-      for(let id in thingIds){
-        if(thingIds[id]){
-          raygun.get('thing/' + thingIds[id]).load((childThing) => {
-            if(childThing){
-              loadedThings[thingIds[id]] = childThing
-              thingThingsInOrder[loadedThings[id].loadOrder] = id;
-              count++;
-              if(count == thing.thingCount){
-                for(let i=0; i < thing.thingCount; i++){
-                  if(thingThingsInOrder[i]){
-                    loadedThings[thingThingsInOrder[i]] = new Thing(loadedThings[thingThingsInOrder[i]]);
-                    createNewThing(loadedThings[thingThingsInOrder[i]]);
-                  }
-                }
+      for(let i=0; i<thing.thingCount; i++){
+        if(thingIds[i]){
+          if(!loadedThings[thingIds[i]]){
+            raygun.get('thing/' + thingIds[i]).load((childThing) => {
+              if(childThing){
+                loadedThings[childThing.id] = new Thing(childThing)
+                createNewThing(loadedThings[childThing.id]);
               }
-            }
-          })
+            })
+          }else{
+            createNewThing(loadedThings[thingIds[i]])
+          }
         }
       }
     }
@@ -190,22 +186,13 @@ function createNewThing(thing, thingHasData = false){
 
 function loadDimensionThings(thingsHaveData = false){
   let dimThings = dimBeingEdited.things;
-  let thingsInOrder = {};
-  let count = 0;
-  for(id in dimThings){
-    if(dimThings[id]){
-      raygun.get('thing/' + id).load((thisThing) => {
-        if(!thisThing.parentThing){
-          loadedThings[thisThing.id] = thisThing;
-          thingsInOrder[thisThing.loadOrder] = thisThing.id;
-          count += 1;
-          if(count == dimBeingEdited.thingCount){
-            for(let i=0; i < dimBeingEdited.thingCount; i++){
-              if(thingsInOrder[i]){
-                loadedThings[thingsInOrder[i]] = new Thing(loadedThings[thingsInOrder[i]]);
-                createNewThing(loadedThings[thingsInOrder[i]]);
-              }
-            }
+  for(let i=0; i<dimBeingEdited.thingCount; i++){
+    if(dimThings[i]){
+      raygun.get('thing/' + dimThings[i]).load((thisThing) => {
+        if(thisThing){
+          if(!thisThing.parentThing){
+            loadedThings[thisThing.id] = new Thing(thisThing);
+            createNewThing(loadedThings[thisThing.id]);
           }
         }
       })

@@ -80,10 +80,7 @@ window.Idea = class {
   save(){
     loadedIdeas[this.id] = this;
     raygun.get('idea/' + this.id).put(this);
-    if(this.parentIdea){
-      loadedIdeas[this.parentIdea][this.id] = this.id;
-      raygun.get('idea/' + this.parentIdea).get('ideas').get(this.id).put(this.id);
-    }else{
+    if(!this.parentIdea){
       dimBeingEdited.ideas[this.id] = this.id;
       raygun.get('dimension/' + dimBeingEdited.id).get('ideas').get(this.id).put(this.id)
     }

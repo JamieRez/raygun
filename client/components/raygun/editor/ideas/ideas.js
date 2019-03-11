@@ -18,6 +18,7 @@ function openIdeaPrototypeEditor(idea){
   $('.prototype').css('display', 'flex');
   $('#prototype').children('.space').empty();
   $('.dataValue').remove();
+  loadIdeaData(idea);
   eval(idea.classCode);
   let protoThingData = {
     id : "proto-" + idea.className,
@@ -52,11 +53,13 @@ function addNewIdea(idea){
   newIdeaElem.classList.add('ideaBtn');
   newIdeaElem.id = 'ideaBtn-' + idea.id;
   newIdeaElem.ideaId = idea.id;
-  if(!idea.parentIdea){
-    $('.editorIdeasList').append(newIdeaElem);
-  }else{
-    let parentIdeaBtn = $('#ideaBtn-' + idea.parentIdea);
-    $(parentIdeaBtn).append(newIdeaElem);
+  if($('#' + newIdeaElem.id).length == 0){
+    if(!idea.parentIdea){
+      $('.editorIdeasList').append(newIdeaElem);
+    }else{
+      let parentIdeaBtn = $('#ideaBtn-' + idea.parentIdea);
+      $(parentIdeaBtn).append(newIdeaElem);
+    }
   }
 
   let newIdeaElemLabel = document.createElement('div');
@@ -77,27 +80,27 @@ function addNewIdea(idea){
       //Update the local variables
       loadedIdeas[e.item.ideaId].parentIdea = idea.id;
       loadedIdeas[e.item.ideaId].loadOrder = idea.ideaCount;
-      loadedIdeas[idea.id].ideas[e.item.ideaId] = e.item.ideaId;
-      loadedIdeas[e.item.ideaId].save();
+      loadedIdeas[idea.id].ideas[idea.ideaCount] = e.item.ideaId;
       loadedIdeas[idea.id].ideaCount += 1;
+      loadedIdeas[e.item.ideaId].save();
       loadedIdeas[idea.id].save();
-      let ideaOptions = $(newIdeaElem).children('.ideaBtn');
     },
 
     onRemove : function(e){
       //Remove the idea from this idea. Put it back in the dim ideas
       loadedIdeas[e.item.ideaId].parentIdea = false;
-      idea.ideaCount -= 1;
-      idea.ideas[e.item.ideaId] = null;
+      let loadIndex = loadedIdeas[e.item.ideaId].loadOrder;
+      loadedIdeas[idea.id].ideaCount -= 1;
+      loadedIdeas[idea.id].ideas[loadIndex] = null;
       loadedIdeas[e.item.ideaId].save();
-      idea.save();
+      loadedIdeas[idea.id].save();
 
       //Add it to the new Idea if there is one.
       if(e.to.className != 'editorIdeasList'){
         //Update the local variables
         loadedIdeas[e.item.ideaId].parentIdea = e.to.ideaId;
         loadedIdeas[e.item.ideaId].loadOrder = loadedIdeas[e.to.ideaId].ideaCount;
-        loadedIdeas[e.to.ideaId].ideas[e.item.ideaId] = e.item.ideaId;
+        loadedIdeas[e.to.ideaId].ideas[loadedIdeas[e.item.ideaId].loadOrder] = e.item.ideaId;
         loadedIdeas[e.to.ideaId].ideaCount += 1;
         loadedIdeas[e.item.ideaId].save();
         loadedIdeas[e.to.ideaId].save();
@@ -110,10 +113,13 @@ function addNewIdea(idea){
         let ideaId = ideaOptions[i].ideaId;
         if(loadedIdeas[ideaId]){
           loadedIdeas[ideaId].loadOrder = i;
+          loadedIdeas[idea.id].ideas[i] = ideaId;
           loadedIdeas[ideaId].save();
+          loadedIdeas[idea.id].save();
         }
       }
     }
+
   })
 
   var listSortable = Sortable.create($('.editorIdeasList')[0], {
@@ -158,7 +164,7 @@ function addNewIdea(idea){
       raygun.get(`idea/${idea.id}`).put(null);
       dimBeingEdited.ideas[idea.id] = null;
       if(idea.parentIdea){
-        loadedIdeas[idea.parentIdea][idea.id] = null
+        loadedIdeas[idea.parentIdea][idea.loadOrder] = null
         loadedIdeas[idea.parentIdea].ideaCount -= 1;
         loadedIdeas[idea.parentIdea].save();
       }
@@ -167,37 +173,26 @@ function addNewIdea(idea){
     }
   });
 
-  raygun.get(`idea/${idea.id}`).get('name').on((newName) => {
-    idea.name = newName;
-    $('.editIdeaName').text(newName);
-    $(`#ideaBtn-${idea.id}`).find('.ideaBtnLabel').text(newName);
-  })
-
-  raygun.get(`idea/${idea.id}`).get('desc').on((newDesc) => {
-    idea.desc = newDesc;
-    $('.editIdeaDesc').text(newDesc);
-  })
+  // raygun.get(`idea/${idea.id}`).get('name').on((newName) => {
+  //   idea.name = newName;
+  //   $('.editIdeaName').text(newName);
+  //   $(`#ideaBtn-${idea.id}`).find('.ideaBtnLabel').text(newName);
+  // })
+  //
+  // raygun.get(`idea/${idea.id}`).get('desc').on((newDesc) => {
+  //   idea.desc = newDesc;
+  //   $('.editIdeaDesc').text(newDesc);
+  // })
 
   //Add the idea's ideas if any
   raygun.get('idea/' + idea.id).get('ideas').load((childIdeas) => {
     if(childIdeas){
-      let ideaIdeasSorted = {};
-      let count = 0;
-      for(let id in childIdeas){
-        if(childIdeas[id]){
-          raygun.get('idea/' + childIdeas[id]).load((childIdea) => {
+      for(let i=0; i<idea.ideaCount; i++){
+        if(childIdeas[i]){
+          raygun.get('idea/' + childIdeas[i]).load((childIdea) => {
             if(childIdea){
-              loadedIdeas[childIdea.id] = childIdea;
-              ideaIdeasSorted[childIdea.loadOrder] = childIdea.id;
-              count += 1;
-              if(count == idea.ideaCount){
-                for(let i=0; i<idea.ideaCount; i++){
-                  if(loadedIdeas[ideaIdeasSorted[i]]){
-                    loadedIdeas[ideaIdeasSorted[i]] = new Idea(loadedIdeas[ideaIdeasSorted[i]]);
-                    addNewIdea(loadedIdeas[ideaIdeasSorted[i]]);
-                  }
-                }
-              }
+              loadedIdeas[childIdea.id] = new Idea(childIdea);
+              addNewIdea(loadedIdeas[childIdea.id]);
             }
           })
         }
@@ -233,13 +228,14 @@ $(document).ready(() => {
   $('.editIdeaName').on('blur', (e) => {
     if($('.editIdeaName').text().length > 0){
       ideaBeingEdited.name = $('.editIdeaName').text()
-      raygun.get(`idea/${ideaBeingEdited.id}`).get('name').put(ideaBeingEdited.name);
+      $('#ideaBtn-' + ideaBeingEdited.id).children('.ideaBtnLabel').text(ideaBeingEdited.name)
+      ideaBeingEdited.save();
     }
   })
   $('.editIdeaDesc').on('blur', () => {
     if($('.editIdeaDesc').text().length > 0){
       ideaBeingEdited.desc = $('.editIdeaDesc').text()
-      raygun.get(`idea/${ideaBeingEdited.id}`).get('desc').put(ideaBeingEdited.desc);
+      ideaBeingEdited.save();
     }
   })
 
@@ -265,8 +261,12 @@ $(document).ready(() => {
   //Click on Make Thing Button makes a new thing in this dimension
   $('.editIdeaMakeThingBtn').on('click', () => {
     let newThing = new Thing();
-    newThing.save();
-    if(!newThing.parentThing){
+    loadedThings[newThing.id] = newThing
+    loadedThings[newThing.id].getDataFromIdea(true)
+    loadedThings[newThing.id].save();
+    if(!loadedThings[newThing.id].parentThing){
+      dimBeingEdited.things[newThing.loadOrder] = newThing.id;
+      raygun.get('dimension/' + dimBeingEdited.id).get('things').get(newThing.loadOrder).put(newThing.id);
       dimBeingEdited.thingCount++;
       raygun.get('dimension/' + dimBeingEdited.id).get('thingCount').put(dimBeingEdited.thingCount);
     }
@@ -274,20 +274,22 @@ $(document).ready(() => {
     let initialIdea = ideaBeingEdited;
     function makeThingChildren(idea, parentThing){
       let thisIdea = idea;
-      for(let id in thisIdea.ideas){
-        if(thisIdea.ideas[id] && loadedIdeas[id]){
-          ideaBeingEdited = loadedIdeas[id];
+      for(let i=0; i<thisIdea.ideaCount; i++){
+        if(thisIdea.ideas[i] && loadedIdeas[thisIdea.ideas[i]]){
+          ideaBeingEdited = loadedIdeas[idea.ideas[i]];
           let thisNewThing = new Thing();
-          thisNewThing.parentThing = parentThing.id;
-          thisNewThing.loadOrder = ideaBeingEdited.loadOrder;
-          thisNewThing.parentElement = `#${parentThing.ideaClassName + parentThing.id}`;
-          parentThing.things[thisNewThing.id] = thisNewThing.id;
-          parentThing.thingCount++;
-          parentThing.save();
-          thisNewThing.save();
+          loadedThings[thisNewThing.id] = thisNewThing;
+          loadedThings[thisNewThing.id].parentThing = parentThing.id;
+          loadedThings[thisNewThing.id].loadOrder = ideaBeingEdited.loadOrder;
+          loadedThings[thisNewThing.id].parentElement = `#${parentThing.ideaClassName + parentThing.id}`;
+          loadedThings[parentThing.id].things[thisNewThing.loadOrder] = thisNewThing.id;
+          loadedThings[parentThing.id].thingCount++;
+          loadedThings[parentThing.id].save();
+          loadedThings[thisNewThing.id].getDataFromIdea(true);
+          loadedThings[thisNewThing.id].save();
           let thisIdea = ideaBeingEdited;
           if(ideaBeingEdited.ideaCount > 0){
-            makeThingChildren(ideaBeingEdited, thisNewThing)
+            makeThingChildren(ideaBeingEdited, loadedThings[thisNewThing.id])
           }
           ideaBeingEdited = thisIdea
         }
@@ -303,6 +305,5 @@ $(document).ready(() => {
     createNewThing(newThing)
 
   })
-
 
 })

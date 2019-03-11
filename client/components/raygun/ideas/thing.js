@@ -1,37 +1,40 @@
 window.Thing = class {
 
-  getDataFromIdea(){
-    let ideaData = ideaBeingEdited.data;
+  getDataFromIdea(isPrototype = false){
+    let ideaData = loadedIdeas[this.ideaId].data;
     this.data = {};
     let seenKeys = {};
-    for(soul in ideaData){
-      if(ideaData[soul] && ideaData[soul].exists && !seenKeys[ideaData[soul].key]){
-        seenKeys[ideaData[soul].key] = true;
+    for(id in ideaData){
+      if(ideaData[id] && !seenKeys[ideaData[id].key]){
+        seenKeys[ideaData[id].key] = true;
         let newThingData = {
           id : UUID(),
-          key : ideaData[soul].key,
-          value : ideaData[soul].value,
-          exists : ideaData[soul].exists,
+          key : ideaData[id].key,
+          value : ideaData[id].value,
+          exists : ideaData[id].exists,
         }
-        let thingDataGun = raygun.get(`thingData/${newThingData.id}`).put(newThingData)
-        newThingData.soul = thingDataGun._.link;
         this.data[newThingData.key] = newThingData.value;
-        this.dataGun[newThingData.soul] = newThingData;
-        raygun.get(`thing/${this.id}`).get('dataGun').set(thingDataGun);
+        this.dataGun[newThingData.id] = newThingData;
+        if(!isPrototype){
+          this.save();
+        }
       }
     }
   }
 
-  loadData(){
-    this.data = {};
-    let thisDataGun = this.dataGun;
-    let seenKeys = {};
-    for(soul in thisDataGun){
-      if(thisDataGun[soul] && thisDataGun[soul].exists && !seenKeys[thisDataGun[soul].key]){
-        seenKeys[thisDataGun[soul].key] = true;
-        this.data[thisDataGun[soul].key] = thisDataGun[soul].value;
+  loadData(cb){
+    raygun.get('thing/' + this.id).get('data').load((data) => {
+      if(this.data != data){
+        this.data = data;
+        if(cb && typeof cb == 'function'){
+          cb();
+        }
+      }else{
+        if(cb && typeof cb == 'function'){
+          cb();
+        }
       }
-    }
+    })
   }
 
   constructor(thing){
@@ -50,6 +53,8 @@ window.Thing = class {
       this.ideaClassName = thing.ideaClassName || null;
       this.exists = thing.exists || true;
       this.data = thing.data || {null : null};
+      this.dataCount = thing.dataCount;
+      this.dataGun = thing.dataGun || {null : null};
       this.loadOrder = thing.loadOrder || dimBeingEdited.thingCount;
       this.things = thing.things || {null : null};
       this.thingCount = thing.thingCount || 0;
@@ -59,7 +64,9 @@ window.Thing = class {
     }else{
       this.id = UUID();
       this.name = ideaBeingEdited.name;
-      this.data = {null : null}
+      this.data = {null : null},
+      this.dataCount = ideaBeingEdited.dataCount;
+      this.dataGun = {null : null};
       let userId = $('#userId').text();
       let username = $('#username').text();
       this.creatorId = userId;
@@ -81,28 +88,47 @@ window.Thing = class {
 
   save(){
     loadedThings[this.id] = this;
-    dimBeingEdited.things[this.id] = this.id;
     raygun.get('thing/' + this.id).put(this);
-    raygun.get('dimension/' + dimBeingEdited.id).get('things').get(this.id).put(this.id)
   }
 
-  render(){
-    if($(`#${this.ideaClassName + this.id}`).length == 0){
-      let thisElement = document.createElement('div');
-      thisElement.id = this.ideaClassName + this.id;
-      thisElement.classList.add("thing");
-      this.element = '#' + this.ideaClassName + this.id;
-      if(this.dimension == 'prototype'){
-        thisElement.id = 'prototype-thing';
-        this.element = '#prototype-thing';
-        $('#space-prototype').append(thisElement);
-      }else{
-        $(this.parentElement).append(thisElement);
+  render(dataLoaded = false){
+    if(!dataLoaded){
+      this.loadData(() => {
+        if($(`#${this.ideaClassName + this.id}`).length == 0){
+          let thisElement = document.createElement('div');
+          thisElement.id = this.ideaClassName + this.id;
+          thisElement.classList.add("thing");
+          this.element = '#' + this.ideaClassName + this.id;
+          if(this.dimension == 'prototype'){
+            thisElement.id = 'prototype-thing';
+            this.element = '#prototype-thing';
+            $('#space-prototype').append(thisElement);
+          }else{
+            $(this.parentElement).append(thisElement);
+          }
+        }
+        eval(`
+          new ${this.ideaClassName}(this).build();
+        `)
+      });
+    }else{
+      if($(`#${this.ideaClassName + this.id}`).length == 0){
+        let thisElement = document.createElement('div');
+        thisElement.id = this.ideaClassName + this.id;
+        thisElement.classList.add("thing");
+        this.element = '#' + this.ideaClassName + this.id;
+        if(this.dimension == 'prototype'){
+          thisElement.id = 'prototype-thing';
+          this.element = '#prototype-thing';
+          $('#space-prototype').append(thisElement);
+        }else{
+          $(this.parentElement).append(thisElement);
+        }
       }
+      eval(`
+        new ${this.ideaClassName}(this).build();
+      `)
     }
-    eval(`
-      new ${this.ideaClassName}(this).build();
-    `)
   }
 
 

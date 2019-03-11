@@ -38,11 +38,8 @@ function saveCodeInEditor(cb){
 
   let ideaClassData = createClassCode(ideaBeingEdited);
 
-
   ideaBeingEdited.classCode= ideaClassData.classCode;
   ideaBeingEdited.className = ideaClassData.className;
-  dimBeingEdited.ideas[ideaBeingEdited.soul] = ideaBeingEdited;
-  dimBeingEdited.ideas[ideaBeingEdited.soul].code = ideaBeingEdited.code;
 
   if(cb && typeof cb == 'function'){
     cb(ideaBeingEdited);
@@ -65,33 +62,36 @@ function runCodeInIdeaEditor(){
         dimension : 'prototype',
         ideaId : idea.id,
         ideaClassName : idea.className,
-        soul : 'prototype-soul-lol',
+        dataGun : idea.data,
         parentElement : '#space-prototype'
       }
       let protoThing = new Thing(protoThingData);
+      protoThing.getDataFromIdea(true)
       protoThing.render(true);
 
       //Render the idea children if any
-      for(id in idea.ideas){
-        if(idea.ideas[id]){
-          let thisIdea = idea.ideas[id];
-          eval(thisIdea.classCode);
-          let thisProtoThingData = {
-            id : "proto-" + thisIdea.className,
-            dimension : 'prototype',
-            ideaId : thisIdea.id,
-            ideaClassName : thisIdea.className,
-            parentThing : 'prototype-soul-lol'
+      for(i in idea.ideas){
+        if(idea.ideas[i]){
+          if(loadedIdeas[idea.ideas[i]]){
+            let thisIdea = loadedIdeas[idea.ideas[i]];
+            eval(thisIdea.classCode);
+            let thisProtoThingData = {
+              id : "proto-" + thisIdea.className,
+              dimension : 'prototype',
+              ideaId : thisIdea.id,
+              ideaClassName : thisIdea.className,
+              parentThing : 'prototype-thing'
+            }
+            let thisProtoThing = new Thing(thisProtoThingData);
+            protoThing.getDataFromIdea(true)
+            thisProtoThing.render(true);
           }
-          let thisProtoThing = new Thing(thisProtoThingData);
-          thisProtoThing.getDataFromIdea();
-          thisProtoThing.render(true);
         }
       }
 
     });
   } catch (e) {
-    console.log(e.message);
+    console.log(e);
   }
 }
 
@@ -143,9 +143,9 @@ function prototypeToEditor(){
 
 function loadIdeaData(idea){
   let ideaData = idea.data;
-  for(soul in ideaData){
-    if(ideaData[soul] && ideaData[soul].exists){
-      addNewDataValue(ideaData[soul]);
+  for(id in ideaData){
+    if(ideaData[id]){
+      addNewDataValue(ideaData[id]);
     }
   }
 }
@@ -165,8 +165,6 @@ function dataValuesToCodeEditor(){
 }
 
 function addNewDataValue(dataValue){
-  ideaBeingEdited.data[dataValue.soul] = dataValue;
-
   let newDataValue = document.createElement('div');
   newDataValue.classList.add('dataValue');
   newDataValue.id = dataValue.id;
@@ -199,8 +197,8 @@ function addNewDataValue(dataValue){
     let newKey = $(newDataValueKey).text();
     if(newKey.length > 0){
       dataValue.key = newKey;
-      raygun.get(`ideaData/${dataValue.id}`).get('key').put(newKey);
-      ideaBeingEdited.data[dataValue.soul] = dataValue;
+      raygun.get('idea/'+ ideaBeingEdited.id).get('data').get(dataValue.id).get('key').put(newKey);
+      loadedIdeas[ideaBeingEdited.id].data[dataValue.id] = dataValue;
       runCodeInIdeaEditor();
     }
   })
@@ -211,8 +209,8 @@ function addNewDataValue(dataValue){
     let newValue = $(newDataValueValue).text();
     if(newValue.length > 0){
       dataValue.value = newValue;
-      raygun.get(`ideaData/${dataValue.id}`).get('value').put(newValue);
-      ideaBeingEdited.data[dataValue.soul] = dataValue;
+      raygun.get('idea/'+ ideaBeingEdited.id).get('data').get(dataValue.id).get('value').put(newValue);
+      loadedIdeas[ideaBeingEdited.id].data[dataValue.id] = dataValue;
       runCodeInIdeaEditor();
     }
   })
@@ -220,11 +218,10 @@ function addNewDataValue(dataValue){
   //Delete
   $(newDataValue).on('click', (e) => {
     if(inDeleteMode){
-      raygun.get(`ideaData/${dataValue.id}`).get('exists').put(false, () => {
-        raygun.get(`idea/${ideaBeingEdited.id}`).get('dataCount').put(ideaBeingEdited.dataCount - 1)
-        ideaBeingEdited.dataCount -= 1;
-        $(newDataValue).remove();
-      });
+      raygun.get('idea/'+ ideaBeingEdited.id).get('data').get(dataValue.id).put(null);
+      raygun.get('idea/'+ ideaBeingEdited.id).get('dataCount').put(loadedIdeas[ideaBeingEdited.id].dataCount - 1)
+      loadedIdeas[ideaBeingEdited.id].dataCount -= 1;
+      $(newDataValue).remove();
     }
   });
 }
@@ -269,11 +266,11 @@ $(document).ready(() => {
       value : "dataValue",
       exists : true,
     }
-    let newIdeaDataGun = raygun.get(`ideaData/${newIdeaData.id}`).put(newIdeaData);
-    newIdeaData.soul = newIdeaDataGun._.link;
-    addNewDataValue(newIdeaData);
-    raygun.get(`idea/${ideaBeingEdited.id}`).get('data').set(newIdeaDataGun);
+    loadedIdeas[ideaBeingEdited.id].data = newIdeaData;
+    loadedIdeas[ideaBeingEdited.id].dataCount += 1;
+    raygun.get(`idea/${ideaBeingEdited.id}`).get('data').get(newIdeaData.id).put(newIdeaData);
     raygun.get(`idea/${ideaBeingEdited.id}`).get('dataCount').put(ideaBeingEdited.dataCount + 1);
+    addNewDataValue(newIdeaData);
   })
 
   $('#protoCodeEditor').on('keydown', (e) => {
