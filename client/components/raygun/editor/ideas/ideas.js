@@ -203,6 +203,7 @@ function addNewIdea(idea){
 }
 
 function loadDimensionIdeas(){
+  console.log("Here");
   for(id in dimBeingEdited.ideas){
     if(dimBeingEdited.ideas[id]){
       raygun.get('idea/' + id).load((thisIdea) => {
