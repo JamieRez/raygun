@@ -44,7 +44,7 @@ let checkAuth = function (req, res, next) {
 app.use(checkAuth);
 
 
-app.get('/', (req, res) => {
+app.get('/*', (req, res) => {
   if(req.user){
     User.findById(req.user.id).then((user) => {
       if(!user){
@@ -52,7 +52,8 @@ app.get('/', (req, res) => {
         res.render('main');
       }else{
         res.render('main', {
-          currentUser : req.user
+          currentUser : req.user,
+          raygunPublicKey : process.env.RAYGUN_PUBLIC_KEY
         })
       }
     })

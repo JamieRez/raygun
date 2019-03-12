@@ -52,6 +52,7 @@ meta(name='viewport', content='width=device-width, initial-scale=1.0, maximum-sc
   
 
 if currentUser
+  p#raygunPublicKey(hidden)=raygunPublicKey
   p#username(hidden)=currentUser.username
   p#userId(hidden)=currentUser.id
   p#userHash(hidden)=currentUser.password

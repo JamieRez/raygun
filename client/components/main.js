@@ -4,9 +4,9 @@ window.loadedThings = {};
 
 let gun;
 if(window.location.href == 'http://localhost:3000/'){
-  gun = Gun([`${window.location.href}gun`])
+  gun = Gun([`${window.location.origin}/gun`])
 }else{
-  gun = Gun([`${window.location.href}gun`, `https://www.raygun.live/gun`])
+  gun = Gun([`${window.location.origin}/gun`, `https://www.raygun.live/gun`])
 }
 window.hostName = window.location.host;
 window.currentDimension = null;
@@ -14,6 +14,7 @@ window.userIsTyping = false;
 
 $(document).ready(() => {
 
+  window.raygunPublicKey = $('#raygunPublicKey').text();
   window.thisUsername = $('#username').text();
   window.thisUserId = $('#userId').text();
   window.thisUserHash = $('#userHash').text()

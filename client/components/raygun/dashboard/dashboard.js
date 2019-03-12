@@ -44,27 +44,22 @@ function addDimOption(dim){
   })
 
 }
-
+$('body').css({
+  background: 'url("/components/body-bg.gif")',
+})
 //LOADING THE USER. THIS IS LIKE THE MOST IMPORTANT THING
 gun.on('auth', () => {
 
-  // //Going to domain dimension if applicable
-  // raygun.get(`domain/${window.location.host}`).once((dimId) => {
-  //   if(dimId){
-  //     raygun.get(`dimension/${dimId}`).load((dim) => {
-  //       let thisDim = new Dimension(dim);
-  //       changeToEditor(thisDim);
-  //       enterDimensionInEditor();
-  //     })
-  //   }else{
-  //     $('body').css({
-  //       background: 'url("/components/body-bg.gif")',
-  //     })
-  //     $('.raygun').css({
-  //       display : 'flex'
-  //     })
-  //   }
-  // })
+  //Going to domain dimension if applicable
+  gun.user(raygunPublicKey).get('url').get(window.location.pathname).once((dimId) => {
+    if(dimId){
+      raygun.get(`dimension/${dimId}`).load((dim) => {
+        let thisDim = new Dimension(dim);
+        changeToEditor(thisDim);
+        enterDimensionInEditor();
+      })
+    }
+  })
   // $('.raygun').css({
   //   display : 'flex'
   // })
