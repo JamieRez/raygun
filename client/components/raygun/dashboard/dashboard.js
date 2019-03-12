@@ -76,9 +76,6 @@ function addDimOption(dim){
   })
 
 }
-$('body').css({
-  background: 'url("/components/body-bg.gif")',
-})
 //LOADING THE USER. THIS IS LIKE THE MOST IMPORTANT THING
 gun.on('auth', () => {
 
@@ -98,11 +95,13 @@ gun.on('auth', () => {
           })
         }
       })
+    }else{
+      $('.raygun').css({
+        display : 'flex'
+      })
     }
   })
-  // $('.raygun').css({
-  //   display : 'flex'
-  // })
+
   raygun.get('dimension').load((dimensions) => {
     for(id in dimensions){
       if(dimensions[id] && dimensions[id]){

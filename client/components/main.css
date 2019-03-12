@@ -19,4 +19,5 @@ body {
   overflow: hidden;
   font-family: futura;
   color : white;
+  background: url("/components/body-bg.gif");
 }
