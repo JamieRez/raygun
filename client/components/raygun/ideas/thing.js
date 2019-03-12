@@ -2,7 +2,7 @@ window.Thing = class {
 
   getDataFromIdea(isPrototype = false){
     let ideaData = loadedIdeas[this.ideaId].data;
-    this.data = {};
+    this.data = {null : null};
     let seenKeys = {};
     for(id in ideaData){
       if(ideaData[id] && !seenKeys[ideaData[id].key]){
@@ -49,7 +49,6 @@ window.Thing = class {
       this.isPrivate = thing.isPrivate || false;
       this.dimension = thing.dimension || dimBeingEdited.id
       this.ideaId = thing.ideaId || null;
-      this.ideaSoul = thing.ideaSoul || null;
       this.ideaClassName = thing.ideaClassName || null;
       this.exists = thing.exists || true;
       this.data = thing.data || {null : null};
@@ -74,7 +73,6 @@ window.Thing = class {
       this.isPrivate = false;
       this.dimension = dimBeingEdited.id;
       this.ideaId = ideaBeingEdited.id;
-      this.ideaSoul = ideaBeingEdited.soul;
       this.ideaClassName = ideaBeingEdited.className;
       this.exists = true;
       this.loadOrder = dimBeingEdited.thingCount;
