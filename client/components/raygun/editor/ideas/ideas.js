@@ -204,7 +204,6 @@ function addNewIdea(idea){
 
 function loadDimensionIdeas(){
   for(id in dimBeingEdited.ideas){
-    console.log(id)
     if(dimBeingEdited.ideas[id]){
       raygun.get('idea/' + id).load((thisIdea) => {
         if(!thisIdea.parentIdea){
