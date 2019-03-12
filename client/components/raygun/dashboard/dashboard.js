@@ -88,9 +88,14 @@ gun.on('auth', () => {
       raygun.get(`dimension/${dimId}`).load((dim) => {
         if(dim){
           let thisDim = new Dimension(dim);
-          console.log(thisDim.ideas);
-          changeToEditor(thisDim);
-          enterDimensionInEditor();
+          raygun.get(`dimension/${dimId}`).get('ideas').load((ideas) => {
+            thisDim.ideas = ideas;
+            raygun.get(`dimension/${dimId}`).get('things').load((things) => {
+              thisDim.things = things;
+              changeToEditor(thisDim);
+              enterDimensionInEditor();
+            })
+          })
         }
       })
     }
