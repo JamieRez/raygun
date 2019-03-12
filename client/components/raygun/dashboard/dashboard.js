@@ -51,7 +51,7 @@ $('body').css({
 gun.on('auth', () => {
 
   //Going to domain dimension if applicable
-  gun.user(raygunPublicKey).get('url').get(window.location.pathname).once((dimId) => {
+  gun.user(raygunPublicKey).get('path').get(window.location.pathname).once((dimId) => {
     if(dimId){
       raygun.get(`dimension/${dimId}`).load((dim) => {
         let thisDim = new Dimension(dim);
