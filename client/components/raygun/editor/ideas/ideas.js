@@ -229,6 +229,7 @@ $(document).ready(() => {
     if($('.editIdeaName').text().length > 0){
       ideaBeingEdited.name = $('.editIdeaName').text()
       $('#ideaBtn-' + ideaBeingEdited.id).children('.ideaBtnLabel').text(ideaBeingEdited.name)
+      ideaBeingEdited.createClassCode();
       ideaBeingEdited.save();
     }
   })
