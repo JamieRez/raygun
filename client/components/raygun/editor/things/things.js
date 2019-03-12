@@ -37,13 +37,14 @@ function openThingEditor(thing){
       seenKeys[thingDataGun[id].key] = true;
 
       let thingData = thingDataGun[id];
+      let thingDataId = thingDataGun[id].id;
       let thisKey = thingDataGun[id].key;
       let thisValue = thingDataGun[id].value;
 
       //Now we add the data value to the dom
       let thingDataValue = document.createElement('div');
       thingDataValue.classList.add('thingDataValue');
-      thingDataValue.id = id;
+      thingDataValue.id = thingDataId;
 
       let thingDataValueKey = document.createElement('div');
       thingDataValueKey.classList.add('thingDataValueKey');
@@ -62,9 +63,8 @@ function openThingEditor(thing){
       $(thingDataValueValue).on('blur', () => {
         let newValue = $(thingDataValueValue).text();
         if(newValue.length > 0){
-          thing.data[thing.dataGun[id].key] = newValue;
-          thing.dataGun[id].value = newValue;
-          let thingDataId = thing.dataGun[id].id;
+          thing.data[thing.dataGun[thingDataId].key] = newValue;
+          thing.dataGun[thingDataId].value = newValue;
           thing.render(true);
           thing.save();
           // raygun.get('thing/' + thing.id).get('dataGun').get(thingDataId).get('value').put(newValue)
