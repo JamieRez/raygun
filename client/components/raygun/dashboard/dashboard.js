@@ -56,6 +56,8 @@ gun.on('auth', () => {
       raygun.get(`dimension/${dimId}`).load((dim) => {
         let thisDim = new Dimension(dim);
         changeToEditor(thisDim);
+        loadDimensionIdeas();
+        loadDimensionThings();
         enterDimensionInEditor();
       })
     }
