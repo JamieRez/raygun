@@ -1,3 +1,35 @@
+function changeToEditor(dim){
+  dimBeingEdited = dim;
+  currentRaygunScreen = "editor";
+  //Change to Editor
+  $('.dashboard').css({
+    display : "none"
+  })
+  $('.editor').css({
+    display : "flex"
+  })
+  $('.toolbarLabel').text(dim.name);
+  $('.toolbarLabel')[0].contentEditable = true;
+  $('.toolbarLabel').css({
+    border : "2px solid #2ed17c",
+    borderRadius : "25px",
+    padding : "5px 10px",
+  })
+  $('.ideaBtn').remove();
+  $('.thingOptionBtn').remove();
+  $('.editorDimPreview').empty();
+  $('.thingDataValue').remove();
+  $('.editorThingsEditor').css('display', 'none');
+  $('.editorThingsList').css('display', 'flex');
+  dim.renderAt('body');
+  $('#' + dim.id).css({
+    transform : "perspective(500px) translate3d(575px, -100px, -500px)",
+    boxShadow : "0px 0px 3px 3px #2ed17c"
+  })
+  loadDimensionIdeas();
+  loadDimensionThings();
+}
+
 function addDimOption(dim){
   //Create a Dimension Option on the dashboard
   let newDimElem = document.createElement('div');
@@ -54,11 +86,11 @@ gun.on('auth', () => {
   gun.user(raygunPublicKey).get('path').get(window.location.pathname).once((dimId) => {
     if(dimId){
       raygun.get(`dimension/${dimId}`).load((dim) => {
-        let thisDim = new Dimension(dim);
-        changeToEditor(thisDim);
-        loadDimensionIdeas();
-        loadDimensionThings();
-        enterDimensionInEditor();
+        if(dim){
+          let thisDim = new Dimension(dim);
+          changeToEditor(thisDim);
+          enterDimensionInEditor();
+        }
       })
     }
   })
@@ -76,38 +108,6 @@ gun.on('auth', () => {
     }
   })
 })
-
-function changeToEditor(dim){
-  dimBeingEdited = dim;
-  currentRaygunScreen = "editor";
-  //Change to Editor
-  $('.dashboard').css({
-    display : "none"
-  })
-  $('.editor').css({
-    display : "flex"
-  })
-  $('.toolbarLabel').text(dim.name);
-  $('.toolbarLabel')[0].contentEditable = true;
-  $('.toolbarLabel').css({
-    border : "2px solid #2ed17c",
-    borderRadius : "25px",
-    padding : "5px 10px",
-  })
-  $('.ideaBtn').remove();
-  $('.thingOptionBtn').remove();
-  $('.editorDimPreview').empty();
-  $('.thingDataValue').remove();
-  $('.editorThingsEditor').css('display', 'none');
-  $('.editorThingsList').css('display', 'flex');
-  dim.renderAt('body');
-  $('#' + dim.id).css({
-    transform : "perspective(500px) translate3d(575px, -100px, -500px)",
-    boxShadow : "0px 0px 3px 3px #2ed17c"
-  })
-  loadDimensionIdeas();
-  loadDimensionThings();
-}
 
 $(document).ready(()=> {
 
