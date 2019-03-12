@@ -1,13 +1,14 @@
 function enterDimensionInEditor(){
   currentRaygunScreen = 'dimension';
   currentDimension = dimBeingEdited || currentDimension;
-  $(currentDimension.element).css({
+  $('#' + currentDimension.id).css({
     transform : "perspective(500px) translate3d(0px, 0px, 0px)"
   });
 }
 
 function escapeDimensionToRaygun(){
   currentRaygunScreen = 'editor';
+  currentDimension = dimBeingEdited || currentDimension;
   $('body').css({
     background: 'url("/components/body-bg.gif")'
   })

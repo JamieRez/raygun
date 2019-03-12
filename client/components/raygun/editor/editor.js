@@ -38,11 +38,7 @@ $(document).ready(() => {
         enterDimensionInEditor();
       }
       else if(e.keyCode == 192 && currentRaygunScreen == 'dimension'){
-        raygun.get(`dimension/${currentDimension.id}`).get('editors').map().once((editorId) => {
-          if(thisUserId == editorId){
-            escapeDimensionToRaygun();
-          }
-        })
+        escapeDimensionToRaygun();
       }else if(currentRaygunScreen == 'editor' && e.keyCode == 70){
         inDeleteMode = true;
         $('.ideaBtn').css({
