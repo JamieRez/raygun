@@ -23,7 +23,7 @@ window.Thing = class {
   }
 
   loadData(cb){
-    raygun.get('thing/' + this.id).get('data').load((data) => {
+    raygun.get('thing/' + this.id).get('data').open((data) => {
       if(this.data != data){
         this.data = data;
         if(cb && typeof cb == 'function'){
