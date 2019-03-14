@@ -45,22 +45,16 @@ app.use(checkAuth);
 
 
 app.get('/*', (req, res) => {
-  if(req.user){
-    User.findById(req.user.id).then((user) => {
-      if(!user){
-        res.clearCookie('userToken');
-        res.render('main');
-      }else{
-        res.render('main', {
-          currentUser : req.user,
-          raygunPublicKey : process.env.RAYGUN_PUBLIC_KEY
-        })
-      }
+  let thisUserId = req.user ? req.user.id : null;
+  User.findById(thisUserId).then((user) => {
+    if(!user){
+      res.clearCookie('userToken');
+    }
+    res.render('main', {
+      currentUser : req.user,
+      raygunPublicKey : process.env.RAYGUN_PUBLIC_KEY
     })
-  }else{
-    res.clearCookie('userToken');
-    res.render('main');
-  }
+  });
 })
 
 //Controllers
