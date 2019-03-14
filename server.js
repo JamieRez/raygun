@@ -65,6 +65,6 @@ app.get('/*', (req, res) => {
 
 //Controllers
 require('./controllers/user.js')(app, raygun);
-require('./controllers/dimension.js')(app, raygun);
-require('./controllers/idea.js')(app, raygun);
-require('./controllers/thing.js')(app, raygun)
+// require('./controllers/dimension.js')(app, raygun);
+// require('./controllers/idea.js')(app, raygun);
+// require('./controllers/thing.js')(app, raygun)
