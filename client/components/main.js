@@ -1,6 +1,7 @@
 window.currentRaygunScreen = 'dashboard';
 window.loadedIdeas = {};
 window.loadedThings = {};
+window.userPubKey = null;
 
 let gun;
 if(window.location.href == 'http://localhost:3000/'){
