@@ -169,7 +169,8 @@ function createNewThing(thing, thingHasData = false){
       for(let i=0; i<thing.thingCount; i++){
         if(thingIds[i]){
           if(!loadedThings[thingIds[i]]){
-            raygun.get('thing/' + thingIds[i]).load((childThing) => {
+            let thisRaygun = gun.user(creatorPubKey);
+            thisRaygun.get('thing/' + thingIds[i]).load((childThing) => {
               if(childThing){
                 loadedThings[childThing.id] = new Thing(childThing)
                 createNewThing(loadedThings[childThing.id]);
@@ -188,7 +189,8 @@ function loadDimensionThings(thingsHaveData = false){
   let dimThings = dimBeingEdited.things;
   for(let i=0; i<dimBeingEdited.thingCount; i++){
     if(dimThings[i]){
-      raygun.get('thing/' + dimThings[i]).load((thisThing) => {
+      let thisRaygun = gun.user(dimBeingEdited.creatorPubKey);
+      thisRaygun.get('thing/' + dimThings[i]).load((thisThing) => {
         if(thisThing){
           if(!thisThing.parentThing){
             loadedThings[thisThing.id] = new Thing(thisThing);

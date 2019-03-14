@@ -7,6 +7,7 @@ window.Dimension = class {
       let userId = $('#userId').text();
       let username = $('#username').text();
       this.creatorId = dim.creatorId || userId;
+      this.creatorPubKey = dim.creatorPubKey || userPubKey;
       this.creatorName = dim.creatorName || username;
       this.isPrivate = dim.isPrivate || false;
       this.exists = dim.exists || true;
@@ -20,6 +21,7 @@ window.Dimension = class {
       let username = $('#username').text();
       this.creatorId = userId
       this.creatorName = username;
+      this.creatorPubKey = userPubKey;
       this.isPrivate = false;
       this.exists = true;
       this.ideas = {null : null};
@@ -29,8 +31,9 @@ window.Dimension = class {
   }
 
   save(){
-    raygun.get('dimension/' + this.id).put(this);
-    raygun.get('dimension').get(this.id).put(this.id);
+    let thisRaygun = gun.user(creatorPubKey);
+    thisRaygun.get('dimension/' + this.id).put(this);
+    thisRaygun.get('dimension').get(this.id).put(this.id);
   }
 
   renderAt(parentElement){

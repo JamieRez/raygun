@@ -23,7 +23,8 @@ window.Thing = class {
   }
 
   loadData(cb){
-    raygun.get('thing/' + this.id).get('data').open((data) => {
+    let thisRaygun = gun.user(this.creatorPubKey);
+    thisRaygun.get('thing/' + this.id).get('data').open((data) => {
       if(this.data != data){
         this.data = data;
         if(cb && typeof cb == 'function'){
@@ -46,6 +47,7 @@ window.Thing = class {
       let username = $('#username').text();
       this.creatorId = thing.creatorId || userId;
       this.creatorName = thing.creatorName || username;
+      this.creatorPubKey = thing.creatorPubKey || userPubKey;
       this.isPrivate = thing.isPrivate || false;
       this.dimension = thing.dimension || dimBeingEdited.id
       this.ideaId = thing.ideaId || null;
@@ -70,6 +72,7 @@ window.Thing = class {
       let username = $('#username').text();
       this.creatorId = userId;
       this.creatorName = username;
+      this.creatorPubKey = userPubKey;
       this.isPrivate = false;
       this.dimension = dimBeingEdited.id;
       this.ideaId = ideaBeingEdited.id;

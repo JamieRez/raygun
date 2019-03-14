@@ -79,6 +79,8 @@ function addDimOption(dim){
 //LOADING THE USER. THIS IS LIKE THE MOST IMPORTANT THING
 gun.on('auth', () => {
 
+  window.userPubKey = gun.user().is.pub;
+
   //Going to domain dimension if applicable
   maingun.get('path').get(window.location.pathname).once((dimId) => {
     if(dimId){
@@ -89,7 +91,6 @@ gun.on('auth', () => {
             thisDim.ideas = ideas;
             maingun.get(`dimension/${dimId}`).get('things').load((things) => {
               thisDim.things = things;
-              raygun = maingun;
               changeToEditor(thisDim);
               enterDimensionInEditor();
             })

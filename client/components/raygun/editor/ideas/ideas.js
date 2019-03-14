@@ -185,11 +185,12 @@ function addNewIdea(idea){
   // })
 
   //Add the idea's ideas if any
-  raygun.get('idea/' + idea.id).get('ideas').load((childIdeas) => {
+  let thisRaygun = gun.user(dimBeingEdited.creatorPubKey);
+  thisRaygun.get('idea/' + idea.id).get('ideas').load((childIdeas) => {
     if(childIdeas){
       for(let i=0; i<idea.ideaCount; i++){
         if(childIdeas[i]){
-          raygun.get('idea/' + childIdeas[i]).load((childIdea) => {
+          thisRaygun.get('idea/' + childIdeas[i]).load((childIdea) => {
             if(childIdea){
               loadedIdeas[childIdea.id] = new Idea(childIdea);
               addNewIdea(loadedIdeas[childIdea.id]);
@@ -205,7 +206,7 @@ function addNewIdea(idea){
 function loadDimensionIdeas(){
   for(id in dimBeingEdited.ideas){
     if(dimBeingEdited.ideas[id]){
-      raygun.get('idea/' + id).load((thisIdea) => {
+      gun.user(dimBeingEdited.creatorPubKey).get('idea/' + id).load((thisIdea) => {
         if(!thisIdea.parentIdea){
           loadedIdeas[thisIdea.id] = new Idea(thisIdea);
           addNewIdea(loadedIdeas[thisIdea.id]);
