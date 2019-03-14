@@ -14,6 +14,7 @@ window.currentDimension = null;
 window.userIsTyping = false;
 
 $(document).ready(() => {
+  $('.loadingRayGun').css('display', 'none');
 
   window.raygunPublicKey = $('#raygunPublicKey').text();
   window.thisUsername = $('#username').text();
@@ -25,28 +26,40 @@ $(document).ready(() => {
     raygun.auth(thisUserId, thisUserHash);
   }
 
+  //Initialize RayGun if on the raygun domain or localhost
+  if(window.location.hostname == 'raygun.live' || window.location.hostname == 'localhost'){
+    $('.raygun').css("display", 'flex');
+  }
+
+  if(!thisUserId){
+    $('.auth').css('display', 'flex');
+    $('.raygun').css('display', 'none');
+  }
+
   //Going to domain dimension if applicable
-  maingun.get('path').get(window.location.pathname).once((dimId) => {
-    if(dimId){
-      maingun.get(`dimension/${dimId}`).load((dim) => {
-        if(dim){
-          let thisDim = new Dimension(dim);
-          maingun.get(`dimension/${dimId}`).get('ideas').load((ideas) => {
-            thisDim.ideas = ideas;
-            maingun.get(`dimension/${dimId}`).get('things').load((things) => {
-              thisDim.things = things;
-              changeToEditor(thisDim);
-              enterDimensionInEditor();
+  if(window.location.pathname != '/'){
+    maingun.get('path').get(window.location.pathname).once((dimId) => {
+      if(dimId){
+        maingun.get(`dimension/${dimId}`).load((dim) => {
+          if(dim){
+            let thisDim = new Dimension(dim);
+            maingun.get(`dimension/${dimId}`).get('ideas').load((ideas) => {
+              thisDim.ideas = ideas;
+              maingun.get(`dimension/${dimId}`).get('things').load((things) => {
+                thisDim.things = things;
+                changeToEditor(thisDim);
+                enterDimensionInEditor();
+              })
             })
-          })
-        }
-      })
-    }else{
-      $('.raygun').css({
-        display : 'flex'
-      })
-    }
-  })
+          }
+        })
+      }else{
+        $('.raygun').css({
+          display : 'flex'
+        })
+      }
+    })
+  }
 
 
 

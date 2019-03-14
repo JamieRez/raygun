@@ -1,3 +1,8 @@
+//Main.css
+link(rel='stylesheet' href='/components/main.css')
+//Page Loading Animation
+.loadingRayGun
+  img.loadingRayGunSource(src='/components/load.gif')
 //GUN
 script(src="/gun/gun.js")
 script(src="/gun/sea.js")
@@ -41,12 +46,10 @@ script(src='https://cdn.quilljs.com/1.3.6/quill.js')
 script(src="/imports/axios.min.js")
 //IPFS
 script(src="/imports/ipfs_http.js")
-//Main.css
-link(rel='stylesheet' href='/components/main.css')
+//Main.js
 script(src='/components/main.js')
 
 link(rel="icon" href="/components/favicon.png")
-
 
 meta(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no')
   
@@ -60,5 +63,4 @@ if currentUser
 if dimension
   p#currentDimension(hidden)=dimension
 include raygun/raygun
-//- else
-//-   include auth/auth
+include auth/auth
