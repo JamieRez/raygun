@@ -19,6 +19,7 @@ $(document).ready(() => {
   window.thisUserId = $('#userId').text();
   window.thisUserHash = $('#userHash').text()
   window.raygun = gun.user()
+  window.maingun = gun.user(raygunPublicKey);
   if(thisUserId.length > 0 && thisUserHash.length > 0){
     raygun.auth(thisUserId, thisUserHash);
   }

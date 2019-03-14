@@ -79,17 +79,17 @@ function addDimOption(dim){
 //LOADING THE USER. THIS IS LIKE THE MOST IMPORTANT THING
 gun.on('auth', () => {
 
-  let pubRayGun = gun.user(raygunPublicKey);
   //Going to domain dimension if applicable
-  pubRayGun.get('path').get(window.location.pathname).once((dimId) => {
+  maingun.get('path').get(window.location.pathname).once((dimId) => {
     if(dimId){
-      pubRayGun.get(`dimension/${dimId}`).load((dim) => {
+      maingun.get(`dimension/${dimId}`).load((dim) => {
         if(dim){
           let thisDim = new Dimension(dim);
-          pubRayGun.get(`dimension/${dimId}`).get('ideas').load((ideas) => {
+          maingun.get(`dimension/${dimId}`).get('ideas').load((ideas) => {
             thisDim.ideas = ideas;
-            pubRayGun.get(`dimension/${dimId}`).get('things').load((things) => {
+            maingun.get(`dimension/${dimId}`).get('things').load((things) => {
               thisDim.things = things;
+              raygun = maingun;
               changeToEditor(thisDim);
               enterDimensionInEditor();
             })
