@@ -33,6 +33,7 @@ $(document).ready(() => {
   }
 
   if(!thisUserId){
+    currentRaygunScreen = 'auth';
     $('.auth').css('display', 'flex');
     $('.raygun').css('display', 'none');
   }
