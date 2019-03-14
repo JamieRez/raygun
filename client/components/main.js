@@ -29,6 +29,7 @@ $(document).ready(() => {
   //Initialize RayGun if on the raygun domain or localhost
   if(window.location.hostname == 'www.raygun.live' || window.location.hostname == 'localhost'){
     $('.raygun').css("display", 'flex');
+    $('body').css('background', "url('/components/body-bg.gif')")
   }
 
   if(!thisUserId){
