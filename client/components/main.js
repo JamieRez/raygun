@@ -27,7 +27,7 @@ $(document).ready(() => {
   }
 
   //Initialize RayGun if on the raygun domain or localhost
-  if(window.location.hostname == 'raygun.live' || window.location.hostname == 'localhost'){
+  if(window.location.hostname == 'www.raygun.live' || window.location.hostname == 'localhost'){
     $('.raygun').css("display", 'flex');
   }
 
