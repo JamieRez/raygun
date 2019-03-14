@@ -46,7 +46,7 @@ function addDimOption(dim){
     if(!inDeleteMode){
       changeToEditor(dim);
     }else{
-      raygun.get(`dimension/${dim.id}`).put(null);
+      //raygun.get(`dimension/${dim.id}`).put(null);
       raygun.get('dimension').get(dim.id).put(null);
       $(newDimElem).remove();
     }
@@ -80,29 +80,6 @@ function addDimOption(dim){
 gun.on('auth', () => {
 
   window.userPubKey = gun.user().is.pub;
-
-  //Going to domain dimension if applicable
-  maingun.get('path').get(window.location.pathname).once((dimId) => {
-    if(dimId){
-      maingun.get(`dimension/${dimId}`).load((dim) => {
-        if(dim){
-          let thisDim = new Dimension(dim);
-          maingun.get(`dimension/${dimId}`).get('ideas').load((ideas) => {
-            thisDim.ideas = ideas;
-            maingun.get(`dimension/${dimId}`).get('things').load((things) => {
-              thisDim.things = things;
-              changeToEditor(thisDim);
-              enterDimensionInEditor();
-            })
-          })
-        }
-      })
-    }else{
-      $('.raygun').css({
-        display : 'flex'
-      })
-    }
-  })
 
   raygun.get('dimension').load((dimensions) => {
     for(id in dimensions){

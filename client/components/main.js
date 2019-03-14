@@ -25,6 +25,31 @@ $(document).ready(() => {
     raygun.auth(thisUserId, thisUserHash);
   }
 
+  //Going to domain dimension if applicable
+  maingun.get('path').get(window.location.pathname).once((dimId) => {
+    if(dimId){
+      maingun.get(`dimension/${dimId}`).load((dim) => {
+        if(dim){
+          let thisDim = new Dimension(dim);
+          maingun.get(`dimension/${dimId}`).get('ideas').load((ideas) => {
+            thisDim.ideas = ideas;
+            maingun.get(`dimension/${dimId}`).get('things').load((things) => {
+              thisDim.things = things;
+              changeToEditor(thisDim);
+              enterDimensionInEditor();
+            })
+          })
+        }
+      })
+    }else{
+      $('.raygun').css({
+        display : 'flex'
+      })
+    }
+  })
+
+
+
   $(window).on('keydown', (e) => {
     if(e.metaKey && e.keyCode == 83 || e.ctrlKey && e.keyCode == 83) {
       e.preventDefault();
