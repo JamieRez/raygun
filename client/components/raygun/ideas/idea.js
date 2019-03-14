@@ -81,10 +81,11 @@ window.Idea = class {
 
   save(){
     loadedIdeas[this.id] = this;
-    raygun.get('idea/' + this.id).put(this);
+    let thisRaygun = gun.user(this.creatorPubKey)
+    thisRaygun.get('idea/' + this.id).put(this);
     if(!this.parentIdea){
       dimBeingEdited.ideas[this.id] = this.id;
-      raygun.get('dimension/' + dimBeingEdited.id).get('ideas').get(this.id).put(this.id)
+      thisRaygun.get('dimension/' + dimBeingEdited.id).get('ideas').get(this.id).put(this.id)
     }
   }
 

@@ -31,7 +31,7 @@ window.Dimension = class {
   }
 
   save(){
-    let thisRaygun = gun.user(creatorPubKey);
+    let thisRaygun = gun.user(this.creatorPubKey);
     thisRaygun.get('dimension/' + this.id).put(this);
     thisRaygun.get('dimension').get(this.id).put(this.id);
   }

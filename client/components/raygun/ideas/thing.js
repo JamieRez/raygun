@@ -89,7 +89,8 @@ window.Thing = class {
 
   save(){
     loadedThings[this.id] = this;
-    raygun.get('thing/' + this.id).put(this);
+    let thisRaygun = gun.user(this.creatorPubKey);
+    thisRaygun.get('thing/' + this.id).put(this);
   }
 
   render(dataLoaded = false){
