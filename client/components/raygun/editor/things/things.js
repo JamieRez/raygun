@@ -105,8 +105,7 @@ function createNewThing(thing, thingHasData = false){
     onEnd : function(e){
 
       //Empty the Dimension Space
-      $(dimBeingEdited.element).children('.space').empty();
-
+      $('#' + dimBeingEdited.id).children('.space').empty();
       let thingOptions = $('.editorThingsList').children();
       for(var i=0; i < thingOptions.length;i++){
         let thingId = thingOptions[i].thingId;

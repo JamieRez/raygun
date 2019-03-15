@@ -94,42 +94,27 @@ window.Thing = class {
   }
 
   render(dataLoaded = false){
-    if(!dataLoaded){
-      this.loadData(() => {
-        if($(`#${this.ideaClassName + this.id}`).length == 0){
-          let thisElement = document.createElement('div');
-          thisElement.id = this.ideaClassName + this.id;
-          thisElement.classList.add("thing");
-          this.element = '#' + this.ideaClassName + this.id;
-          if(this.dimension == 'prototype'){
-            thisElement.id = 'prototype-thing';
-            this.element = '#prototype-thing';
-            $('#space-prototype').append(thisElement);
-          }else{
-            $(this.parentElement).append(thisElement);
-          }
-        }
-        eval(`
-          new ${this.ideaClassName}(this).build();
-        `)
-      });
-    }else{
-      if($(`#${this.ideaClassName + this.id}`).length == 0){
-        let thisElement = document.createElement('div');
-        thisElement.id = this.ideaClassName + this.id;
-        thisElement.classList.add("thing");
-        this.element = '#' + this.ideaClassName + this.id;
-        if(this.dimension == 'prototype'){
-          thisElement.id = 'prototype-thing';
-          this.element = '#prototype-thing';
-          $('#space-prototype').append(thisElement);
-        }else{
-          $(this.parentElement).append(thisElement);
-        }
+    let thisThing = this;
+    function create(){
+      let thisElement = document.createElement('div');
+      thisElement.id = thisThing.ideaClassName + thisThing.id;
+      thisElement.classList.add("thing");
+      thisThing.element = '#' + thisThing.ideaClassName + thisThing.id;
+      if($(`#${thisThing.ideaClassName + thisThing.id}`).length == 0){
+        $(thisThing.parentElement).append(thisElement);
+      }else if(thisThing.dimension == 'prototype'){
+        thisElement.id = 'prototype-thing';
+        thisThing.element = '#prototype-thing';
+        $('#space-prototype').append(thisElement);
       }
       eval(`
-        new ${this.ideaClassName}(this).build();
+        new ${thisThing.ideaClassName}(thisThing).build();
       `)
+    }
+    if(!dataLoaded){
+      this.loadData(create);
+    }else{
+      create();
     }
   }
 
