@@ -104,7 +104,6 @@ window.Thing = class {
   render(dataLoaded = false){
     let thisThing = this;
     function create(){
-      console.log("Creatin")
       let thisElement = document.createElement('div');
       thisElement.id = thisThing.ideaClassName + thisThing.id;
       thisElement.classList.add("thing");
