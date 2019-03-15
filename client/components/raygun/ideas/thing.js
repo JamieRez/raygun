@@ -24,16 +24,22 @@ window.Thing = class {
 
   loadData(cb){
     let thisRaygun = gun.user(this.creatorPubKey);
+    let seenData = {};
     thisRaygun.get('thing/' + this.id).get('data').open((data) => {
-      if(this.data != data){
-        this.data = data;
-        if(cb && typeof cb == 'function'){
-          cb();
+      if(!seenData[data.key]){
+        seenData[data.key] = true;
+        if(this.data != data){
+          this.data = data;
+          if(cb && typeof cb == 'function'){
+            cb();
+          }
+        }else{
+          if(cb && typeof cb == 'function'){
+            cb();
+          }
         }
       }else{
-        if(cb && typeof cb == 'function'){
-          cb();
-        }
+        return;
       }
     })
   }
@@ -62,6 +68,7 @@ window.Thing = class {
       this.parentThing = thing.parentThing || false;
       this.parentElement = thing.parentElement || `#space-${dimBeingEdited.id}`;
       this.element = thing.element || null;
+      this.rendered = thing.rendered || false;
     }else{
       this.id = UUID();
       this.name = ideaBeingEdited.name;
@@ -84,6 +91,7 @@ window.Thing = class {
       this.parentThing = false;
       this.parentElement = `#space-${dimBeingEdited.id}`;
       this.element = null;
+      this.rendered = false;
     }
   }
 
@@ -96,16 +104,20 @@ window.Thing = class {
   render(dataLoaded = false){
     let thisThing = this;
     function create(){
+      console.log("Creatin")
       let thisElement = document.createElement('div');
       thisElement.id = thisThing.ideaClassName + thisThing.id;
       thisElement.classList.add("thing");
       thisThing.element = '#' + thisThing.ideaClassName + thisThing.id;
       if($(`#${thisThing.ideaClassName + thisThing.id}`).length == 0){
         $(thisThing.parentElement).append(thisElement);
+        thisThing.rendered = true;
       }else if(thisThing.dimension == 'prototype'){
         thisElement.id = 'prototype-thing';
         thisThing.element = '#prototype-thing';
         $('#space-prototype').append(thisElement);
+      }else{
+        thisThing.rendered= false;
       }
       eval(`
         new ${thisThing.ideaClassName}(thisThing).build();
