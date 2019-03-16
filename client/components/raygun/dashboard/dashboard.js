@@ -21,13 +21,20 @@ function changeToEditor(dim){
   $('.thingDataValue').remove();
   $('.editorThingsEditor').css('display', 'none');
   $('.editorThingsList').css('display', 'flex');
-  dim.renderAt('body');
+  dim.renderAt('.editorDimPreview');
   $('#' + dim.id).css({
-    transform : "perspective(500px) translate3d(575px, -100px, -500px)",
+    transform : "perspective(500px) translate3d(0px, 0px, -500px)",
     boxShadow : "0px 0px 3px 3px #2ed17c",
+    position : "absolute",
   })
   loadDimensionIdeas();
   loadDimensionThings();
+  setTimeout(() => {
+    $('#' + dim.id).css({
+      left : $('#' + dim.id).css('left'),
+      top : $('#' + dim.id).css('top')
+    })
+  }, 310)
 }
 
 function addDimOption(dim){

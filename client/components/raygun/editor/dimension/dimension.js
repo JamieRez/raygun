@@ -1,8 +1,15 @@
 function enterDimensionInEditor(){
   currentRaygunScreen = 'dimension';
   currentDimension = dimBeingEdited || currentDimension;
+  currentDimension.pos = {
+    left : $('#' + currentDimension.id).css('left'),
+    top : $('#' + currentDimension.id).css('top')
+  }
   $('#' + currentDimension.id).css({
-    transform : "perspective(500px) translate3d(0px, 0px, 0px)"
+    transform : "perspective(500px) translate3d(0px, 0px, 0px)",
+    top : "0px",
+    left : "0px",
+    zIndex : "1"
   });
 }
 
@@ -16,7 +23,9 @@ function escapeDimensionToRaygun(){
     display : 'flex'
   })
   $('#' + currentDimension.id).css({
-    transform : "perspective(500px) translate3d(575px, -100px, -500px)",
+    transform : "perspective(500px) translate3d(0px, 0px, -500px)",
+    top : currentDimension.pos.top,
+    left : currentDimension.pos.left,
     boxShadow : "0px 0px 3px 3px #2ed17c"
   })
 }

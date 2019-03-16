@@ -50,7 +50,7 @@ window.Dimension = class {
       overflowX : "hidden",
       top : "initial",
       left : "initial",
-      transition : "transform 0.3s ease-in, top 0.5s ease-in, left 0.5s ease-in",
+      transition : "transform 0.3s ease-in, top 0.3s ease-in, left 0.3s ease-in",
       transform : "perspective(500px) translate3d(0px, 0px, 0px)",
     })
     let space = document.createElement('div');

@@ -172,18 +172,6 @@ function addNewIdea(idea){
       $(newIdeaElem).remove();
     }
   });
-
-  // raygun.get(`idea/${idea.id}`).get('name').on((newName) => {
-  //   idea.name = newName;
-  //   $('.editIdeaName').text(newName);
-  //   $(`#ideaBtn-${idea.id}`).find('.ideaBtnLabel').text(newName);
-  // })
-  //
-  // raygun.get(`idea/${idea.id}`).get('desc').on((newDesc) => {
-  //   idea.desc = newDesc;
-  //   $('.editIdeaDesc').text(newDesc);
-  // })
-
   //Add the idea's ideas if any
   let thisRaygun = gun.user(dimBeingEdited.creatorPubKey);
   thisRaygun.get('idea/' + idea.id).get('ideas').load((childIdeas) => {
