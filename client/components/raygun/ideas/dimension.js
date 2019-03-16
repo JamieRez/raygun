@@ -4,6 +4,7 @@ window.Dimension = class {
     if(dim){
       this.id = dim.id || UUID();
       this.name = dim.name || "Untitled Dimension";
+      this.element = dim.element || null;
       let userId = $('#userId').text();
       let username = $('#username').text();
       this.creatorId = dim.creatorId || userId;
@@ -18,6 +19,7 @@ window.Dimension = class {
     }else{
       this.id = UUID();
       this.name = "Untitled Dimension";
+      this.element = null;
       let userId = $('#userId').text();
       let username = $('#username').text();
       this.creatorId = userId
@@ -40,7 +42,10 @@ window.Dimension = class {
 
   renderAt(parentElement){
     let thisElement = document.createElement('div');
-    thisElement.id = this.id;
+    thisElement.id = $(parentElement)[0].className + this.id;
+    this.element = '#' + thisElement.id;
+    let thisRaygun = gun.user(this.creatorPubKey);
+    thisRaygun.get('dimension/' + this.id).get('element').put(this.element);
     thisElement.classList.add("dimension");
     $(thisElement).css({
       width : "100%",

@@ -2,10 +2,10 @@ function enterDimensionInEditor(){
   currentRaygunScreen = 'dimension';
   currentDimension = dimBeingEdited || currentDimension;
   currentDimension.pos = {
-    left : $('#' + currentDimension.id).css('left'),
-    top : $('#' + currentDimension.id).css('top')
+    left : $(currentDimension.element).css('left'),
+    top : $(currentDimension.element).css('top')
   }
-  $('#' + currentDimension.id).css({
+  $(currentDimension.element).css({
     transform : "perspective(500px) translate3d(0px, 0px, 0px)",
     top : "0px",
     left : "0px",
@@ -22,7 +22,7 @@ function escapeDimensionToRaygun(){
   $('.raygun').css({
     display : 'flex'
   })
-  $('#' + currentDimension.id).css({
+  $(currentDimension.element).css({
     transform : "perspective(500px) translate3d(0px, 0px, -500px)",
     top : currentDimension.pos.top,
     left : currentDimension.pos.left,

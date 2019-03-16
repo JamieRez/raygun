@@ -22,7 +22,7 @@ function changeToEditor(dim){
   $('.editorThingsEditor').css('display', 'none');
   $('.editorThingsList').css('display', 'flex');
   dim.renderAt('.editorDimPreview');
-  $('#' + dim.id).css({
+  $(dim.element).css({
     transform : "perspective(500px) translate3d(0px, 0px, -500px)",
     boxShadow : "0px 0px 3px 3px #2ed17c",
     position : "absolute",
@@ -30,9 +30,9 @@ function changeToEditor(dim){
   loadDimensionIdeas();
   loadDimensionThings();
   setTimeout(() => {
-    $('#' + dim.id).css({
-      left : $('#' + dim.id).css('left'),
-      top : $('#' + dim.id).css('top')
+    $(dim.element).css({
+      left : $(dim.element).css('left'),
+      top : $(dim.element).css('top')
     })
   }, 310)
 }
