@@ -123,9 +123,9 @@ function prototypeToEditor(){
       $('.editorThingsEditor').css('display', 'none');
       $('.editorThingsList').css('display', 'flex');
       dimBeingEdited.renderAt('.editorDimPreview');
-      $(dimBeingEdited.element).css({
-        transform : "perspective(500px) translate3d(575px, -100px, -500px)",
-      })
+      // $(dimBeingEdited.element).css({
+      //   transform : "perspective(500px) translate3d(575px, -100px, -500px)",
+      // })
       loadDimensionIdeas();
       loadDimensionThings(true);
       changeToolbarColorsToDefault();
