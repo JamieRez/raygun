@@ -14,6 +14,7 @@ window.Dimension = class {
       this.ideas = dim.ideas || {null : null};
       this.things = dim.things || {null : null};
       this.thingCount = dim.thingCount || 0;
+      this.pos = dim.pos || null;
     }else{
       this.id = UUID();
       this.name = "Untitled Dimension";
@@ -27,6 +28,7 @@ window.Dimension = class {
       this.ideas = {null : null};
       this.things = {null : null};
       this.thingCount = 0;
+      this.pos = null;
     }
   }
 
@@ -46,7 +48,9 @@ window.Dimension = class {
       backgroundColor : "black",
       overflowY : "hidden",
       overflowX : "hidden",
-      transition : "transform 0.5s ease-in",
+      top : "initial",
+      left : "initial",
+      transition : "transform 0.3s ease-in, top 0.5s ease-in, left 0.5s ease-in",
       transform : "perspective(500px) translate3d(0px, 0px, 0px)",
     })
     let space = document.createElement('div');
