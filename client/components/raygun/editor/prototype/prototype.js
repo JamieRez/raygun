@@ -55,7 +55,7 @@ function runCodeInIdeaEditor(){
   let codeInEditor = ideaEditor.getValue();
   try {
     saveCodeInEditor((idea) => {
-      $('#prototype').children('.space').empty();
+      $('#prototypePreviewprototype').children('.space').empty();
       eval(idea.classCode);
       let protoThingData = {
         id : "proto-" + idea.className,
@@ -125,9 +125,8 @@ function prototypeToEditor(){
       $('.thingDataValue').remove();
       $('.editorThingsEditor').css('display', 'none');
       $('.editorThingsList').css('display', 'flex');
-      $('#' + dimBeingEdited.id).remove();
-      dimBeingEdited.renderAt($('body')[0]);
-      $('#' + dimBeingEdited.id).css({
+      dimBeingEdited.renderAt('.editorDimPreview');
+      $(dimBeingEdited.element).css({
         transform : "perspective(500px) translate3d(575px, -100px, -500px)",
       })
       loadDimensionIdeas();

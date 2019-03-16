@@ -12,11 +12,11 @@ function openIdeaPrototypeEditor(idea){
   $('.editorThings').css({
     transform : "perspective(500px) translate3d(0px, 1500px, -500px)"
   })
-  $('#' + dimBeingEdited.id).css({
+  $(dimBeingEdited.element).css({
     transform : "perspective(500px) translate3d(2075px, -100px, -500px)"
   })
   $('.prototype').css('display', 'flex');
-  $('#prototype').children('.space').empty();
+  $('#prototypePreviewprototype').children('.space').empty();
   $('.dataValue').remove();
   loadIdeaData(idea);
   eval(idea.classCode);
