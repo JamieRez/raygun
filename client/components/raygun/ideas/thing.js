@@ -105,14 +105,13 @@ window.Thing = class {
 
   render(dataLoaded, atElement){
     let thisThing = this;
-    function create(){
+    function create(atElement){
       let thisElement = document.createElement('div');
       thisElement.id = thisThing.ideaClassName + thisThing.id;
       thisElement.classList.add("thing");
       thisThing.element = '#' + thisThing.ideaClassName + thisThing.id;
       if($(`#${thisThing.ideaClassName + thisThing.id}`).length == 0){
         if(atElement){
-          console.log(atElement);
           $(atElement).children('.space').append(thisElement);
         }else{
           $(thisThing.dimElement).children('.space').append(thisElement);
@@ -130,9 +129,9 @@ window.Thing = class {
       `)
     }
     if(!dataLoaded){
-      this.loadData(create);
+      this.loadData(create(atElement));
     }else{
-      create();
+      create(atElement);
     }
   }
 
