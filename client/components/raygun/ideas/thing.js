@@ -130,7 +130,10 @@ window.Thing = class {
       `)
     }
     if(!dataLoaded){
-      this.loadData(create(atElement));
+      this.loadData(() => {
+        console.log(atElement);
+        create(atElement);
+      });
     }else{
       create(atElement);
     }
