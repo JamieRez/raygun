@@ -59,7 +59,7 @@ window.Dimension = class {
       transform : "perspective(500px) translate3d(0px, 0px, 0px)",
     })
     let space = document.createElement('div');
-    space.id = 'space-' + this.id;
+    space.id = 'space-' + this.element;
     space.classList.add('space');
     $(space).css({
       backgroundColor : "black",
