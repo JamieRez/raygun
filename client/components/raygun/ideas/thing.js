@@ -66,7 +66,7 @@ window.Thing = class {
       this.things = thing.things || {null : null};
       this.thingCount = thing.thingCount || 0;
       this.parentThing = thing.parentThing || false;
-      this.parentElement = thing.parentElement || `#space-${dimBeingEdited.id}`;
+      this.parentElement = thing.parentElement || `#space-${dimBeingEdited.element}`;
       this.element = thing.element || null;
       this.rendered = thing.rendered || false;
     }else{
