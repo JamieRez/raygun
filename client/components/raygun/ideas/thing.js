@@ -89,6 +89,7 @@ window.Thing = class {
       this.things = {null : null};
       this.thingCount = 0;
       this.parentThing = false;
+      this.dimElement = dimBeingEdited.element;
       this.parentElement = `#space-${dimBeingEdited.element}`;
       this.element = null;
       this.rendered = false;
@@ -112,8 +113,7 @@ window.Thing = class {
         if(atElement){
           $(atElement).append(thisElement);
         }else{
-          console.log(thisThing.parentElement);
-          $(thisThing.parentElement).append(thisElement);
+          $(thisThing.dimElement).children('.space').append(thisElement);
           thisThing.rendered = true;
         }
       }else if(thisThing.dimension == 'prototype'){
