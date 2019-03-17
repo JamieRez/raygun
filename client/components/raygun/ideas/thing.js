@@ -112,6 +112,7 @@ window.Thing = class {
       thisThing.element = '#' + thisThing.ideaClassName + thisThing.id;
       if($(`#${thisThing.ideaClassName + thisThing.id}`).length == 0){
         if(atElement){
+          console.log(atElement);
           $(atElement).children('.space').append(thisElement);
         }else{
           $(thisThing.dimElement).children('.space').append(thisElement);
