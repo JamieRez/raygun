@@ -103,7 +103,7 @@ window.Thing = class {
     thisRaygun.get('thing/' + this.id).put(this);
   }
 
-  render(dataLoaded = false, atElement=false){
+  render(dataLoaded, atElement){
     let thisThing = this;
     function create(){
       let thisElement = document.createElement('div');
