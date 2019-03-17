@@ -112,7 +112,7 @@ window.Thing = class {
       thisThing.element = '#' + thisThing.ideaClassName + thisThing.id;
       if($(`#${thisThing.ideaClassName + thisThing.id}`).length == 0){
         if(atElement){
-          $(atElement).append(thisElement);
+          $(atElement).children('.space').append(thisElement);
         }else{
           $(thisThing.dimElement).children('.space').append(thisElement);
           thisThing.rendered = true;
