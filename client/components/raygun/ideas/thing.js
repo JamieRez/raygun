@@ -110,14 +110,13 @@ window.Thing = class {
       thisElement.id = thisThing.ideaClassName + thisThing.id;
       thisElement.classList.add("thing");
       thisThing.element = '#' + thisThing.ideaClassName + thisThing.id;
-      if($(`#${thisThing.ideaClassName + thisThing.id}`).length == 0){
-        if(atElement){
-          console.log(atElement);
-          $(atElement).children('.space').append(thisElement);
-        }else{
-          $(thisThing.dimElement).children('.space').append(thisElement);
-          thisThing.rendered = true;
-        }
+
+      if(atElement){
+        $(atElement).children('.space').append(thisElement);
+      }
+      else if($(`#${thisThing.ideaClassName + thisThing.id}`).length == 0){
+        $(thisThing.dimElement).children('.space').append(thisElement);
+        thisThing.rendered = true;
       }else if(thisThing.dimension == 'prototype'){
         thisElement.id = 'prototype-thing';
         thisThing.element = '#prototype-thing';
@@ -131,7 +130,6 @@ window.Thing = class {
     }
     if(!dataLoaded){
       this.loadData(() => {
-        console.log(atElement);
         create(atElement);
       });
     }else{
