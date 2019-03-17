@@ -101,7 +101,7 @@ window.Thing = class {
     thisRaygun.get('thing/' + this.id).put(this);
   }
 
-  render(dataLoaded = false){
+  render(dataLoaded = false, atElement=false){
     let thisThing = this;
     function create(){
       let thisElement = document.createElement('div');
@@ -109,8 +109,13 @@ window.Thing = class {
       thisElement.classList.add("thing");
       thisThing.element = '#' + thisThing.ideaClassName + thisThing.id;
       if($(`#${thisThing.ideaClassName + thisThing.id}`).length == 0){
-        $(thisThing.parentElement).append(thisElement);
-        thisThing.rendered = true;
+        if(atElement){
+          $(atElement).append(thisElement);
+        }else{
+          console.log(thisThing.parentElement);
+          $(thisThing.parentElement).append(thisElement);
+          thisThing.rendered = true;
+        }
       }else if(thisThing.dimension == 'prototype'){
         thisElement.id = 'prototype-thing';
         thisThing.element = '#prototype-thing';
