@@ -110,7 +110,7 @@ window.Thing = class {
       thisElement.id = thisThing.ideaClassName + thisThing.id;
       thisElement.classList.add("thing");
       thisThing.element = '#' + thisThing.ideaClassName + thisThing.id;
-
+      console.log(atElement);
       if(atElement){
         $(atElement).children('.space').append(thisElement);
       }
