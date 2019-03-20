@@ -30,10 +30,30 @@ function escapeDimensionToRaygun(){
   })
 }
 
+function copyDimLink(){
+  let dimLink = `https://www.raygun.live/user/${dimBeingEdited.creatorPubKey}/dim/${dimBeingEdited.id}`
+  let dimLinkEl = document.createElement('textarea');
+  dimLinkEl.value = dimLink;
+  dimLinkEl.style.position = "absolute";
+  dimLinkEl.style.left = '-100000';
+  document.body.appendChild(dimLinkEl);
+  dimLinkEl.select();
+  document.execCommand('copy');
+  document.body.removeChild(dimLinkEl);
+}
+
 $(document).ready(() => {
 
   $('.goToDimBtn').on("click", () => {
     enterDimensionInEditor();
+  })
+
+  $('.shareDimBtn').on('click', () => {
+    copyDimLink();
+    $('.shareDimBtnLabel').text("Link Copied to Clipboard!")
+    setTimeout(() => {
+      $('.shareDimBtnLabel').text("Share Dimension")
+    }, 1000)
   })
 
 })

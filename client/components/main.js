@@ -38,29 +38,49 @@ $(document).ready(() => {
     $('.raygun').css('display', 'none');
   }
 
-  //Going to domain dimension if applicable
+  //Going to path or domain dimension if applicable
   if(window.location.pathname != '/'){
-    maingun.get('path').get(window.location.pathname).once((dimId) => {
-      if(dimId){
-        maingun.get(`dimension/${dimId}`).load((dim) => {
-          if(dim){
-            let thisDim = new Dimension(dim);
-            maingun.get(`dimension/${dimId}`).get('ideas').load((ideas) => {
-              thisDim.ideas = ideas;
-              maingun.get(`dimension/${dimId}`).get('things').load((things) => {
-                thisDim.things = things;
-                changeToEditor(thisDim);
-                enterDimensionInEditor();
-              })
+    let pathArr = window.location.pathname.split('/');
+    if(pathArr[1] == 'user' && pathArr[2]){
+      //Loading a dim of a user
+      if(pathArr[3] && pathArr[3] == 'dim' && pathArr[4]){
+        $('.raygun').css('display', 'none');
+        let dimGun = gun.user(pathArr[2]).get('dimension/' + pathArr[4]);
+        dimGun.load((dim) => {
+          let thisDim = new Dimension(dim);
+          dimGun.get('ideas').load((ideas) => {
+            thisDim.ideas = ideas;
+            dimGun.get('things').load((things) => {
+              thisDim.things = things;
+              changeToEditor(thisDim);
+              enterDimensionInEditor();
+              $('.raygun').css('display', 'flex');
             })
-          }
-        })
-      }else{
-        $('.raygun').css({
-          display : 'flex'
+          })
         })
       }
-    })
+    }
+    // maingun.get('path').get(window.location.pathname).once((dimId) => {
+    //   if(dimId){
+    //     maingun.get(`dimension/${dimId}`).load((dim) => {
+    //       if(dim){
+    //         let thisDim = new Dimension(dim);
+    //         maingun.get(`dimension/${dimId}`).get('ideas').load((ideas) => {
+    //           thisDim.ideas = ideas;
+    //           maingun.get(`dimension/${dimId}`).get('things').load((things) => {
+    //             thisDim.things = things;
+    //             changeToEditor(thisDim);
+    //             enterDimensionInEditor();
+    //           })
+    //         })
+    //       }
+    //     })
+    //   }else{
+    //     $('.raygun').css({
+    //       display : 'flex'
+    //     })
+    //   }
+    // })
   }
 
 

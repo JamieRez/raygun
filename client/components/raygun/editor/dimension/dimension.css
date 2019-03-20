@@ -16,6 +16,30 @@
   align-items: center;
 }
 
+.dimNavRight{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.shareDimBtn{
+  border : 2px solid #3ea26e;
+  color : #2ed17c;
+  font-size: 15px;
+  padding: 5px 10px;
+  margin-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  cursor : pointer;
+}
+
+.shareDimBtn:hover{
+  background-color: #d9fae9;
+}
+
 .goToDimBtn{
   border : 2px solid #3ea26e;
   color : #2ed17c;
