@@ -67,7 +67,7 @@ function openThingEditor(thing){
           thing.dataGun[thingDataId].value = newValue;
           thing.render(true);
           raygun.get('thing/' + thing.id).get('dataGun').get(thingDataId).get('value').put(newValue)
-          raygun.get('thing/' + thing.id).get('data').get(thing.dataGun[id].key).put(newValue)
+          raygun.get('thing/' + thing.id).get('data').get(thing.dataGun[thingDataId].key).put(newValue)
         }
       })
     }

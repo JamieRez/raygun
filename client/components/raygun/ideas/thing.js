@@ -36,7 +36,7 @@ window.Thing = class {
           cb();
         }
       }
-    })
+    }, {change : true})
   }
 
   constructor(thing){
