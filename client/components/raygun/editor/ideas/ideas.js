@@ -39,6 +39,7 @@ function openIdeaPrototypeEditor(idea){
     setTimeout(() => {
       //Change toolbar label to be the idea being worked on
       $('.toolbarLabel').text(idea.name);
+      $('.editorDimension').find('.space').empty();
       runCodeInIdeaEditor();
       changeToolbarColorsForIdeaBuilder();
     }, 500)

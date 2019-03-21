@@ -1,5 +1,5 @@
 $(this.element).css({
-  backgroundColor : this.data.color,
+  backgroundColor : this.data.color || "#f0f0f0",
   width : "100%",
   height : "100%",
   position : "absolute",
@@ -8,9 +8,9 @@ $(this.element).css({
 
 if(this.data.backgroundImage != "none"){
   $(this.element).css({
-    backgroundImage : "url('" + this.data.backgroundImage + "')",
-    backgroundRepeat : this.data.backgroundRepeat,
-    backgroundSize : this.data.backgroundSize
+    backgroundImage : "url('" + this.data.backgroundImage || "/components/body-bg.gif" + "')",
+    backgroundRepeat : this.data.backgroundRepeat || "initial",
+    backgroundSize : this.data.backgroundSize || "initial"
   })
 }
 

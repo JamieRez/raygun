@@ -6,6 +6,10 @@ function switchToDashboard(){
   $('.dashboard').css({
     display : "flex"
   })
+  $('.editorDimension').css({
+    transform : "none"
+  })
+  $('#prototypePreviewprototype').children('.space').empty();
   $('#' + dimBeingEdited.id).remove();
   $('.toolbarLabel').text("Dashboard");
   $('.toolbarLabel')[0].contentEditable = false;

@@ -122,6 +122,7 @@ function prototypeToEditor(){
       $('.thingDataValue').remove();
       $('.editorThingsEditor').css('display', 'none');
       $('.editorThingsList').css('display', 'flex');
+      $('#prototypePreviewprototype').children('.space').empty();
       dimBeingEdited.renderAt('.editorDimPreview');
       $(dimBeingEdited.element).css({
         transform : "perspective(500px) translate3d(0px, 0px, -500px)",
