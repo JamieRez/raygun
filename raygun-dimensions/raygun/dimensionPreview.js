@@ -25,7 +25,7 @@ $(this.element).append(editorDimNav)
 //Dimension Preview Tab
 let dimEditorTab = document.createElement('div');
 let dimEditorTabLabel = document.createElement('div');
-dimEditorTabLabel.textContent = "Dimension";
+dimEditorTabLabel.textContent = this.data.label || "Dimension";
 $(dimEditorTab).css({
   height : "25px",
   width : "75px",

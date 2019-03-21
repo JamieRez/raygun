@@ -18,7 +18,7 @@ $('#raygunUpperEditor').append($(this.element));
 //Idea Editor Tab
 let ideaEditorTab = document.createElement('div');
 let ideaEditorTabLabel = document.createElement('div');
-ideaEditorTabLabel.textContent = "Ideas";
+ideaEditorTabLabel.textContent = this.data.label || "Ideas";
 $(ideaEditorTab).css({
   height : "25px",
   width : "75px",

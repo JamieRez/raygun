@@ -17,17 +17,17 @@ $('.mainToolbar').css({
 let leftToolbar = document.createElement('div');
 let centerToolbar = document.createElement('div');
 let rightToolbar = document.createElement('div');
-leftToolbar.classList.add('toolbarLeft');
-centerToolbar.classList.add('toolbarCenter');
-rightToolbar.classList.add('toolbarRight');
-if($('.toolbarLeft').length === 0){
-  $(this.element).append(leftToolbar);
+leftToolbar.classList.add('mainToolbarLeft');
+centerToolbar.classList.add('mainToolbarCenter');
+rightToolbar.classList.add('mainToolbarRight');
+if($('.mainToolbarLeft').length === 0){
+  $('.mainToolbar').append(leftToolbar);
 }
-if($('.toolbarCenter').length === 0){
-  $(this.element).append(centerToolbar);
+if($('.mainToolbarCenter').length === 0){
+  $('.mainToolbar').append(centerToolbar);
 }
-if($('.toolbarRight').length === 0){
-  $(this.element).append(rightToolbar);
+if($('.mainToolbarRight').length === 0){
+  $('.mainToolbar').append(rightToolbar);
 }
 
 $(leftToolbar).css({
@@ -63,57 +63,50 @@ $(rightToolbar).css({
 let mainDashBtn = document.createElement('div');
 let toolbarLogo = document.createElement('img');
 let toolbarLabel = document.createElement('div');
-mainDashBtn.classList.add('toolbarMainDashBtn');
-toolbarLogo.classList.add('toolbarLogo');
-toolbarLabel.classList.add('toolbarBrandLabel');
-if($('.toolbarMainDashBtn').length === 0){
-  $('.toolbarLeft').append(mainDashBtn)
+mainDashBtn.classList.add('mainToolbarMainDashBtn');
+toolbarLogo.classList.add('mainToolbarLogo');
+toolbarLabel.classList.add('mainToolbarBrandLabel');
+if($('.mainToolbarMainDashBtn').length === 0){
+  $('.mainToolbarLeft').append(mainDashBtn)
 }
-if($('.toolbarLogo').length === 0){
-  $('.toolbarMainDashBtn').append(toolbarLogo);
+if($('.mainToolbarLogo').length === 0){
+  $('.mainToolbarMainDashBtn').append(toolbarLogo);
 }
-if($('.toolbarBrandLabel').length === 0){
-  $('.toolbarMainDashBtn').append(toolbarLabel);
+if($('.mainToolbarBrandLabel').length === 0){
+  $('.mainToolbarMainDashBtn').append(toolbarLabel);
 }
-$('.toolbarMainDashBtn').css({
+$('.mainToolbarMainDashBtn').css({
   display : "flex",
   flexDirection : "row",
   alignItems : "center",
   height : "100%",
   cursor : "pointer"
 })
-$('.toolbarLogo').css({
+$('.mainToolbarLogo').css({
   width : "84px",
   height : "64px",
   cursor : "pointer",
   marginRight : "10px"
 })
-$('.toolbarBrandLabel').css({
+$('.mainToolbarBrandLabel').css({
   fontSize : "30px",
   fontWeight : "250",
   color : this.data.brandTextColor || "white"
 })
 
 
-$('.toolbarLogo').attr('src', this.data.brandLogo || "/components/fake_cool.png")
-$('.toolbarBrandLabel').text(this.data.brandText || "Fake School");
-
-$('.toolbarMainDashBtn').on("click", () => {
-  $('.raygunEditor').css('display', 'none');
-  $('.raygunDashboard').css('display', 'flex');
-  $('#raygunToolbarInput').css('display', 'none');
-  $('#raygunToolbarLocLabel').css('display', 'flex');
-})
+$('.mainToolbarLogo').attr('src', this.data.brandLogo || "/components/fake_cool.png")
+$('.mainToolbarBrandLabel').text(this.data.brandText || "Fake School");
 
 //Create the toolbar location label. Starts off as Dashboard.
 //This goes to the center side of the toolbar
 let toolbarLocLabel = document.createElement('div');
-toolbarLocLabel.classList.add('toolbarLocLabel');
-if($('.toolbarLocLabel').length === 0){
-  $('.toolbarCenter').append(toolbarLocLabel);
+toolbarLocLabel.classList.add('mainToolbarLocLabel');
+if($('.mainToolbarLocLabel').length === 0){
+  $('.mainToolbarCenter').append(toolbarLocLabel);
 }
-$('.toolbarLocLabel').text(this.data.locationLabelText || "Student Dashboard")
-$('.toolbarLocLabel').css({
+$('.mainToolbarLocLabel').text(this.data.locationLabelText || "Student Dashboard")
+$('.mainToolbarLocLabel').css({
   textAlign : "center",
   fontSize : "30px",
   display : "flex",
@@ -123,13 +116,13 @@ $('.toolbarLocLabel').css({
 
 //Create the Profile Icon. This goes to the right side of the toolbar
 let toolbarProfileIcon = document.createElement('img');
-toolbarProfileIcon.classList.add('toolbarProfileIcon');
-if($('.toolbarProfileIcon').length === 0){
-  $('.toolbarRight').append(toolbarProfileIcon)
+toolbarProfileIcon.classList.add('mainToolbarProfileIcon');
+if($('.mainToolbarProfileIcon').length === 0){
+  $('.mainToolbarRight').append(toolbarProfileIcon)
 }
-$('.toolbarProfileIcon').css({
+$('.mainToolbarProfileIcon').css({
   width : "48px",
   height : "48px",
   cursor : "pointer"
 })
-$('.toolbarProfileIcon').attr('src', this.data.profileIcon || "/toolbar/profile.svg");
+$('.mainToolbarProfileIcon').attr('src', this.data.profileIcon || "/toolbar/profile.svg");

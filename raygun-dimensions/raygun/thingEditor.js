@@ -14,7 +14,7 @@ $('#raygunLowerEditor').append($(this.element))
 //Thing Editor Tab
 let thingEditorTab = document.createElement('div');
 let thingEditorTabLabel = document.createElement('div');
-thingEditorTabLabel.textContent = "Things";
+thingEditorTabLabel.textContent = this.data.label || "Things";
 $(thingEditorTab).css({
   height : "25px",
   width : "75px",
