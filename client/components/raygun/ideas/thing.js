@@ -108,12 +108,13 @@ window.Thing = class {
       if($(`#${thisThing.ideaClassName + thisThing.id}`).length == 0){
         $(thisThing.dimElement).children('.space').append(thisElement);
         thisThing.rendered = true;
-      }else if(thisThing.dimension == 'prototype'){
-        thisElement.id = 'prototype-thing';
-        thisThing.element = '#prototype-thing';
-        $('#space-prototype').append(thisElement);
       }else{
         thisThing.rendered= false;
+      }
+      if(thisThing.dimension == 'prototype'){
+        thisElement.id = 'prototype-thing';
+        thisThing.element = '#prototype-thing';
+        $('.prototypePreview').find('.space').append(thisElement);
       }
       eval(`
         new ${thisThing.ideaClassName}(thisThing).build();

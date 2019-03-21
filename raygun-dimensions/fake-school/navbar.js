@@ -4,7 +4,7 @@ $('.mainToolbar').css({
   backgroundColor : this.data.color || "#303030",
   width : this.data.width || "100%",
   height : this.data.height || "60px",
-  borderBottom : this.data.border || "2px solid #ffffff",
+  borderBottom : this.data.border || "2px solid #36ffad",
   padding : "5px 20px",
   display : "flex",
   flexDirection : "row",
@@ -83,7 +83,7 @@ $('.toolbarMainDashBtn').css({
   cursor : "pointer"
 })
 $('.toolbarLogo').css({
-  width : "64px",
+  width : "84px",
   height : "64px",
   cursor : "pointer",
   marginRight : "10px"
@@ -95,7 +95,7 @@ $('.toolbarBrandLabel').css({
 })
 
 
-$('.toolbarLogo').attr('src', this.data.brandLogo || "/toolbar/raygun.svg")
+$('.toolbarLogo').attr('src', this.data.brandLogo || "/components/fake_cool.png")
 $('.toolbarBrandLabel').text(this.data.brandText || "Fake School");
 
 $('.toolbarMainDashBtn').on("click", () => {
@@ -118,7 +118,7 @@ $('.toolbarLocLabel').css({
   fontSize : "30px",
   display : "flex",
   fontWeight : "250",
-  color : this.data.locLabelTextColor || "white"
+  color : this.data.locLabelTextColor || "#36ffad"
 })
 
 //Create the Profile Icon. This goes to the right side of the toolbar
