@@ -105,6 +105,9 @@ function prototypeToEditor(){
     $('.editorIdeas').css({
       transform : "perspective(500px) translate3d(0px, 0px, 0px)"
     })
+    $('.editorDimension').css({
+      transform : "none"
+    })
     $('.editorThings').css({
       transform : "perspective(500px) translate3d(0px, 0px, 0px)"
     })
