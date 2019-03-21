@@ -26,20 +26,15 @@ window.Thing = class {
     let thisRaygun = gun.user(this.creatorPubKey);
     let seenData = {};
     thisRaygun.get('thing/' + this.id).get('data').open((data) => {
-      if(!seenData[data.key]){
-        seenData[data.key] = true;
-        if(this.data != data){
-          this.data = data;
-          if(cb && typeof cb == 'function'){
-            cb();
-          }
-        }else{
-          if(cb && typeof cb == 'function'){
-            cb();
-          }
+      if(this.data != data){
+        this.data = data;
+        if(cb && typeof cb == 'function'){
+          cb();
         }
       }else{
-        return;
+        if(cb && typeof cb == 'function'){
+          cb();
+        }
       }
     })
   }
