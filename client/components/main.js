@@ -1,14 +1,15 @@
-window.currentRaygunScreen = 'dashboard';
+window.currentRaygunScreen = 'auth';
 window.loadedIdeas = {};
 window.loadedThings = {};
 window.userPubKey = null;
 
+localStorage.clear();
+var opt = {};
+opt.store = RindexedDB(opt);
+
 let gun;
-if(window.location.href == 'http://localhost:3000/'){
-  gun = Gun([`${window.location.origin}/gun`])
-}else{
-  gun = Gun([`${window.location.origin}/gun`, `https://www.raygun.live/gun`])
-}
+gun = Gun([opt, window.location.href + 'gun'])
+
 window.hostName = window.location.host;
 window.currentDimension = null;
 window.userIsTyping = false;
@@ -19,23 +20,15 @@ $(document).ready(() => {
   window.raygunPublicKey = $('#raygunPublicKey').text();
   window.thisUsername = $('#username').text();
   window.thisUserId = $('#userId').text();
-  window.thisUserHash = $('#userHash').text()
   window.raygun = gun.user()
   window.maingun = gun.user(raygunPublicKey);
-  if(thisUserId.length > 0 && thisUserHash.length > 0){
-    raygun.auth(thisUserId, thisUserHash);
-  }
+
+  raygun.recall({sessionStorage: true})
 
   //Initialize RayGun if on the raygun domain or localhost
   if(window.location.hostname == 'www.raygun.live' || window.location.hostname == 'localhost'){
-    $('.raygun').css("display", 'flex');
+    //$('.raygun').css("display", 'flex');
     $('body').css('background', "url('/components/body-bg.gif')")
-  }
-
-  if(!thisUserId){
-    currentRaygunScreen = 'auth';
-    $('.auth').css('display', 'flex');
-    $('.raygun').css('display', 'none');
   }
 
   //Going to path or domain dimension if applicable

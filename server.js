@@ -13,11 +13,8 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/raygun', { useN
 
 let server = app.listen(process.env.PORT || '3000');
 let gun = Gun({
-  // file: 'data.json', // local testing and development
   web: server
 });
-
-let raygun = gun.get('raygun');
 
 //App Setting
 app.set('views', './client/components')
@@ -43,7 +40,6 @@ let checkAuth = function (req, res, next) {
 }
 app.use(checkAuth);
 
-
 app.get('/*', (req, res) => {
   let thisUserId = req.user ? req.user.id : null;
   User.findById(thisUserId).then((user) => {
@@ -58,7 +54,4 @@ app.get('/*', (req, res) => {
 })
 
 //Controllers
-require('./controllers/user.js')(app, raygun);
-// require('./controllers/dimension.js')(app, raygun);
-// require('./controllers/idea.js')(app, raygun);
-// require('./controllers/thing.js')(app, raygun)
+require('./controllers/user.js')(app, gun);

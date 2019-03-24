@@ -3,8 +3,7 @@ const Dimension = require('../models/dimension');
 const Idea = require('../models/idea');
 const jwt = require('jsonwebtoken');
 
-module.exports = (app, raygun) => {
-
+module.exports = (app, gun) => {
   app.post('/register', (req, res) => {
     User.findOne({username : req.body.username.toLowerCase()}).then((user) => {
       if(user){
@@ -24,13 +23,8 @@ module.exports = (app, raygun) => {
           res.cookie('userToken', token);
 
           //Create a raygun user with id and hashedPassword
-          raygun.user().create(user._id.toString(), user.password, () => {
-            raygun.user().put({
-              name : user.username,
-              id : user._id.toString()
-            }, () => {
-              res.redirect('/')
-            })
+          gun.user().create(user._id.toString(), req.body.password, () => {
+            res.send(user._id.toString());
           });
 
         });
@@ -54,7 +48,7 @@ module.exports = (app, raygun) => {
         }
         let token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: "60 days"});
         res.cookie('userToken', token);
-        res.redirect('/')
+        res.send(user._id.toString());
       }
     })
   });

@@ -85,6 +85,9 @@ function addDimOption(dim){
 }
 //LOADING THE USER. THIS IS LIKE THE MOST IMPORTANT THING
 gun.on('auth', () => {
+  currentRaygunScreen = 'dashboard';
+  $('.auth').css('display', 'none');
+  $('.raygun').css('display', 'flex');
 
   window.userPubKey = gun.user().is.pub;
 

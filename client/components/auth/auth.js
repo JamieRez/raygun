@@ -13,7 +13,8 @@ function registerUser(){
       if(res.data.err){
         showErr(res.data.err);
       }else{
-        window.location = '/';
+        raygun.auth(res.data, password);
+        raygun.recall();
       }
     })
   }
@@ -29,7 +30,8 @@ function loginUser(){
       if(res.data.err){
         showErr(res.data.err);
       }else{
-        window.location = '/';
+        raygun.auth(res.data, password);
+        raygun.recall();
       }
     })
   }
