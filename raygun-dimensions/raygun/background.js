@@ -13,15 +13,3 @@ if(this.data.backgroundImage != "none"){
     backgroundSize : this.data.backgroundSize || "initial"
   })
 }
-
-
-
-
-
-
-
-
-
-
-
-console.log("Hey man!");

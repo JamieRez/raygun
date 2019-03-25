@@ -8,7 +8,7 @@ var opt = {};
 opt.store = RindexedDB(opt);
 
 let gun;
-gun = Gun([opt, window.location.href + 'gun'])
+gun = Gun([opt, window.location.origin + '/gun'])
 
 window.hostName = window.location.host;
 window.currentDimension = null;
@@ -22,14 +22,6 @@ $(document).ready(() => {
   window.thisUserId = $('#userId').text();
   window.raygun = gun.user()
   window.maingun = gun.user(raygunPublicKey);
-
-  raygun.recall({sessionStorage: true})
-
-  //Initialize RayGun if on the raygun domain or localhost
-  if(window.location.hostname == 'www.raygun.live' || window.location.hostname == 'localhost'){
-    //$('.raygun').css("display", 'flex');
-    $('body').css('background', "url('/components/body-bg.gif')")
-  }
 
   //Going to path or domain dimension if applicable
   if(window.location.pathname != '/'){
@@ -53,6 +45,16 @@ $(document).ready(() => {
         })
       }
     }
+
+  raygun.recall({sessionStorage: true})
+
+  //Initialize RayGun if on the raygun domain or localhost
+  if(window.location.hostname == 'www.raygun.live' || window.location.hostname == 'localhost'){
+    //$('.raygun').css("display", 'flex');
+    $('body').css('background', "url('/components/body-bg.gif')")
+  }
+
+
     // maingun.get('path').get(window.location.pathname).once((dimId) => {
     //   if(dimId){
     //     maingun.get(`dimension/${dimId}`).load((dim) => {
